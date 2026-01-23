@@ -2,20 +2,16 @@ import {
   Route,
   RouterProvider,
   createBrowserRouter,
-  createRoutesFromElements
+  createRoutesFromElements,
 } from "react-router"
-import Main from "./pages/main"
+import MainPage from "./pages/MainPage"
+import RobotAnimation from "./pages/RobotAnimation"
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/" element={<Main />} >
-        {/* <Route index element={<Home />} />
-        <Route path="threejs" element={<ThreeJS />} />
-        <Route path="flow" element={<ReactFlow />} />
-        <Route path="graph" element={<Graph />} />
-        <Route path="test" element={<Test />} /> */}
-      </Route>
+      <Route path="/" element={<MainPage />}></Route>
+      <Route path="robotics" element={<RobotAnimation />}/>
     </>
   )
 )

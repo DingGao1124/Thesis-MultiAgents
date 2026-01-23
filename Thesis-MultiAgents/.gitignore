@@ -24,4 +24,8 @@ dist-ssr
 *.sw?
 
 # customization
-/public
+/public/models
+
+# environment
+.env
+.env.*

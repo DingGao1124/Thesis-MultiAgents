@@ -85,11 +85,20 @@ The system explores how LLM-driven multi-agent architectures can enhance the fle
 
 🚧 **Active Development** - This is a research prototype under active development.
 
-- ✅ Infrastructure setup (MinIO, pgvector, Redis)
-- ✅ Frontend framework (React 19 + Vite + Tailwind)
-- ⏳ Backend agent orchestration (in progress)
-- ⏳ Frontend-backend integration (planned)
-- ⏳ Multi-agent coordination logic (planned)
+### Frontend
+- [x] React 19 + Vite + Tailwind framework setup
+- [ ] UR5 robot visualization page polish
+   - [ ] Replace current static grasper with dynamic one
+   - [ ] Add Physics for Robot Grasp
+   - [ ] Add animation for Robot Grasp
+- [ ] Knowledge graph UI enhancements
+
+### Backend
+- [x] Infrastructure setup (MinIO, pgvector, Redis)
+- [ ] Agent orchestration core (main.py)
+- [ ] REST API service layer (FastAPI/Flask)
+- [ ] Multi-agent coordination logic
+- [ ] Vector DB + knowledge graph integration
 
 ## License
 

@@ -1,53 +1,93 @@
 # Multi-Agent Thesis Project - AI Coding Instructions
 
-## Project Architecture
+## Project Overview
 
-This is a **hybrid multi-agent system** combining:
+**LLM-Based Multi-Agent System for Dynamic Production Line Construction** - A research project combining digital twin technology with LLM-driven multi-agent collaboration for flexible manufacturing systems.
+
+## Architecture
+
+This is a **hybrid multi-agent system** with three layers:
 - **Frontend**: React 19 + TypeScript + Vite + Tailwind CSS 4 (in `Thesis-MultiAgents/`)
-- **Backend**: Python-based services (root level `main.py` - currently empty/placeholder)
-- **Infrastructure**: Docker Compose orchestrating MinIO (object storage), pgvector (vector DB), and Redis (semantic cache)
+- **Backend**: Python-based agent orchestration (root `main.py` - pending implementation)
+- **Infrastructure**: Docker Compose with MinIO (object storage), pgvector (vector DB), Neo4j (knowledge graph), Redis (semantic cache - currently disabled)
 
-The frontend and backend are **separate but connected** - frontend handles UI interactions while Python services manage data processing, vector operations, and agent logic.
+**Data flows**: User input → React UI → Python agents (via Vite proxy `/api` → `localhost:8000`) → Services (MinIO/pgvector/Neo4j) → Frontend visualization
 
 ## Key Technologies & Patterns
 
-### Frontend (React + Vite)
-- **React Compiler enabled**: Uses `babel-plugin-react-compiler` in Vite config - write standard React, compiler optimizes automatically
-- **Tailwind CSS 4**: Uses new Vite plugin (`@tailwindcss/vite`), not PostCSS config
-- **TypeScript strict mode**: All `.tsx`/`.ts` files use strict type checking
-- **Dev workflow**: `pnpm dev` (port 5173), `pnpm build` compiles TypeScript first, then Vite build
+### Frontend Stack (React 19 + Vite)
+- **React Compiler**: `babel-plugin-react-compiler` enabled - no manual memoization needed (React.memo/useMemo/useCallback auto-optimized)
+- **Tailwind CSS 4**: Uses `@tailwindcss/vite` plugin (NOT PostCSS) - check [tailwind.config.ts] for v4 syntax changes
+- **TypeScript strict mode**: Enforced across all `.tsx`/`.ts` files
+- **3D/Animation libraries**:
+  - `@react-three/fiber` + `@react-three/drei`: Three.js integration (see [MainPage.tsx](Thesis-MultiAgents/src/pages/MainPage.tsx))
+  - `gsap` + `@gsap/react`: Animation timelines (registered with `gsap.registerPlugin(useGSAP)`)
+  - `urdf-loader`: Robot arm URDF model loading (public models in `Thesis-MultiAgents/public/models/ur5/`)
+- **Knowledge graph**: `react-force-graph-2d` for Neo4j visualizations (see [KnowledgeGraph.tsx](Thesis-MultiAgents/src/pages/KnowledgeGraph.tsx))
+- **State management**: Zustand (stores/ currently empty - add stores as needed)
+- **Routing**: React Router 7 with `createBrowserRouter` + JSX route syntax
 
-### Backend Infrastructure
-- **Docker services** (run `docker-compose up -d`):
-  - MinIO: ports 9000 (API), 9001 (console) - credentials: `minioadmin/minioadmin`
-  - pgvector (Postgres 17): port 5432 - credentials: `postgres/postgres`, DB: `vectordb`
-  - Redis: port 6379 - AOF persistence enabled for semantic caching
-- **Python utilities**: `libs/` contains service clients (e.g., `minio_client.py` for object storage CRUD)
+### Backend Infrastructure (Docker Compose)
+Critical credentials (UPDATE IN PRODUCTION):
+- **MinIO**: 9000 (API), 9001 (console) - `admin:12345678` (NOT `minioadmin`)
+- **pgvector**: 5432 - `postgres:12345678` DB: `vectordb`
+- **Neo4j**: 7474 (HTTP), 7687 (Bolt) - `neo4j:12345678` with persistent volumes at `./neo4j/data`
+- **Redis**: DISABLED in docker-compose (commented out) - re-enable if needed for semantic caching
+
+### Python Patterns (`libs/`)
+- **Class-based service clients**: Pattern from `MinIOClient` (425 lines) - full CRUD with type hints
+- **Status symbols**: `✓` success, `✗` error, `!` warnings in print statements
+- **Error handling**: Try/except with `S3Error` or service-specific exceptions
+- **Type safety**: Use `typing.Optional`, `List`, `BinaryIO` etc.
+- **English-only**: ALL comments/docstrings must be in English (research thesis requirement)
 
 ## Development Workflows
 
-### Starting the Environment
+### Starting the Full Stack
 ```bash
-# Start infrastructure
+# 1. Start infrastructure (from root)
 docker-compose up -d
 
-# Start frontend (in Thesis-MultiAgents/)
+# 2. Verify services healthy
+docker-compose ps  # All should show "Up (healthy)"
+
+# 3. Start frontend (from Thesis-MultiAgents/)
 cd Thesis-MultiAgents
 pnpm install  # First time only
-pnpm dev      # Dev server with HMR
+pnpm dev      # Vite dev server on http://localhost:5173
 ```
 
 ### Python Service Development
-- Python scripts go in `libs/` for reusable utilities or root level for main services
-- Use `MinIOClient` class from `libs/minio_client.py` for object storage operations
-- Connect to pgvector using standard psycopg2/SQLAlchemy with vector extension
-- Redis semantic cache: store embeddings/query results with TTL for LLM response optimization
+- **Utilities location**: `libs/` for reusable clients (e.g., `minio_client.py`)
+- **Main service**: `main.py` (root) - currently empty, needs agent orchestration logic
+- **MinIO operations**: Import `MinIOClient` class - methods: `upload_file()`, `download_file()`, `list_objects()`, `get_presigned_url()`, etc.
+- **Vector DB**: pgvector for embeddings - use psycopg2/SQLAlchemy with `vector` extension
+- **Neo4j**: Knowledge graph queries via py2neo or neo4j-driver (ports 7474/7687)
 
 ### Frontend Development
-- Components in `Thesis-MultiAgents/src/` - currently basic React template
-- Styling: Use Tailwind utility classes (v4 syntax)
-- Type safety: Always define interfaces/types for props and state
-- HMR active: Changes auto-reload without full page refresh
+- **Pages**: `Thesis-MultiAgents/src/pages/` - [MainPage.tsx](Thesis-MultiAgents/src/pages/MainPage.tsx) (3D), [KnowledgeGraph.tsx](Thesis-MultiAgents/src/pages/KnowledgeGraph.tsx) (graph viz), [RobotAnimation.tsx](Thesis-MultiAgents/src/pages/RobotAnimation.tsx) (stub)
+- **API client**: [src/api/basic.ts](Thesis-MultiAgents/src/api/basic.ts) - axios instance with `/api` prefix (proxied to `localhost:8000`)
+  - Interceptors: Auto-add Bearer token, log requests in DEV mode
+  - Typed API methods in [src/api/index.ts](Thesis-MultiAgents/src/api/index.ts): `agentAPI`, `taskAPI`, `userAPI`
+- **Styling**: Tailwind v4 classes - NO PostCSS config, uses Vite plugin
+- **3D assets**: URDF models go in `public/models/` (current: UR5 robot arm)
+- **HMR**: Fast Refresh active - component edits reload instantly
+
+### Debugging Services
+```bash
+# Check all services
+docker-compose ps
+
+# View real-time logs
+docker-compose logs -f minio
+docker-compose logs -f postgres
+docker-compose logs -f neo4j
+
+# Access services directly
+# MinIO console: http://localhost:9001 (admin:12345678)
+# Neo4j browser: http://localhost:7474 (neo4j:12345678)
+# pgvector: psql -h localhost -U postgres -d vectordb (password: 12345678)
+```
 
 ## Critical Conventions
 
@@ -70,18 +110,21 @@ pnpm dev      # Dev server with HMR
 
 ## Integration Points
 
-### Frontend ↔ Backend
-- **Not yet connected**: Frontend currently standalone, backend Python services need REST/WebSocket API layer
-- **Expected pattern**: Frontend calls Python API → Python orchestrates agents → Results stored in MinIO/pgvector/Redis
+### Frontend ↔ Backend Communication
+- **Vite dev proxy**: `/api/*` requests → `http://localhost:8000` (configured in [vite.config.ts](Thesis-MultiAgents/vite.config.ts))
+- **Authentication**: Bearer token from localStorage auto-added by axios interceptor
+- **Expected backend**: FastAPI/Flask Python server on port 8000 (NOT YET IMPLEMENTED)
+- **API structure**: Typed interfaces in [api/index.ts](Thesis-MultiAgents/src/api/index.ts) - `Agent`, `Task`, `User` models ready
 
 ### Data Flow (Multi-Agent Context)
-1. User input → Frontend
-2. Frontend → Python agent orchestrator (to be implemented in `main.py`)
-3. Agents use:
-   - **MinIO**: Store documents, artifacts, intermediate results
-   - **pgvector**: Store/query embeddings for RAG/semantic search
-   - **Redis**: Cache LLM responses, agent state, semantic query results
-4. Results → Frontend display
+1. User input → React UI (`MainPage`, `KnowledgeGraph`)
+2. Frontend → Python REST API (via axios `/api` proxy)
+3. Python agents orchestrate tasks using:
+   - **MinIO**: Store production line documents, robot models, agent artifacts
+   - **pgvector**: RAG/semantic search for production documentation
+   - **Neo4j**: Knowledge graph of production line entities (machines, workflows, dependencies)
+   - **Redis** (disabled): Semantic cache for LLM responses (enable if needed)
+4. Results → Frontend visualization (3D scenes, force-directed graphs, ECharts)
 
 ## Common Tasks
 
@@ -119,21 +162,6 @@ export default function ComponentName({ ...props }: ComponentProps) {
 }
 ```
 
-### Testing Docker Services
-```bash
-# Check all services healthy
-docker-compose ps
-
-# View logs
-docker-compose logs -f minio
-docker-compose logs -f pgvector
-docker-compose logs -f redis
-
-# MinIO console: http://localhost:9001
-# pgvector: psql -h localhost -U postgres -d vectordb
-# Redis: redis-cli -h localhost
-```
-
 ## Project-Specific Notes
 
 - **Thesis context**: This is a research project on multi-agent systems - prioritize flexibility and experimentation over production patterns
@@ -142,10 +170,6 @@ docker-compose logs -f redis
 - **No backend API yet**: Frontend-backend integration pending - consider FastAPI/Flask for REST endpoints
 - **Vector operations**: pgvector is for semantic search/RAG - expect to store embeddings from OpenAI/local models
 - **Semantic cache strategy**: Redis will cache expensive LLM calls - implement cache key based on query embeddings similarity
-
-## Questions for Developer Clarification
-
-1. **Agent framework**: Will you use LangChain, CrewAI, AutoGen, or custom orchestration?
-2. **LLM provider**: OpenAI, Azure OpenAI, local models (Ollama), or mixed?
-3. **Frontend-backend communication**: REST API, WebSockets, or GraphQL?
-4. **Authentication**: Needed for frontend/services, or development-only setup?
+- **Agent framework**: LangChain and LangGraph for agent orchestration - use LangChain chains/tools/memory with LangGraph for complex multi-agent workflows
+- **LLM providers**: Mixed approach - support OpenAI, Azure OpenAI, and local models (Ollama) with configurable switching
+- **Communication layer**: Mixed patterns - REST API for standard operations, WebSockets for real-time agent updates, consider GraphQL for complex queries

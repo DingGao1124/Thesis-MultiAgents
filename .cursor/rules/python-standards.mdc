@@ -1,0 +1,51 @@
+---
+description: Python coding standards for lib/ and backend services
+globs: "**/*.py"
+alwaysApply: false
+---
+
+# Python Standards
+
+## Structure & Style
+
+- **Class-based service clients**: Encapsulate MinIO, pgvector, Neo4j, Redis as classes (see `lib/minio_client.py`).
+- **Type hints**: Use `typing.Optional`, `List`, `BinaryIO`, etc.
+- **English only**: All comments and docstrings in English.
+
+## Error Handling & Logging
+
+- Use `try`/`except` with `S3Error` or service-specific exceptions.
+- Status symbols in print: `✓` success, `✗` error, `!` warning.
+
+```python
+# ✅ GOOD
+try:
+    result = client.upload_file(...)
+    print("✓ Upload successful")
+    return result
+except S3Error as e:
+    print(f"✗ Upload failed: {e}")
+    raise
+```
+
+## Adding a New Service Client
+
+Create `lib/<service>_client.py`:
+
+```python
+class ServiceClient:
+    def __init__(self, endpoint: str, credentials: tuple[str, str]) -> None:
+        ...
+
+    def create(self, ...) -> bool:
+        """Create resource. English docstring."""
+        try:
+            # implementation
+            print("✓ Operation successful")
+            return True
+        except Exception as e:
+            print(f"✗ Operation failed: {e}")
+            return False
+```
+
+Use `MinIOClient` for object storage; pgvector for embeddings; Neo4j (py2neo/neo4j-driver) for knowledge graph. Main orchestration lives in root `main.py`.

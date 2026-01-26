@@ -1,0 +1,36 @@
+---
+description: Multi-Agent Thesis project overview, architecture, and conventions
+alwaysApply: true
+---
+
+# Project Conventions
+
+**LLM-Based Multi-Agent System for Dynamic Production Line Construction** – hybrid stack: React 19 + TypeScript + Vite (frontend in `Thesis-MultiAgents/`), Python orchestration (root `main.py`), Docker Compose (MinIO, pgvector, Neo4j).
+
+## File Organization
+
+- **`lib/`**: Python utility modules (clients, helpers). Use `MinIOClient` and similar class-based clients.
+- **`Thesis-MultiAgents/src/`**: React components, pages, API client, assets.
+- **`docker-compose.yaml`**: Single source of truth for infrastructure.
+- **Root `main.py`**: Entry point for Python backend (agent orchestration).
+
+## Critical Conventions
+
+- **English only**: ALL comments, docstrings, and docs must be in English (thesis requirement).
+- **Frontend ↔ Backend**: Vite proxy `/api` → `localhost:8000`. Axios in `src/api/`; typed `agentAPI`, `taskAPI`, `userAPI`.
+- **Data flow**: UI → Python REST API → MinIO / pgvector / Neo4j → Frontend (3D, force-directed graphs).
+
+## Tech Stack (Summary)
+
+- Frontend: React 19, TypeScript strict, Tailwind v4 (`@tailwindcss/vite`), React Router 7, Zustand, `@react-three/fiber`, gsap, `react-force-graph-2d`.
+- Backend: FastAPI/Flask on 8000 (pending). LangChain/LangGraph for agents; OpenAI/Azure/Ollama.
+- Infra: MinIO 9000/9001, pgvector 5432, Neo4j 7474/7687, Redis disabled.
+
+## Development
+
+```bash
+docker-compose up -d   # from root
+cd Thesis-MultiAgents && pnpm install && pnpm dev
+```
+
+Prioritize flexibility and experimentation (research project). Add main orchestration logic in `main.py`.

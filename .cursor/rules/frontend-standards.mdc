@@ -1,0 +1,38 @@
+---
+description: React, TypeScript, and Tailwind conventions for Thesis-MultiAgents
+globs: "Thesis-MultiAgents/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Frontend Standards (TypeScript)
+
+## Stack
+
+- **React 19** + **React Compiler** (`babel-plugin-react-compiler`): No manual `React.memo` / `useMemo` / `useCallback`.
+- **TypeScript strict**: Enforced for all `.ts` / `.tsx`.
+- **Tailwind v4**: `@tailwindcss/vite` plugin only – no PostCSS. Use `tailwind.config.ts` for v4 syntax.
+- **Routing**: React Router 7, `createBrowserRouter` + JSX routes.
+- **API**: Axios in `src/api/client.ts` with `/api` prefix; typed methods in `src/api/index.ts` (`agentAPI`, `taskAPI`, `userAPI`).
+
+## Conventions
+
+- **Functional components only**; render inside `<StrictMode>`.
+- **ESLint v9**: Flat config in `eslint.config.js`.
+- **3D**: `@react-three/fiber` + `@react-three/drei`; gsap + `@gsap/react`; URDF in `public/models/`.
+- **Knowledge graph**: `react-force-graph-2d` (see `KnowledgeGraph.tsx`).
+- **State**: Zustand stores in `stores/` as needed.
+
+## New Component Template
+
+```tsx
+// Thesis-MultiAgents/src/components/ComponentName.tsx
+interface ComponentProps {
+  /* define props */
+}
+
+export default function ComponentName({ ...props }: ComponentProps) {
+  return <div className="flex items-center gap-4">...</div>;
+}
+```
+
+Use Tailwind classes for layout and styling. HMR/Fast Refresh enabled.

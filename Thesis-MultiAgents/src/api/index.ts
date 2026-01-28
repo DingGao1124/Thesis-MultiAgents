@@ -1,4 +1,4 @@
-import { get, post, put, del } from './client'
+import { get, post, put, del } from './config/client'
 
 export interface ApiResponse<T> {
   success: boolean

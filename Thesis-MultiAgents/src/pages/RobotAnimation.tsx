@@ -42,7 +42,7 @@ export default function RobotAnimation() {
             <UR5Model />
 
             <gridHelper args={[10, 100]} />
-            <axesHelper />
+            <axesHelper args={[10]} />
             <GizmoHelper alignment="bottom-left" margin={[80, 80]}>
               <GizmoViewport
                 axisColors={['#ff4d4f', '#52c41a', '#40a9ff']}
@@ -50,7 +50,7 @@ export default function RobotAnimation() {
               />
             </GizmoHelper>
             <Stats />
-            <OrbitControls makeDefault />
+            <OrbitControls makeDefault enabled={true} />
           </Suspense>
         </Canvas>
       </KeyboardControls>

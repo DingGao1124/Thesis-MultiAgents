@@ -9,6 +9,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import Loading from "./components/layout/Loading"
 import ErrorPage from "./pages/ErrorPage"
 import NotFound from "./pages/NotFound"
+import TestPage from "./pages/TestPage"
 
 const MainPage = React.lazy(() => import("./pages/MainPage"))
 const RobotAnimation = React.lazy(() => import("./pages/RobotAnimation"))
@@ -20,6 +21,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<MainPage />}></Route>
       <Route path="/robotics" element={<RobotAnimation />} />
       <Route path="/kgraph" element={<KnowledgeGraph />} />
+      <Route path="/test" element={<TestPage />} />
       <Route path="*" element={<NotFound />} />
     </>
   )

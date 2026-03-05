@@ -1,3 +1,5 @@
+"""This is the standardized way to build Graph RAG, for now, we needn't use it."""
+
 import asyncio
 import os
 import re

@@ -24,7 +24,7 @@ services:
     image: pgvector/pgvector:pg17
     container_name: postgres_db
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12345678
@@ -48,6 +48,7 @@ services:
       - ./neo4j/plugins:/plugins
     environment:
       - NEO4J_AUTH=neo4j/12345678
+      - NEO4J_PLUGINS=["apoc"]
     ports:
       - "7474:7474"
       - "7687:7687"

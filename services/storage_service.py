@@ -9,6 +9,7 @@ from typing import Optional, List, BinaryIO
 import os
 from io import BytesIO
 from datetime import timedelta
+from dotenv import load_dotenv
 
 
 class MinIOClient:
@@ -16,9 +17,9 @@ class MinIOClient:
     
     def __init__(
         self,
-        endpoint: str = "localhost:9000",
-        access_key: str = "minioadmin",
-        secret_key: str = "minioadmin",
+        endpoint: Optional[str] = None,
+        access_key: Optional[str] = None,
+        secret_key: Optional[str] = None,
         secure: bool = False
     ):
         """
@@ -30,10 +31,20 @@ class MinIOClient:
             secret_key: Secret key
             secure: Whether to use HTTPS
         """
+        resolved_endpoint = endpoint or os.getenv("MINIO_ENDPOINT", "localhost:9000")
+        resolved_access_key = access_key or os.getenv("MINIO_ROOT_USER")
+        resolved_secret_key = secret_key or os.getenv("MINIO_ROOT_PASSWORD")
+
+        if not resolved_access_key or not resolved_secret_key:
+            raise ValueError(
+                "MINIO_ROOT_USER and MINIO_ROOT_PASSWORD must be set in environment "
+                "variables or passed explicitly."
+            )
+
         self.client = Minio(
-            endpoint,
-            access_key=access_key,
-            secret_key=secret_key,
+            resolved_endpoint,
+            access_key=resolved_access_key,
+            secret_key=resolved_secret_key,
             secure=secure
         )
     
@@ -376,12 +387,14 @@ class MinIOClient:
 
 # Example usage
 if __name__ == "__main__":
+    load_dotenv(override=True)
+
     # Initialize client
     minio_client = MinIOClient(
-        endpoint="localhost:9000",
-        access_key="minioadmin",
-        secret_key="minioadmin",
-        secure=False
+        endpoint=os.getenv("MINIO_ENDPOINT", "localhost:9000"),
+        access_key=os.getenv("MINIO_ROOT_USER"),
+        secret_key=os.getenv("MINIO_ROOT_PASSWORD"),
+        secure=os.getenv("MINIO_SECURE", "false").lower() == "true",
     )
     
     # Create bucket
@@ -396,7 +409,7 @@ if __name__ == "__main__":
     test_data = b"Hello, MinIO! This is a test file."
     minio_client.upload_data(
         bucket_name,
-        "test.txt",
+        "test/test.txt",
         test_data,
         content_type="text/plain"
     )

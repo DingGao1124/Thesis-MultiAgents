@@ -30,13 +30,16 @@
 - Knowledge graph UI pattern is shown in `src/pages/KnowledgeGraph.tsx` (`react-force-graph-2d` + custom canvas renderers).
 
 ## LLM / Embedding Gateway
-- **All LLM and embedding calls route through OpenRouter**, not direct OpenAI: `base_url="https://openrouter.ai/api/v1"` with `OPENROUTER_API_KEY` (see `utils/Embedding.py`, `modules/Agents/AgenticGraphBuilder.py`).
-- Use `langchain_openrouter.ChatOpenRouter` for chat models and `langchain_openai.OpenAIEmbeddings` with the OpenRouter base URL for embeddings.
-- `GraphRAGAgent.py` currently uses bare `OpenAIEmbeddings` (no OpenRouter override) — align new agent code to the OpenRouter pattern instead.
+- **Chat model calls route through OpenRouter**: `base_url="https://openrouter.ai/api/v1"` with `OPENROUTER_API_KEY`.
+- **Embedding and reranking calls route through Alibaba DashScope**: `base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"` with `DASHSCOPE_API_KEY`.
+- Use `langchain_openrouter.ChatOpenRouter` for chat models.
+- Use `langchain_openai.OpenAIEmbeddings` configured with the DashScope compatible endpoint for embeddings.
+- Keep provider separation strict: do not route embeddings/rerank requests through OpenRouter in new code.
 
 ## Environment Variables
 All secrets come from `.env` loaded via `load_dotenv(override=True)`. Required variables:
-- `OPENROUTER_API_KEY` — LLM + embedding calls
+- `OPENROUTER_API_KEY` — chat model calls
+- `DASHSCOPE_API_KEY` — embedding + reranking calls
 - `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD` — graph DB (default bolt: `bolt://localhost:7687`)
 - `MINERU_API_KEY` — document parsing via `lib/parser_service.py` (MinerU cloud API)
 - `FRONTEND_ORIGIN` — CORS allowed origin in `main.py` (default `http://localhost:5173`)

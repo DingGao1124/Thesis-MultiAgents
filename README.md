@@ -100,6 +100,88 @@ The system explores how LLM-driven multi-agent architectures can enhance the fle
 - [ ] Multi-agent coordination logic
 - [ ] Vector DB + knowledge graph integration
 
+## ModelRAGAgent Database Setup
+
+`modules/Agents/ModelRAGAgent.py` does not create or migrate schema in code.
+Please run the SQL below manually in PostgreSQL.
+
+### Upsert behavior (`upsert_model_metadata`)
+
+- Insert when `model_name` does not exist.
+- Update when `model_name` already exists.
+- Conflict key is `model_name` (must be `UNIQUE`).
+- On update, `description`, `minio_bucket`, `minio_object_key`, and `embedding` are refreshed.
+- For new rows, `model_id` uses provided UUID if passed, otherwise auto-generated.
+
+### SQL Steps
+
+```sql
+-- 1) Enable extensions
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- 2) Create table
+CREATE TABLE IF NOT EXISTS model_assets (
+   model_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+   model_name TEXT NOT NULL UNIQUE,
+   description TEXT NOT NULL,
+   minio_bucket TEXT NOT NULL,
+   minio_object_key TEXT NOT NULL,
+   embedding VECTOR(1024) NOT NULL,
+   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE model_assets
+ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
+
+ALTER TABLE model_assets
+ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
+
+-- 3) Create HNSW index (cosine distance)
+CREATE INDEX IF NOT EXISTS idx_model_assets_embedding_hnsw
+ON model_assets
+USING hnsw (embedding vector_cosine_ops);
+
+-- 4) Create similarity function called by Python
+CREATE OR REPLACE FUNCTION similarity_search_models(
+   query_embedding vector(1024),
+   match_count INT DEFAULT 10
+)
+RETURNS TABLE (
+   model_id UUID,
+   model_name TEXT,
+   description TEXT,
+   minio_bucket TEXT,
+   minio_object_key TEXT,
+   cosine_distance DOUBLE PRECISION,
+   similarity_score DOUBLE PRECISION
+)
+LANGUAGE SQL
+AS $$
+   SELECT
+      ma.model_id,
+      ma.model_name,
+      ma.description,
+      ma.minio_bucket,
+      ma.minio_object_key,
+      (ma.embedding <=> query_embedding) AS cosine_distance,
+      GREATEST(0, 1 - (ma.embedding <=> query_embedding)) AS similarity_score
+   FROM model_assets AS ma
+   ORDER BY ma.embedding <=> query_embedding
+   LIMIT LEAST(match_count, 100);
+$$;
+
+-- 5) Quick verification
+SELECT *
+FROM similarity_search_models('[0.1,0.2,0.3]'::vector(1024), 5);
+```
+
+### Python integration contract
+
+- `search_candidates` calls `similarity_search_models`.
+- Keep function name, parameter order, and return column names consistent with the SQL above.
+
 ## License
 
 This project is developed for academic research purposes.

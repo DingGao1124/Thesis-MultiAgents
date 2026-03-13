@@ -13,10 +13,13 @@ __pypackages__/
 # PyCharm
 .idea/
 
-# custom
-.DS_Store
-neo4j/
-
 # Environments
 .env
 .env.*
+
+# custom
+.DS_Store
+neo4j/
+.langgraph_api/
+
+/datasets

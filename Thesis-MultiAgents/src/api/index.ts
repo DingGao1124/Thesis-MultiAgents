@@ -1,7 +1,4 @@
 import { get, post, put, del } from './config/client'
+import type { ApiResponse } from './models'
 
-export interface ApiResponse<T> {
-  success: boolean
-  data: T
-  message?: string
-}
+// Api Requests Below

@@ -91,7 +91,7 @@ class EmbeddingAndReranking:
         #     dimensions=1024,
         # )
         self.embeddings = OpenAIEmbeddings(
-            model="text-embedding-v4",
+            model="text-embedding-v4", # Ali Embedding
             base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
             api_key=os.getenv("DASHSCOPE_API_KEY"),
             check_embedding_ctx_length=False,

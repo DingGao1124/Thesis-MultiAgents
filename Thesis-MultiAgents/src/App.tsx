@@ -10,23 +10,21 @@ import Loading from "./components/layout/Loading"
 import ErrorPage from "./pages/ErrorPage"
 import NotFound from "./pages/NotFound"
 
+import MainPage from "./pages/MainPage"
 import GamePage from "./pages/GamePage/GamePage"
 import TestPage from "./pages/TestPage"
 
-const MainPage = React.lazy(() => import("./pages/MainPage"))
 const RobotAnimation = React.lazy(() => import("./pages/RobotAnimation"))
 const KnowledgeGraph = React.lazy(() => import("./pages/KnowledgeGraph"))
-
-// Later for Optimization (Lazy Loading)
-import AgentPage from "./pages/AgentPage"
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<MainPage />}></Route>
-      <Route path="/agent" element={<AgentPage />} />
+      <Route path="/knowledge-graph" element={<KnowledgeGraph />} />
+      <Route path="/multi-agents" element={<KnowledgeGraph />} />
+      <Route path="/production-line" element={<KnowledgeGraph />} />
       <Route path="/robotics" element={<RobotAnimation />} />
-      <Route path="/kgraph" element={<KnowledgeGraph />} />
       <Route path="/game" element={<GamePage />} />
       <Route path="/test" element={<TestPage />} />
       <Route path="*" element={<NotFound />} />

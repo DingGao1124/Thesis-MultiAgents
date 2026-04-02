@@ -7,12 +7,12 @@ const ErrorPage = () => {
         <img src={error} alt="Error" className="mb-5 mt-20 h-85.5" />
         <span className="text-[3.3em] font-extrabold mb-10">SOMETHING WENT WRONG</span>
         <p className="text-lg mb-3">An unexpected error occurred.</p>
-        <p className="text-sm mb-6">... Back to previous page</p>
+        <p className="text-sm mb-6">... Back to Main page</p>
         <a
-          href="#"
+          href="/"
           className="bg-white text-black text-2xl font-extrabold py-2 px-6 rounded-full shadow-[0px_20px_70px_4px_rgba(0,0,0,0.1),inset_7px_33px_0px_#fff300] transition-transform duration-300 hover:-translate-y-3.25 hover:shadow-[0_35px_90px_4px_rgba(0,0,0,0.3),inset_0px_0_0_3px_black]"
         >
-          ... Back to previous page
+          ... Back to Main page
         </a>
       </div>
     </main>

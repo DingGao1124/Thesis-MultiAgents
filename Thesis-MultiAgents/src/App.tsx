@@ -10,7 +10,7 @@ import Loading from "./components/layout/Loading"
 import ErrorPage from "./pages/ErrorPage"
 import NotFound from "./pages/NotFound"
 
-import MainPage from "./pages/MainPage"
+import HomePage from "./pages/Home"
 import GamePage from "./pages/GamePage/GamePage"
 import TestPage from "./pages/TestPage"
 
@@ -20,7 +20,7 @@ const KnowledgeGraph = React.lazy(() => import("./pages/KnowledgeGraph"))
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/" element={<MainPage />}></Route>
+      <Route path="/" element={<HomePage />}></Route>
       <Route path="/knowledge-graph" element={<KnowledgeGraph />} />
       <Route path="/multi-agents" element={<KnowledgeGraph />} />
       <Route path="/production-line" element={<KnowledgeGraph />} />

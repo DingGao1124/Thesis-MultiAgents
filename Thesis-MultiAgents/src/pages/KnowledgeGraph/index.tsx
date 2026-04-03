@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import ForceGraph2D, { type ForceGraphMethods } from 'react-force-graph-2d'
-import GraphPanel, { type GraphLegendItem } from '../components/graph/GraphPanel'
+import GraphPanel, { type GraphLegendItem } from './components/GraphPanel'
 
 const KnowledgeGraph = () => {
   const fgRef = useRef<ForceGraphMethods>(undefined)

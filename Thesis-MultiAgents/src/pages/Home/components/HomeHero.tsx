@@ -37,12 +37,12 @@ export default function HomeHero({
         </Badge>
 
         <h1 className="text-4xl leading-tight font-semibold tracking-tight md:text-5xl xl:text-6xl">
-          LLM驱动的
+          LLM 驱动的
           <span className="block">多智能体协同建模平台</span>
         </h1>
 
         <p className="mt-3 max-w-xl text-sm leading-7 text-slate-600 md:text-base">
-          集成知识图谱、协同推理、产线建模与机器人系统能力。
+          集成知识图谱、协同推理、产线建模与三维模型资产能力，面向柔性生产线数字孪生场景快速展示。
         </p>
 
         <div className="mt-5 flex flex-wrap gap-3">
@@ -57,7 +57,7 @@ export default function HomeHero({
           />
 
           <Button asChild size="lg" variant="outline" className="rounded-full px-6">
-            <Link to="/robotics">进入机器人模块</Link>
+            <Link to="/model-assets">进入模型资产模块</Link>
           </Button>
         </div>
 

@@ -1,5 +1,5 @@
 import type { ComponentType } from "react"
-import { Bot, Factory, Network, Orbit } from "lucide-react"
+import { Bot, Boxes, Factory, Network } from "lucide-react"
 
 export type IconComponent = ComponentType<{ className?: string }>
 
@@ -27,53 +27,54 @@ export const modules: ModuleItem[] = [
   {
     id: "knowledge-graph",
     title: "知识图谱",
-    description: "查看实体关系与图谱结构。",
+    description: "查看产线实体关系、层级结构与图谱演化结果。",
     to: "/knowledge-graph",
     icon: Network,
     details: [
-      "支持实体关系梳理与图谱结构展示。",
-      "提供知识节点关联分析与路径查看能力。",
+      "支持 Line -> Module -> Unit 三层结构展示与关系追踪。",
+      "用于查看知识节点、关联路径与图谱更新结果。",
     ],
   },
   {
     id: "multi-agents",
-    title: "多智能体",
-    description: "支持协同推理与任务分配。",
+    title: "多智能体协同",
+    description: "观察任务拆解、协同推理与执行过程。",
     to: "/multi-agents",
     icon: Bot,
     details: [
-      "支持多角色任务协同与执行编排。",
-      "适用于复杂流程推理与策略分发场景。",
+      "支持多角色任务协同、调度监控与过程追踪。",
+      "适合展示复杂生产任务的分解与执行链路。",
     ],
   },
   {
     id: "production-line",
     title: "产线建模",
-    description: "连接流程节点与系统状态。",
+    description: "连接业务流程、设备状态与产线结构信息。",
     to: "/production-line",
     icon: Factory,
     details: [
-      "覆盖产线流程建模、状态管理与过程组织。",
-      "支撑柔性生产系统的结构化表达。",
+      "覆盖产线流程建模、状态管理与业务组织能力。",
+      "用于承接数字孪生产线的结构化表达。",
     ],
   },
   {
-    id: "robotics",
-    title: "机器人系统",
-    description: "管理机械臂运动与交互能力。",
-    to: "/robotics",
-    icon: Orbit,
+    id: "model-assets",
+    title: "三维模型资产",
+    description: "管理产线 glb 模型，并支持本地渲染预览。",
+    to: "/model-assets",
+    icon: Boxes,
     details: [
-      "支持机器人动作过程查看与交互控制。",
-      "适配数字孪生场景下的系统联动能力。",
+      "直接读取根目录 models 文件夹中的产线模型资产。",
+      "支持模型展示、上传、删除和详细属性查看。",
     ],
   },
 ]
 
 export const quickEntries: QuickEntry[] = [
-  { label: "产线知识图谱", to: "/knowledge-graph", icon: Network },
-  { label: "多智能体交互", to: "/multi-agents", icon: Bot },
-  { label: "孪生产线建模", to: "/production-line", icon: Factory },
+  { label: "知识图谱", to: "/knowledge-graph", icon: Network },
+  { label: "多智能体协同", to: "/multi-agents", icon: Bot },
+  { label: "产线建模", to: "/production-line", icon: Factory },
+  { label: "模型资产", to: "/model-assets", icon: Boxes },
 ]
 
 export const highlights: HighlightItem[] = [
@@ -86,7 +87,7 @@ export const highlights: HighlightItem[] = [
     className: "border-emerald-200 bg-emerald-50 text-emerald-700",
   },
   {
-    label: "数字孪生",
-    className: "border-violet-200 bg-violet-50 text-violet-700",
+    label: "三维资产",
+    className: "border-amber-200 bg-amber-50 text-amber-700",
   },
 ]

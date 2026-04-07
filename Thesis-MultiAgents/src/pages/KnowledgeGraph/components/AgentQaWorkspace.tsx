@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 
 import type { KnowledgeGraphView } from ".."
 import {
-  builtGraph,
+  knowledgeGraphExample,
   qaMessages,
   qaStructuredResult,
   qaSuggestions,
@@ -20,19 +20,19 @@ const qaAnswerMap: Record<string, QaMessage> = {
     id: "qa-answer-1",
     role: "assistant",
     content:
-      "M-ASM-02 与 M-ASM-01、M-QC-01 构成装配主链。它当前挂接 U-RBT-02 和 U-CNV-07，前者负责装配动作，后者负责转运衔接；工艺说明节点为该模块提供动作约束与节拍说明。",
+      "M-ASM-02 位于缓存模块 M-BUF-01 与物流转运模块 M-TRF-01 之间，是当前产线的装配核心。它直接挂接 U-RBT-02、U-TCL-01、U-CNV-07、U-PRS-01 和 U-TOR-02 等关键单元，其中 U-CNV-07 负责跨模块转运衔接，U-TOR-02 与压装单元共同影响当前节拍波动。相关工艺约束由工艺说明、任务树快照和社区摘要 C-02 提供。",
   },
   [qaSuggestions[1]]: {
     id: "qa-answer-2",
     role: "assistant",
     content:
-      "当前 warning 节点主要是 M-ASM-02 和 U-CNV-07。图谱语义显示，warning 由转运段占用率升高和上游节拍波动共同触发，适合智能体优先排查转运口和模块等待条件。",
+      "当前 warning 节点包括模块 M-ASM-02、M-QC-01，单元 U-CNV-07、U-TOR-02、U-VSN-03、U-DBO-01，以及文档节点质检阈值表。图谱语义表明，warning 主要由转运段拥堵、终检复判频次升高和阈值更新未完成共同触发，适合智能体优先排查装配等待链、视觉置信度和缺陷判定负载。",
   },
   [qaSuggestions[2]]: {
     id: "qa-answer-3",
     role: "assistant",
     content:
-      "已整理出适合程序化调用的质检模块 JSON，包含节点坐标、状态、Unit 列表和关系字段，后续可以直接替换成后端结构化输出接口。",
+      "已整理出适合程序化调用的质检模块 JSON，包含模块状态、关键单元、返修去向以及关联证据文档字段，后续可以直接替换为后端结构化输出接口。",
   },
 }
 
@@ -60,7 +60,7 @@ export default function AgentQaWorkspace({ activeView, onViewChange }: AgentQaWo
               <div>
                 <CardTitle className="text-sm text-slate-900">Agent QA</CardTitle>
                 <CardDescription className="text-xs text-slate-500">
-                  使用 mock 数据演示 Hybrid RAG 与结构化输出
+                  使用增强后的 LS-MS-US 图谱数据演示 Hybrid RAG 与结构化输出
                 </CardDescription>
               </div>
 
@@ -69,7 +69,7 @@ export default function AgentQaWorkspace({ activeView, onViewChange }: AgentQaWo
                   type="button"
                   onClick={() => onViewChange("build")}
                   className={cn(
-                    "rounded-[8px] px-3 py-1.5 text-sm transition",
+                    "rounded-xl px-3 py-1.5 text-sm transition",
                     activeView === "build"
                       ? "bg-white font-medium text-slate-900 shadow-sm"
                       : "text-slate-500 hover:text-slate-900"
@@ -81,7 +81,7 @@ export default function AgentQaWorkspace({ activeView, onViewChange }: AgentQaWo
                   type="button"
                   onClick={() => onViewChange("qa")}
                   className={cn(
-                    "rounded-[8px] px-3 py-1.5 text-sm transition",
+                    "rounded-xl px-3 py-1.5 text-sm transition",
                     activeView === "qa"
                       ? "bg-white font-medium text-slate-900 shadow-sm"
                       : "text-slate-500 hover:text-slate-900"
@@ -93,7 +93,7 @@ export default function AgentQaWorkspace({ activeView, onViewChange }: AgentQaWo
             </div>
 
             <Badge variant="outline" className="rounded-full border-sky-200 bg-sky-50 px-3 py-1 text-sky-700">
-              Mock
+              Synthetic Graph
             </Badge>
           </div>
 
@@ -112,7 +112,7 @@ export default function AgentQaWorkspace({ activeView, onViewChange }: AgentQaWo
         </CardHeader>
 
         <CardContent className="grid min-h-0 gap-3 px-3 pb-3 xl:grid-cols-[minmax(0,1fr)_300px]">
-          <Card className="min-h-0 rounded-[12px] border-slate-200 bg-slate-50 shadow-none">
+          <Card className="min-h-0 rounded-2xl border-slate-200 bg-slate-50 shadow-none">
             <CardHeader className="px-4 py-3">
               <CardTitle className="text-sm text-slate-900">对话记录</CardTitle>
             </CardHeader>
@@ -120,7 +120,7 @@ export default function AgentQaWorkspace({ activeView, onViewChange }: AgentQaWo
               {messages.slice(-4).map((message) => (
                 <div
                   key={message.id}
-                  className={`max-w-[92%] rounded-[12px] px-4 py-3 text-sm leading-6 ${
+                  className={`max-w-[92%] rounded-2xl px-4 py-3 text-sm leading-6 ${
                     message.role === "assistant"
                       ? "border border-slate-200 bg-white text-slate-700"
                       : "ml-auto bg-slate-950 text-white"
@@ -133,7 +133,7 @@ export default function AgentQaWorkspace({ activeView, onViewChange }: AgentQaWo
           </Card>
 
           <div className="grid gap-3">
-            <Card className="rounded-[12px] border-slate-200 bg-slate-50 shadow-none">
+            <Card className="rounded-2xl border-slate-200 bg-slate-50 shadow-none">
               <CardHeader className="px-4 py-3">
                 <CardTitle className="text-sm text-slate-900">检索链路</CardTitle>
               </CardHeader>
@@ -142,24 +142,24 @@ export default function AgentQaWorkspace({ activeView, onViewChange }: AgentQaWo
                   {
                     icon: Database,
                     title: "向量 + BM25",
-                    text: "从图谱摘要、设备名称和文档片段中召回上下文。",
+                    text: "从社区摘要、模块拓扑、设备名称和文档片段中召回上下文。",
                   },
                   {
                     icon: BrainCircuit,
                     title: "RRF 重排",
-                    text: "融合词法匹配与语义匹配，得到最终上下文窗口。",
+                    text: "融合词法匹配与语义匹配，压缩出当前最相关的证据窗口。",
                   },
                   {
                     icon: Sparkles,
                     title: "结构化生成",
-                    text: "将结果整理成 JSON，便于 Agent 程序调用。",
+                    text: "将图谱结果整理为 JSON，便于多智能体程序调用。",
                   },
                 ].map((item) => {
                   const Icon = item.icon
                   return (
                     <div key={item.title} className="rounded-[10px] border border-slate-200 bg-white p-3">
                       <div className="flex items-center gap-3">
-                        <div className="rounded-[8px] bg-slate-100 p-2 text-slate-700">
+                        <div className="rounded-xl bg-slate-100 p-2 text-slate-700">
                           <Icon className="size-4" />
                         </div>
                         <div>
@@ -173,7 +173,7 @@ export default function AgentQaWorkspace({ activeView, onViewChange }: AgentQaWo
               </CardContent>
             </Card>
 
-            <Card className="rounded-[12px] border-slate-200 bg-slate-50 shadow-none">
+            <Card className="rounded-2xl border-slate-200 bg-slate-50 shadow-none">
               <CardHeader className="px-4 py-3">
                 <CardTitle className="text-sm text-slate-900">结构化结果</CardTitle>
                 <CardDescription className="text-xs text-slate-500">
@@ -203,8 +203,7 @@ export default function AgentQaWorkspace({ activeView, onViewChange }: AgentQaWo
           </CardHeader>
           <CardContent className="h-full min-h-0 px-3 pb-3">
             <EChartsForceGraph
-              graph={builtGraph}
-              focusedNodeIds={["module-asm-02", "module-qc-01", "unit-cnv-07", "unit-vsn-03", "doc-process", "doc-vision"]}
+              graph={knowledgeGraphExample}
               selectedNodeId="module-qc-01"
             />
           </CardContent>

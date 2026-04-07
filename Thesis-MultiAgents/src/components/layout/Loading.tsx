@@ -1,4 +1,3 @@
-import reactLogo from "../../assets/react.svg"
 import styles from "./Loading.module.css"
 
 const Loading = () => {
@@ -6,7 +5,7 @@ const Loading = () => {
     <div className={styles.preload}>
       <div className={styles.loaderInner}>
         <span className={styles.loaderLogo}>
-          <img src={reactLogo} alt="Loading"/>
+          <img src="/Agent.svg" alt="Loading"/>
         </span>
         <div className={styles.box}></div>
         <div className={styles.box}></div>

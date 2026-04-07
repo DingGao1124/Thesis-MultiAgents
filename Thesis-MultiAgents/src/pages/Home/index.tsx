@@ -8,7 +8,6 @@ import HomeHeader from "./components/HomeHeader"
 import HomeHero from "./components/HomeHero"
 import ModuleDetailsModal from "./components/ModuleDetailsModal"
 import ModuleGrid from "./components/ModuleGrid"
-import FloatingDockNav from "@/components/layout/FloatingDockNav"
 
 export default function HomePage() {
   const navigate = useNavigate()
@@ -262,8 +261,6 @@ export default function HomePage() {
         overlayRef={overlayRef}
         onClose={closeModule}
       />
-
-      <FloatingDockNav />
     </main>
   )
 }

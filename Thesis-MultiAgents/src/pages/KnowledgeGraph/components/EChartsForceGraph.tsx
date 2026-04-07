@@ -1,60 +1,62 @@
 import { useEffect, useRef } from "react"
-import * as echarts from "echarts"
+import * as echarts from "echarts/core"
+import {
+  LegendComponent,
+  ThumbnailComponent,
+  TooltipComponent,
+  type LegendComponentOption,
+  type ThumbnailComponentOption,
+  type TooltipComponentOption,
+} from "echarts/components"
+import { GraphChart, type GraphSeriesOption } from "echarts/charts"
+import { CanvasRenderer } from "echarts/renderers"
 
 import type { KnowledgeGraphData, KnowledgeNode } from "../data"
 
+echarts.use([ThumbnailComponent, LegendComponent, TooltipComponent, GraphChart, CanvasRenderer])
+
+type EChartsOption = echarts.ComposeOption<
+  ThumbnailComponentOption | LegendComponentOption | TooltipComponentOption | GraphSeriesOption
+>
+
 type EChartsForceGraphProps = {
   graph: KnowledgeGraphData
-  focusedNodeIds?: string[]
   selectedNodeId?: string | null
   onSelectNode?: (nodeId: string) => void
 }
 
-const categoryMeta = {
-  line: {
-    name: "产线层",
-    color: "#f6c54f",
-    border: "#c48a17",
-    size: 82,
-  },
-  module: {
-    name: "模块层",
-    color: "#d8a7df",
-    border: "#9d5ca9",
-    size: 66,
-  },
-  unit: {
-    name: "单元层",
-    color: "#8ec5ff",
-    border: "#3577c6",
-    size: 56,
-  },
-  document: {
-    name: "文档节点",
-    color: "#95d89b",
-    border: "#4f9d56",
-    size: 50,
-  },
-} satisfies Record<
-  KnowledgeNode["group"],
-  { name: string; color: string; border: string; size: number }
->
-
-const statusTextMap = {
-  running: "running",
-  idle: "idle",
-  warning: "warning",
-  offline: "offline",
-} satisfies Record<NonNullable<KnowledgeNode["status"]>, string>
-
-function getOpacity(nodeId: string, focusedNodeIds: string[]) {
-  if (focusedNodeIds.length === 0) return 1
-  return focusedNodeIds.includes(nodeId) ? 1 : 0.2
+const nodeColorMap: Record<KnowledgeNode["group"], string> = {
+  line: "#f6c54f",
+  module: "#d8a7df",
+  unit: "#8ec5ff",
+  document: "#95d89b",
 }
+
+const nodeSizeMap: Record<KnowledgeNode["group"], number> = {
+  line: 58,
+  module: 44,
+  unit: 30,
+  document: 26,
+}
+
+const categoryNameMap: Record<KnowledgeNode["group"], string> = {
+  line: "产线层",
+  module: "模块层",
+  unit: "单元层",
+  document: "文档节点",
+}
+
+const categoryIndexMap: Record<KnowledgeNode["group"], number> = {
+  line: 0,
+  module: 1,
+  unit: 2,
+  document: 3,
+}
+
+const groupOrder: KnowledgeNode["group"][] = ["line", "module", "unit", "document"]
 
 export default function EChartsForceGraph({
   graph,
-  focusedNodeIds = [],
   selectedNodeId,
   onSelectNode,
 }: EChartsForceGraphProps) {
@@ -68,14 +70,15 @@ export default function EChartsForceGraph({
     chartRef.current = chart
 
     const handleResize = () => chart.resize()
-    const resizeObserver = new ResizeObserver(() => chart.resize())
+    const resizeObserver = new ResizeObserver(handleResize)
     resizeObserver.observe(containerRef.current)
     window.addEventListener("resize", handleResize)
 
     chart.on("click", (params) => {
-      if (params.dataType === "node" && params.data && "id" in (params.data as object)) {
-        onSelectNode?.(String((params.data as { id: string }).id))
-      }
+      if (params.dataType !== "node") return
+      const data = params.data as { id?: string | number } | undefined
+      if (data?.id == null) return
+      onSelectNode?.(String(data.id))
     })
 
     return () => {
@@ -87,181 +90,144 @@ export default function EChartsForceGraph({
   }, [onSelectNode])
 
   useEffect(() => {
-    if (!chartRef.current) return
+    const chart = chartRef.current
+    if (!chart) return
 
-    const option: echarts.EChartsOption = {
-      animationDuration: 500,
-      animationEasingUpdate: "cubicOut",
-      tooltip: {
-        backgroundColor: "rgba(255,255,255,0.97)",
-        borderColor: "#cbd5e1",
-        borderWidth: 1,
+    const largeGraph = graph.nodes.length > 60
+
+    const option: EChartsOption = {
+      legend: {
+        left: 12,
+        top: 10,
+        selectedMode: false,
+        itemWidth: 10,
+        itemHeight: 10,
+        itemGap: 10,
+        icon: "circle",
         textStyle: {
-          color: "#0f172a",
-          fontSize: 12,
+          color: "#334155",
+          fontSize: 11,
         },
+        data: Object.values(categoryNameMap),
+      },
+      tooltip: {
         formatter(params: any) {
           if (params.dataType === "edge") {
             return `${params.data.source} → ${params.data.target}<br/>关系：${params.data.relation}`
           }
 
-          const node = params.data as {
-            title: string
-            layerLabel: string
-            subtitle: string
-            status?: KnowledgeNode["status"]
-          }
-          const status = node.status ? statusTextMap[node.status] : "unknown"
-          return `${node.title}<br/>层级：${node.layerLabel}<br/>说明：${node.subtitle}<br/>状态：${status}`
+          const data = params.data as { name?: string; subtitle?: string; status?: string } | undefined
+          if (!data) return ""
+          return [data.name, data.subtitle ? `<br/>${data.subtitle}` : "", data.status ? `<br/>状态：${data.status}` : ""].join("")
         },
       },
+      animationDurationUpdate: 300,
       series: [
         {
           type: "graph",
           layout: "force",
+          animation: false,
           roam: true,
           draggable: true,
-          left: 0,
-          top: 0,
-          right: 0,
-          bottom: 0,
-          force: {
-            repulsion: 1200,
-            edgeLength: [120, 220],
-            gravity: 0.04,
-            friction: 0.12,
-          },
-          edgeSymbol: ["none", "arrow"],
-          edgeSymbolSize: 7,
           emphasis: {
             focus: "adjacency",
             scale: true,
           },
-          lineStyle: {
-            color: "#9aa7b8",
-            width: 1.2,
-            curveness: 0.08,
-            opacity: 0.78,
+          force: {
+            repulsion: largeGraph ? 300 : 360,
+            edgeLength: largeGraph ? [55, 90] : [70, 110],
+            gravity: 0.08,
+            friction: 0.78,
+            layoutAnimation: false,
           },
           label: {
             show: true,
             position: "inside",
-            formatter: "{b}",
-            color: "#243041",
-            fontSize: 11,
-            fontWeight: 600,
+            distance: 5,
+            fontSize: largeGraph ? 8 : 11,
+            color: "#1f2937",
+            formatter(params: any) {
+              const data = params.data as { id?: string; name?: string } | undefined
+              if (!data?.name) return ""
+              return data.name
+            },
           },
           edgeLabel: {
             show: true,
+            position: "middle",
+            distance: 0,
+            fontSize: largeGraph ? 8 : 10,
+            color: "#64748b",
             formatter(params: any) {
               return params.data.relation
             },
-            color: "#475569",
-            fontSize: 10,
-            backgroundColor: "rgba(255,255,255,0.95)",
-            borderColor: "#d8e0ea",
-            borderWidth: 1,
-            borderRadius: 8,
-            padding: [2, 6],
           },
-          categories: Object.values(categoryMeta).map((item) => ({
-            name: item.name,
-            itemStyle: { color: item.color },
+          lineStyle: {
+            color: "#94a3b8",
+            width: largeGraph ? 0.9 : 1.2,
+            opacity: largeGraph ? 0.5 : 0.9,
+            curveness: largeGraph ? 0.08 : 0.03,
+          },
+          edgeSymbol: ["none", "arrow"],
+          edgeSymbolSize: 6,
+          categories: groupOrder.map((group) => ({
+            name: categoryNameMap[group],
+            itemStyle: {
+              color: nodeColorMap[group],
+            },
           })),
           data: graph.nodes.map((node) => {
-            const meta = categoryMeta[node.group]
             const isSelected = selectedNodeId === node.id
-            const opacity = getOpacity(node.id, focusedNodeIds)
-
             return {
               id: node.id,
               name: node.title,
-              title: node.title,
-              layerLabel: node.label,
               subtitle: node.subtitle,
               status: node.status,
-              category: Object.keys(categoryMeta).indexOf(node.group),
-              x: node.fx,
-              y: node.fy,
-              fixed: typeof node.fx === "number" || typeof node.fy === "number",
-              symbol: "circle",
-              symbolSize: meta.size,
+              category: categoryIndexMap[node.group],
+              fixed: false,
+              draggable: true,
+              symbolSize: isSelected ? nodeSizeMap[node.group] + 6 : nodeSizeMap[node.group],
               itemStyle: {
-                color: meta.color,
-                opacity,
-                borderColor: isSelected ? "#7c2d12" : meta.border,
-                borderWidth: isSelected ? 4 : 2,
-                shadowBlur: isSelected ? 18 : 6,
-                shadowColor: isSelected ? "rgba(124,45,18,0.22)" : "rgba(15,23,42,0.08)",
-              },
-              label: {
-                color: "#243041",
-                fontSize: node.group === "line" ? 12 : 10,
-                width: meta.size - 12,
-                overflow: "break",
-                lineHeight: 12,
+                color: nodeColorMap[node.group],
+                borderColor: isSelected ? "#1d4ed8" : "#475569",
+                borderWidth: isSelected ? 3 : 1,
               },
             }
           }),
-          links: graph.links.map((link) => {
-            const sourceId = String(link.source)
-            const targetId = String(link.target)
-            const isFocused =
-              focusedNodeIds.length === 0 ||
-              (focusedNodeIds.includes(sourceId) && focusedNodeIds.includes(targetId))
-
-            return {
-              source: sourceId,
-              target: targetId,
-              relation: link.type,
-              lineStyle: {
-                color: "#97a6ba",
-                opacity: isFocused ? 0.85 : 0.12,
-                width: isFocused ? 1.4 : 0.8,
-              },
-              label: {
-                opacity: isFocused ? 1 : 0,
-              },
-            }
-          }),
+          links: graph.links.map((link) => ({
+            source: String(link.source),
+            target: String(link.target),
+            relation: link.type,
+          })),
         },
       ],
+      thumbnail: {
+        width: "15%",
+        height: "15%",
+        windowStyle: {
+          color: "rgba(140, 212, 250, 0.5)",
+          borderColor: "rgba(30, 64, 175, 0.7)",
+          opacity: 1,
+        },
+      },
     }
 
-    chartRef.current.setOption(option, true)
-  }, [focusedNodeIds, graph, selectedNodeId])
+    chart.setOption(option, {
+      notMerge: false,
+      lazyUpdate: true,
+    })
+  }, [graph, selectedNodeId])
 
   return (
-    <div className="relative h-full min-h-[500px] overflow-hidden rounded-[14px] border border-slate-200 bg-[#fbfcfe]">
-      <div
-        className="absolute inset-0 opacity-65"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(148,163,184,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.08) 1px, transparent 1px)",
-          backgroundSize: "28px 28px",
-        }}
-      />
-
-      <div className="absolute left-2.5 top-2.5 z-10 flex flex-wrap gap-1.5">
-        {Object.values(categoryMeta).map((item) => (
-          <div
-            key={item.name}
-            className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/95 px-2 py-0.5 text-[11px] text-slate-700 shadow-sm"
-          >
-            <span
-              className="h-2.5 w-2.5 rounded-full border"
-              style={{ backgroundColor: item.color, borderColor: item.border }}
-            />
-            {item.name}
-          </div>
-        ))}
-      </div>
-
-      <div className="absolute right-2.5 top-2.5 z-10 rounded-[12px] border border-slate-200 bg-white/95 px-2.5 py-1.5 text-[11px] text-slate-700 shadow-sm">
-        节点 {graph.nodes.length} / 关系 {graph.links.length}
-      </div>
-
-      <div ref={containerRef} className="h-full w-full" />
-    </div>
+    <div
+      ref={containerRef}
+      className="h-full min-h-125 w-full rounded-2xl border border-slate-200"
+      style={{
+        backgroundColor: "#f8fafc",
+        backgroundImage: "radial-gradient(circle, rgba(148, 163, 184, 0.4) 1px, transparent 1.1px)",
+        backgroundSize: "18px 18px",
+        backgroundPosition: "0 0",
+      }}
+    />
   )
 }

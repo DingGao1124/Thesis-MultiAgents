@@ -1,3 +1,8 @@
+import {
+  cypherExamples,
+  knowledgeGraphExample,
+} from "./knowledge_data"
+
 export type KnowledgeFileStatus =
   | "uploaded"
   | "queued"
@@ -42,15 +47,6 @@ export type KnowledgeGraphData = {
   links: KnowledgeLink[]
 }
 
-export type CypherResult = {
-  title: string
-  query: string
-  summary: string
-  graph: KnowledgeGraphData
-  rows: Array<Record<string, string>>
-  focusedNodeIds: string[]
-}
-
 export type QaMessage = {
   id: string
   role: "user" | "assistant"
@@ -59,11 +55,11 @@ export type QaMessage = {
 
 export const statusLabelMap: Record<KnowledgeFileStatus, string> = {
   uploaded: "已上传",
-  queued: "Queued",
-  extracting: "Extracting",
-  aligning: "Aligning",
-  summarizing: "Summarizing",
-  completed: "Completed",
+  queued: "排队中",
+  extracting: "抽取中",
+  aligning: "对齐中",
+  summarizing: "摘要中",
+  completed: "已完成",
 }
 
 export const buildStages = [
@@ -108,9 +104,9 @@ export const mockFiles: KnowledgeFile[] = [
     updatedAt: "2026-04-07 09:20",
     status: "completed",
     progress: 100,
-    summary: "包含装配路线、节拍参数、模块依赖关系及关键单元动作约束。",
+    summary: "覆盖上料、视觉初检、装配、质检、分拣与包装全流程。",
     preview:
-      "第 3 节定义了产线 A 的装配路线。模块 M-ASM-02 依赖单元 U-CNV-07 的输送同步信号，质检单元 U-VSN-03 负责扭矩校验与合格判定。",
+      "文档定义了 M-ASM-02、M-QC-01 与 M-RWK-01 的任务约束、节拍范围以及跨模块放行条件。",
     tags: ["工艺", "装配", "Line A"],
   },
   {
@@ -120,11 +116,11 @@ export const mockFiles: KnowledgeFile[] = [
     size: "3.8 MB",
     source: "工程规范",
     updatedAt: "2026-04-07 09:48",
-    status: "aligning",
-    progress: 74,
-    summary: "包含机械臂负载、夹具映射、模块资源绑定和动作位姿说明。",
+    status: "completed",
+    progress: 100,
+    summary: "包含装配、分拣、返修与包装机械臂的负载、工具与位姿参数。",
     preview:
-      "机器人单元 RC-02 由 U-RBT-02 和换刀具单元 U-TCL-01 构成，服务模块 M-ASM-02，回传节拍、位姿和工具占用状态。",
+      "U-RBT-02、U-RBT-04 与 U-RBT-06 的工具切换、抓取范围和站位坐标已完成结构化归档。",
     tags: ["Robot", "模块", "资源"],
   },
   {
@@ -134,39 +130,39 @@ export const mockFiles: KnowledgeFile[] = [
     size: "1.1 MB",
     source: "检测表格",
     updatedAt: "2026-04-07 10:02",
-    status: "queued",
-    progress: 18,
-    summary: "记录缺陷标签、阈值区间、相机与单元绑定关系。",
+    status: "completed",
+    progress: 100,
+    summary: "记录缺陷标签、阈值区间、相机与模块绑定关系。",
     preview:
-      "相机 U-VSN-03 对应划痕、漏装、松动三类缺陷，报警阈值设为 0.82，并启用了预警复核规则。",
+      "U-VSN-01、U-VSN-03 与 U-VSN-04 对应划痕、漏装、扭矩异常和标签缺失等多类缺陷。",
     tags: ["Vision", "表格", "质检"],
   },
   {
     id: "file-4",
-    name: "输送线运行截图.png",
-    kind: "png",
+    name: "换型工单 WO-20260407-A.pdf",
+    kind: "pdf",
     size: "4.6 MB",
-    source: "监控截图",
+    source: "MES 工单",
     updatedAt: "2026-04-07 10:18",
     status: "uploaded",
-    progress: 8,
-    summary: "图片 OCR 提取了输送速度、占用率、预警位置等运行信息。",
+    progress: 18,
+    summary: "描述 A 型产品换型后的模块优先级、节拍目标与返修策略。",
     preview:
-      "识别结果显示产线 A 输送速度 1.2m/s、占用率 78%，并在 U-CNV-07 附近检测到转运口拥堵提示。",
-    tags: ["Image", "运行态", "Conveyor"],
+      "工单要求优先启用 M-ASM-02、M-QC-01 和 M-PKG-01，目标节拍 56s，返修闭环不超过 2 次。",
+    tags: ["工单", "换型", "MES"],
   },
   {
     id: "file-5",
-    name: "模块社区摘要.txt",
+    name: "模块社区摘要 C-02.txt",
     kind: "pdf",
     size: "0.4 MB",
     source: "LLM 摘要",
     updatedAt: "2026-04-07 10:21",
     status: "extracting",
     progress: 43,
-    summary: "记录 Leiden 社区划分后的模块摘要，用于增量更新范围匹配。",
+    summary: "覆盖装配模块、质检模块与关键转运单元的局部子图摘要。",
     preview:
-      "社区 C-02 主要覆盖装配模块、输送单元与视觉单元，近期更新主题集中在节拍波动和质检误检率。",
+      "社区 C-02 当前重点关注 U-CNV-07 占用率升高、U-VSN-03 误检率波动以及 M-ASM-02 等待链问题。",
     tags: ["LLM", "社区", "更新"],
   },
   {
@@ -178,222 +174,44 @@ export const mockFiles: KnowledgeFile[] = [
     updatedAt: "2026-04-07 10:26",
     status: "uploaded",
     progress: 12,
-    summary: "记录模块级动作时序、等待条件和信号依赖。",
+    summary: "定义装配、质检、分拣和返修之间的动作时序与等待条件。",
     preview:
-      "表中定义了 M-ASM-02 与 M-QC-01 之间的放行条件、等待时长以及信号确认顺序。",
+      "表中给出了 M-ASM-02 → M-QC-01 → M-SRT-01 的放行顺序、重试逻辑和状态超时阈值。",
     tags: ["时序", "动作", "控制"],
   },
+  {
+    id: "file-7",
+    name: "三维资产映射表.docx",
+    kind: "docx",
+    size: "2.6 MB",
+    source: "资产配置",
+    updatedAt: "2026-04-07 10:40",
+    status: "aligning",
+    progress: 67,
+    summary: "建立模块、设备单元与孪生资产 UUID 的一一映射。",
+    preview:
+      "M-ASM-02、M-QC-01、U-RBT-02 与 U-VSN-03 已完成三维模型绑定并支持状态驱动更新。",
+    tags: ["资产", "孪生", "绑定"],
+  },
+  {
+    id: "file-8",
+    name: "返修规则与质检阈值.xlsx",
+    kind: "xlsx",
+    size: "0.8 MB",
+    source: "规则表",
+    updatedAt: "2026-04-07 10:44",
+    status: "queued",
+    progress: 21,
+    summary: "记录返修判定门限、视觉阈值以及二次检测条件。",
+    preview:
+      "当 U-VSN-03 置信度低于 0.82 或 U-TOR-01 扭矩偏差超过 5% 时，工件被路由到 M-RWK-01。",
+    tags: ["规则", "阈值", "返修"],
+  },
 ]
 
-export const initialGraph: KnowledgeGraphData = {
-  nodes: [
-    {
-      id: "line-a",
-      label: "产线层",
-      group: "line",
-      title: "柔性产线 A",
-      subtitle: "全局计划 / takt 56s",
-      status: "running",
-      fx: 0,
-      fy: -10,
-    },
-    {
-      id: "module-asm-01",
-      label: "模块层",
-      group: "module",
-      title: "M-ASM-01",
-      subtitle: "上料模块",
-      status: "running",
-      fx: -190,
-      fy: 110,
-    },
-    {
-      id: "module-asm-02",
-      label: "模块层",
-      group: "module",
-      title: "M-ASM-02",
-      subtitle: "装配模块",
-      status: "warning",
-      fx: 20,
-      fy: 135,
-    },
-    {
-      id: "module-qc-01",
-      label: "模块层",
-      group: "module",
-      title: "M-QC-01",
-      subtitle: "质检模块",
-      status: "idle",
-      fx: 218,
-      fy: 110,
-    },
-    {
-      id: "unit-rbt-01",
-      label: "单元层",
-      group: "unit",
-      title: "U-RBT-01",
-      subtitle: "上料 Robot",
-      status: "running",
-      fx: -238,
-      fy: 270,
-    },
-    {
-      id: "unit-cnv-07",
-      label: "单元层",
-      group: "unit",
-      title: "U-CNV-07",
-      subtitle: "Transfer Conveyor",
-      status: "warning",
-      fx: 36,
-      fy: 288,
-    },
-  ],
-  links: [
-    { source: "line-a", target: "module-asm-01", type: "HAS_MODULE" },
-    { source: "line-a", target: "module-asm-02", type: "HAS_MODULE" },
-    { source: "line-a", target: "module-qc-01", type: "HAS_MODULE" },
-    { source: "module-asm-01", target: "unit-rbt-01", type: "HAS_UNIT" },
-    { source: "module-asm-02", target: "unit-cnv-07", type: "HAS_UNIT" },
-    { source: "module-asm-01", target: "module-asm-02", type: "FEEDS" },
-    { source: "module-asm-02", target: "module-qc-01", type: "ROUTES_TO" },
-  ],
-}
-
-export const builtGraph: KnowledgeGraphData = {
-  nodes: [
-    ...initialGraph.nodes,
-    {
-      id: "unit-rbt-02",
-      label: "单元层",
-      group: "unit",
-      title: "U-RBT-02",
-      subtitle: "Assembly Robot",
-      status: "running",
-      fx: -62,
-      fy: 305,
-    },
-    {
-      id: "unit-vsn-03",
-      label: "单元层",
-      group: "unit",
-      title: "U-VSN-03",
-      subtitle: "Vision Unit",
-      status: "idle",
-      fx: 214,
-      fy: 280,
-    },
-    {
-      id: "doc-process",
-      label: "文档节点",
-      group: "document",
-      title: "工艺说明",
-      subtitle: "Prompt 抽取",
-      status: "idle",
-      fx: -132,
-      fy: -144,
-    },
-    {
-      id: "doc-vision",
-      label: "文档节点",
-      group: "document",
-      title: "视觉配置表",
-      subtitle: "Incremental Update",
-      status: "idle",
-      fx: 166,
-      fy: -144,
-    },
-  ],
-  links: [
-    ...initialGraph.links,
-    { source: "module-asm-02", target: "unit-rbt-02", type: "HAS_UNIT" },
-    { source: "module-qc-01", target: "unit-vsn-03", type: "HAS_UNIT" },
-    { source: "unit-rbt-02", target: "unit-cnv-07", type: "SENDS_TO" },
-    { source: "unit-vsn-03", target: "unit-cnv-07", type: "MONITORS" },
-    { source: "doc-process", target: "module-asm-02", type: "DESCRIBES" },
-    { source: "doc-vision", target: "unit-vsn-03", type: "CONFIGURES" },
-    { source: "doc-vision", target: "module-qc-01", type: "UPDATES" },
-  ],
-}
-
-export const cypherExamples = [
-  "MATCH (l:Line)-[:HAS_MODULE]->(m) RETURN l,m LIMIT 8",
-  "MATCH (m:Module {title:'M-ASM-02'})-[r]-(n) RETURN m,r,n",
-  "MATCH (u:Unit) WHERE u.status = 'warning' RETURN u",
-]
-
-export const cypherResults: Record<string, CypherResult> = {
-  default: {
-    title: "完整图谱快照",
-    query: "MATCH (n)-[r]->(m) RETURN n,r,m LIMIT 25",
-    summary: "当前显示最近一次前端 mock 构建后的 LS-MS-US 全量图谱。",
-    graph: builtGraph,
-    rows: [
-      { 节点A: "柔性产线 A", 节点B: "M-ASM-02", 关系: "HAS_MODULE" },
-      { 节点A: "M-QC-01", 节点B: "U-VSN-03", 关系: "HAS_UNIT" },
-      { 节点A: "视觉配置表", 节点B: "U-VSN-03", 关系: "CONFIGURES" },
-    ],
-    focusedNodeIds: ["line-a", "module-asm-02", "unit-vsn-03"],
-  },
-  line: {
-    title: "Line-Module 拓扑",
-    query: cypherExamples[0],
-    summary: "突出产线层到模块层的组织结构，适合全局计划视图。",
-    graph: {
-      nodes: builtGraph.nodes.filter((node) =>
-        ["line-a", "module-asm-01", "module-asm-02", "module-qc-01"].includes(node.id)
-      ),
-      links: builtGraph.links.filter((link) => link.type === "HAS_MODULE"),
-    },
-    rows: [
-      { 产线: "柔性产线 A", 模块: "M-ASM-01", 状态: "running" },
-      { 产线: "柔性产线 A", 模块: "M-ASM-02", 状态: "warning" },
-      { 产线: "柔性产线 A", 模块: "M-QC-01", 状态: "idle" },
-    ],
-    focusedNodeIds: ["line-a", "module-asm-01", "module-asm-02", "module-qc-01"],
-  },
-  assembly: {
-    title: "Assembly 模块邻域",
-    query: cypherExamples[1],
-    summary: "聚焦 M-ASM-02 周围的关键单元、文档节点和流转关系。",
-    graph: {
-      nodes: builtGraph.nodes.filter((node) =>
-        [
-          "module-asm-01",
-          "module-asm-02",
-          "module-qc-01",
-          "unit-cnv-07",
-          "unit-rbt-02",
-          "doc-process",
-        ].includes(node.id)
-      ),
-      links: builtGraph.links.filter((link) =>
-        ["module-asm-02", "unit-cnv-07", "unit-rbt-02", "doc-process"].includes(String(link.source)) ||
-        ["module-asm-02", "unit-cnv-07", "unit-rbt-02", "doc-process"].includes(String(link.target))
-      ),
-    },
-    rows: [
-      { 节点: "M-ASM-02", 类型: "模块层", 说明: "Assembly 核心模块" },
-      { 节点: "U-CNV-07", 类型: "单元层", 说明: "关键转运单元" },
-      { 节点: "工艺说明", 类型: "文档节点", 说明: "提供动作约束" },
-    ],
-    focusedNodeIds: ["module-asm-02", "unit-cnv-07", "unit-rbt-02", "doc-process"],
-  },
-  warning: {
-    title: "warning 节点筛选",
-    query: cypherExamples[2],
-    summary: "筛选状态为 warning 的节点，用于诊断和增量更新验证。",
-    graph: {
-      nodes: builtGraph.nodes.filter((node) =>
-        ["module-asm-02", "unit-cnv-07", "unit-vsn-03"].includes(node.id)
-      ),
-      links: builtGraph.links.filter((link) =>
-        ["module-asm-02", "unit-cnv-07", "unit-vsn-03"].includes(String(link.source)) &&
-        ["module-asm-02", "unit-cnv-07", "unit-vsn-03"].includes(String(link.target))
-      ),
-    },
-    rows: [{ 节点: "U-CNV-07", 状态: "warning", 原因: "转运口占用率偏高" }],
-    focusedNodeIds: ["module-asm-02", "unit-cnv-07"],
-  },
+export {
+  cypherExamples,
+  knowledgeGraphExample,
 }
 
 export const qaSuggestions = [
@@ -406,28 +224,38 @@ export const qaMessages: QaMessage[] = [
   {
     id: "qa-1",
     role: "user",
-    content: "请概括柔性产线 A 中装配模块的关键资源和关系。",
+    content: "请概括电源组装产线 中装配模块、质检模块与返修模块之间的关键关系。",
   },
   {
     id: "qa-2",
     role: "assistant",
     content:
-      "M-ASM-02 是装配核心模块，当前关联 U-RBT-02 与 U-CNV-07 两个关键单元。它接收 M-ASM-01 的上料，向 M-QC-01 输出工件；工艺说明节点补充了动作约束，视觉配置表则提供质检和增量更新语义。",
+      "图谱显示，M-ASM-02 完成核心装配后将工件路由到 M-TRF-01 和 M-ASM-03，随后进入 M-QC-01 终检；当终检判定异常时，任务会被回路到 M-RWK-01，并在返修完成后再次返回 M-QC-01。关键瓶颈集中在 U-CNV-07、U-VSN-03 和 U-DBO-01。",
   },
 ]
 
 export const qaStructuredResult = {
   模块: "M-QC-01",
-  产线: "柔性产线 A",
-  状态: "idle",
-  坐标: { x: 208, y: 118 },
+  产线: "电源组装产线",
+  状态: "warning",
+  任务角色: "终检与缺陷复判",
+  坐标: {
+    x: knowledgeGraphExample.nodes.find((node) => node.id === "module-qc-01")?.fx ?? 0,
+    y: knowledgeGraphExample.nodes.find((node) => node.id === "module-qc-01")?.fy ?? 0,
+  },
   UnitList: [
-    { 名称: "U-VSN-03", 角色: "Vision Inspection", 状态: "idle" },
-    { 名称: "U-CNV-07", 角色: "Transfer Observation", 状态: "warning" },
+    { 名称: "U-VSN-03", 角色: "终检视觉单元", 状态: "warning" },
+    { 名称: "U-TOR-01", 角色: "扭矩复检仪", 状态: "running" },
+    { 名称: "U-DBO-01", 角色: "缺陷判定主机", 状态: "warning" },
+    { 名称: "U-CNV-08", 角色: "质检输送线", 状态: "running" },
   ],
   Relations: [
     { 类型: "HAS_UNIT", 目标: "U-VSN-03" },
-    { 类型: "MONITORS", 目标: "U-CNV-07" },
+    { 类型: "HAS_UNIT", 目标: "U-TOR-01" },
+    { 类型: "REWORKS_TO", 目标: "M-RWK-01" },
+    { 类型: "ROUTES_TO", 目标: "M-SRT-01" },
     { 类型: "UPDATES", 来源: "视觉配置表" },
+    { 类型: "CONFIGURES", 来源: "质检阈值表" },
   ],
+  EvidenceDocs: ["视觉配置表", "质检阈值表", "社区摘要 C-02", "任务树快照"],
 }

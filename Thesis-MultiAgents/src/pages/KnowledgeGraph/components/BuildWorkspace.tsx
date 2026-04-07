@@ -3,7 +3,6 @@ import {
   CheckCircle2,
   Clock3,
   ChevronDown,
-  ChevronUp,
   Eye,
   FileImage,
   FileSpreadsheet,
@@ -34,13 +33,10 @@ import { cn } from "@/lib/utils"
 import type { KnowledgeGraphView } from ".."
 import {
   buildStages,
-  builtGraph,
   cypherExamples,
-  cypherResults,
-  initialGraph,
+  knowledgeGraphExample,
   mockFiles,
   statusLabelMap,
-  type CypherResult,
   type KnowledgeFile,
   type KnowledgeFileStatus,
   type KnowledgeGraphData,
@@ -62,14 +58,6 @@ function getFileIcon(kind: KnowledgeFile["kind"]) {
   return FileImage
 }
 
-function resolveCypherResult(query: string): CypherResult {
-  const lowered = query.toLowerCase()
-  if (lowered.includes("warning")) return cypherResults.warning
-  if (lowered.includes("m-asm-02") || lowered.includes("assembly")) return cypherResults.assembly
-  if (lowered.includes("has_module") || lowered.includes(":line")) return cypherResults.line
-  return cypherResults.default
-}
-
 type BuildWorkspaceProps = {
   onViewChange: (view: KnowledgeGraphView) => void
 }
@@ -80,14 +68,14 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
   const [editingName, setEditingName] = useState("")
   const [buildTargetId, setBuildTargetId] = useState<string | null>(null)
   const [activeStageIndex, setActiveStageIndex] = useState(0)
-  const [graphData, setGraphData] = useState<KnowledgeGraphData>(builtGraph)
+  const [graphData, setGraphData] = useState<KnowledgeGraphData>(knowledgeGraphExample)
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
-  const [cypherInput, setCypherInput] = useState(cypherResults.default.query)
-  const [queryResult, setQueryResult] = useState<CypherResult>(cypherResults.default)
+  const [cypherInput, setCypherInput] = useState("")
+  const [queryRowCount, setQueryRowCount] = useState<number | null>(null)
+  const [hasExecutedCypher, setHasExecutedCypher] = useState(false)
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewFile, setPreviewFile] = useState<KnowledgeFile | null>(null)
   const [progressOpen, setProgressOpen] = useState(false)
-  const [cypherExpanded, setCypherExpanded] = useState(false)
 
   const uploadedFiles = files.filter((file) => ["uploaded", "completed"].includes(file.status))
   const uploadingFiles = files.filter((file) =>
@@ -109,9 +97,10 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
 
     if (activeStageIndex >= buildStages.length) {
       setBuildTargetId(null)
-      setGraphData(builtGraph)
-      setQueryResult(cypherResults.default)
-      setCypherInput(cypherResults.default.query)
+      setGraphData(knowledgeGraphExample)
+      setQueryRowCount(null)
+      setCypherInput("")
+      setHasExecutedCypher(false)
       return
     }
 
@@ -182,22 +171,24 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
     if (!target) return
     setBuildTargetId(target.id)
     setActiveStageIndex(0)
-    setGraphData(initialGraph)
+    setGraphData(knowledgeGraphExample)
     setSelectedNodeId(null)
   }
 
   function handleRunCypher() {
-    const result = resolveCypherResult(cypherInput)
-    setQueryResult(result)
-    setGraphData(result.graph)
-    setSelectedNodeId(result.focusedNodeIds[0] ?? null)
+    // Placeholder for backend response wiring.
+    setQueryRowCount(null)
+    setGraphData(knowledgeGraphExample)
+    setSelectedNodeId(null)
+    setHasExecutedCypher(true)
   }
 
   function handleResetCypher() {
-    setCypherInput(cypherResults.default.query)
-    setQueryResult(cypherResults.default)
-    setGraphData(builtGraph)
+    setCypherInput("")
+    setQueryRowCount(null)
+    setGraphData(knowledgeGraphExample)
     setSelectedNodeId(null)
+    setHasExecutedCypher(false)
   }
 
   function handleOpenPreview(file: KnowledgeFile) {
@@ -207,35 +198,61 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
 
   return (
     <>
-      <div className="grid h-full min-h-0 gap-2.5 xl:grid-cols-[338px_minmax(0,1fr)_286px]">
+      <div className="grid h-full min-h-0 gap-2.5 xl:grid-cols-[360px_minmax(0,1fr)_286px]">
         <div className="min-h-0 rounded-[14px] border border-slate-200 bg-white/94 shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
-          <div className="grid h-full min-h-0 grid-rows-[76px_minmax(0,1fr)_222px] gap-2.5 p-2.5">
-            <section className="rounded-[12px] border border-slate-200 bg-slate-50/90 p-2">
-              <div className="flex items-center justify-between gap-3">
-                <div className="grid grid-cols-3 gap-2">
+          <div className="grid h-full min-h-0 grid-rows-[82px_minmax(0,1fr)_222px] gap-2 p-2.5">
+            <section className="rounded-2xl border border-slate-200 bg-[linear-gradient(180deg,#f8fafc_0%,#f1f5f9_100%)] p-1.5 h-full">
+              <div className="flex h-full items-center justify-between gap-1.5">
+                <div className="grid h-full flex-1 grid-cols-3 gap-1.5">
                   {[
-                    { label: "文件", value: files.length },
-                    { label: "完成", value: completedCount },
-                    { label: "处理中", value: uploadingFiles.length },
+                    {
+                      label: "文件",
+                      value: files.length,
+                      badge: "总量",
+                      badgeTone: "border-slate-200 bg-slate-100 text-slate-600",
+                    },
+                    {
+                      label: "完成",
+                      value: completedCount,
+                      badge: "完成",
+                      badgeTone: "border-emerald-200 bg-emerald-50 text-emerald-700",
+                    },
+                    {
+                      label: "处理中",
+                      value: uploadingFiles.length,
+                      badge: "进行中",
+                      badgeTone: "border-blue-200 bg-blue-50 text-blue-700",
+                    },
                   ].map((item) => (
                     <div
                       key={item.label}
-                      className="min-w-[78px] rounded-[10px] border border-slate-200 bg-white px-3 py-1.5"
+                      className="flex h-full min-w-0 flex-col justify-center rounded-[10px] border border-slate-200 bg-white/95 p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]"
                     >
-                      <div className="text-[11px] text-slate-500">{item.label}</div>
-                      <div className="mt-0.5 text-[2rem] font-semibold leading-none text-slate-900">{item.value}</div>
+                      <div className="flex items-center justify-between gap-0.5">
+                        <div className="whitespace-nowrap text-[10px] font-medium text-slate-500">{item.label}</div>
+                        <Badge
+                          variant="outline"
+                          className={cn("h-4 whitespace-nowrap rounded-full px-1 text-[8px] font-medium leading-none", item.badgeTone)}
+                        >
+                          {item.badge}
+                        </Badge>
+                      </div>
+                      <div className="mt-1 px-0.5 text-[1.5rem] font-semibold leading-none tracking-tight text-slate-900">{item.value}</div>
                     </div>
                   ))}
                 </div>
 
-                <Button onClick={handleUploadMockFile} className="h-10 rounded-[12px] bg-slate-950 px-4 text-white">
-                  <Plus className="size-4" />
+                <Button
+                  onClick={handleUploadMockFile}
+                  className="h-full shrink-0 flex-col gap-1 rounded-[10px] bg-slate-950 px-2 py-0 text-[11px] font-medium text-white shadow-[0_6px_14px_rgba(15,23,42,0.2)] transition hover:bg-slate-900"
+                >
+                  <Plus className="size-3" />
                   上传
                 </Button>
               </div>
             </section>
 
-            <section className="min-h-0 rounded-[12px] border border-slate-200 bg-slate-50/90">
+            <section className="min-h-0 rounded-2xl border border-slate-200 bg-slate-50/90">
               <div className="flex items-center justify-between border-b border-slate-200 px-3 py-2.5">
                 <div className="text-sm font-semibold text-slate-900">已上传文件列表</div>
                 <div className="text-xs text-slate-500">{uploadedFiles.length} 项</div>
@@ -248,9 +265,9 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
                   return (
                     <div
                       key={file.id}
-                      className="grid h-[96px] grid-cols-[34px_minmax(0,1fr)_90px] items-center gap-2 rounded-[10px] border border-slate-200 bg-white px-2.5 py-2 text-left transition hover:border-slate-300 hover:bg-slate-50"
+                      className="grid h-24 grid-cols-[34px_minmax(0,1fr)_90px] items-center gap-2 rounded-[10px] border border-slate-200 bg-white px-2.5 py-2 text-left transition hover:border-slate-300 hover:bg-slate-50"
                     >
-                      <div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-slate-100 text-slate-700">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
                         <Icon className="size-4" />
                       </div>
 
@@ -264,7 +281,7 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
                               if (event.key === "Enter") handleCommitRename()
                             }}
                             autoFocus
-                            className="h-7 rounded-[8px] border-0 px-2 text-sm shadow-none"
+                            className="h-7 rounded-xl border-0 px-2 text-sm shadow-none"
                           />
                         ) : (
                           <div className="line-clamp-1 text-sm font-medium text-slate-900">{file.name}</div>
@@ -328,7 +345,7 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
               </div>
             </section>
 
-            <section className="min-h-0 rounded-[12px] border border-slate-200 bg-slate-50/90">
+            <section className="min-h-0 rounded-2xl border border-slate-200 bg-slate-50/90">
               <div className="flex items-center justify-between border-b border-slate-200 px-3 py-2.5">
                 <div className="text-sm font-semibold text-slate-900">当前上传任务</div>
                 <div className="text-xs text-slate-500">{uploadingFiles.length} 项</div>
@@ -362,89 +379,77 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
           </div>
         </div>
 
-        <div className="grid min-h-0 grid-rows-[auto_minmax(0,1fr)] gap-2.5">
-          <Card className="rounded-[14px] border-slate-200 bg-white/92 shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
-            <CardHeader className="gap-2 px-3 py-2">
+        <div className="grid min-h-0 grid-rows-[auto_minmax(0,1fr)] gap-1">
+          <Card className="gap-2 pt-1.5 pb-0.5 overflow-hidden rounded-[14px] border-slate-200 bg-white/92 shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
+            <CardHeader className="gap-1 pl-3 pr-2 pt-1">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <CardTitle className="text-sm text-slate-900">Cypher</CardTitle>
+                  <CardTitle className="text-base font-semibold text-slate-900">Cypher查询</CardTitle>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <Button
                     onClick={handleBuildGraph}
                     disabled={Boolean(buildTargetId)}
-                    className="h-9 rounded-[10px] bg-slate-950 px-3 text-white disabled:bg-slate-300"
+                    className="h-7 rounded-[10px] bg-slate-950 px-2 text-xs text-white disabled:bg-slate-300"
                   >
-                    {buildTargetId ? <LoaderCircle className="size-4 animate-spin" /> : <Play className="size-4" />}
+                    {buildTargetId ? <LoaderCircle className="size-3.5 animate-spin" /> : <Play className="size-3.5" />}
                     {buildTargetId ? "构建中" : "开始构建"}
                   </Button>
-                  <Button variant="outline" onClick={handleResetCypher} className="h-9 rounded-[10px] border-slate-300 px-3">
+                  <Button variant="outline" onClick={handleResetCypher} className="h-7 rounded-[10px] border-slate-300 px-2 text-xs">
                     重置
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => setCypherExpanded((value) => !value)}
-                    className="h-9 rounded-[10px] border-slate-300 px-3"
-                  >
-                    {cypherExpanded ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
-                    {cypherExpanded ? "收起" : "展开查询"}
                   </Button>
                 </div>
               </div>
-
-              {cypherExpanded ? (
-                <div className="grid gap-2 xl:grid-cols-[minmax(0,1fr)_150px]">
-                  <div className="grid gap-2">
-                    <div className="flex flex-wrap gap-2">
-                      {cypherExamples.map((example) => (
-                        <button
-                          key={example}
-                          type="button"
-                          onClick={() => setCypherInput(example)}
-                          className="rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] text-slate-600 hover:border-slate-300 hover:text-slate-900"
-                        >
-                          {example}
-                        </button>
-                      ))}
-                    </div>
-
-                    <div className="rounded-[10px] border border-slate-200 bg-white px-3 py-1.5">
-                      <textarea
-                        value={cypherInput}
-                        onChange={(event) => setCypherInput(event.target.value)}
-                        className="min-h-[52px] w-full resize-none border-0 bg-transparent font-mono text-sm text-slate-800 outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Button onClick={handleRunCypher} className="h-10 rounded-[10px] bg-sky-600 text-white hover:bg-sky-700">
-                      <Search className="size-4" />
-                      执行查询
-                    </Button>
-
-                    <div className="rounded-[10px] border border-slate-200 bg-white px-3 py-2">
-                      <div className="text-[11px] text-slate-500">结果概览</div>
-                      <div className="mt-1 text-2xl font-semibold text-slate-900">{queryResult.rows.length}</div>
-                      <div className="text-[11px] text-slate-500">{queryResult.title}</div>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex items-center justify-between rounded-[10px] border border-slate-200 bg-slate-50 px-3 py-1.5">
-                  <div className="text-sm font-medium text-slate-900">{queryResult.title}</div>
-                  <div className="text-lg font-semibold leading-none text-slate-900">{queryResult.rows.length}</div>
-                </div>
-              )}
             </CardHeader>
+
+            <CardContent className="px-2 pb-1.5">
+              <div className="grid gap-1 xl:grid-cols-[minmax(0,1fr)_118px]">
+                <div className="grid gap-2">
+                  <div className="flex flex-wrap gap-1">
+                    {cypherExamples.map((example) => (
+                      <button
+                        key={example}
+                        type="button"
+                        onClick={() => setCypherInput(example)}
+                        className="rounded-full border border-slate-200 bg-white px-2 py-0.5 text-[10px] text-slate-600 hover:border-slate-300 hover:text-slate-900"
+                      >
+                        {example}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="rounded-[10px] border border-slate-200 bg-white px-2 py-0.5">
+                    <textarea
+                      value={cypherInput}
+                      onChange={(event) => setCypherInput(event.target.value)}
+                      placeholder="MATCH (n)-[r]->(m) RETURN n,r,m LIMIT 25"
+                      className="min-h-10 w-full resize-none border-0 bg-transparent font-mono text-sm text-slate-800 outline-none p-0.5"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid gap-1">
+                  <Button onClick={handleRunCypher} className="h-8 rounded-[10px] bg-sky-600 text-xs text-white hover:bg-sky-700">
+                    <Search className="size-3.5" />
+                    执行查询
+                  </Button>
+
+                  <div className="rounded-[10px] border border-slate-200 bg-white px-2 py-1">
+                    <div className="text-[10px] text-slate-500">结果数</div>
+                    <div className="mt-0.5 text-xl font-semibold leading-none text-slate-900">
+                      {hasExecutedCypher ? queryRowCount : "--"}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
           </Card>
 
-          <Card className="min-h-0 rounded-[14px] border-slate-200 bg-white/92 shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
-            <CardContent className="h-full p-2">
+          <Card className="p-2 min-h-0 rounded-[14px] border-slate-200 bg-white/92 shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
+            <CardContent className="h-full p-1">
               <EChartsForceGraph
                 graph={graphData}
-                focusedNodeIds={queryResult.focusedNodeIds}
                 selectedNodeId={selectedNodeId}
                 onSelectNode={setSelectedNodeId}
               />
@@ -452,7 +457,7 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
           </Card>
         </div>
 
-        <div className="grid min-h-0 grid-rows-[minmax(0,1fr)_204px] gap-2.5">
+        <div className="grid min-h-0 grid-rows-[minmax(0,1fr)_220px] gap-2">
           <Card className="min-h-0 rounded-[14px] border-slate-200 bg-white/92 shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
             <CardHeader className="px-3 py-2.5">
               <CardTitle className="text-sm text-slate-900">节点详情</CardTitle>
@@ -499,25 +504,25 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
             </CardContent>
           </Card>
 
-          <Card className="rounded-[14px] border-slate-200 bg-white/92 shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
-            <CardHeader className="px-3 py-2.5">
+          <Card className="overflow-hidden rounded-[14px] border-slate-200 bg-white/92 shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
+            <CardHeader className="px-3 -mb-3">
               <div className="flex items-center justify-between gap-2">
                 <CardTitle className="text-sm text-slate-900">当前进程</CardTitle>
                 <button
                   type="button"
                   onClick={() => onViewChange("qa")}
-                  className="group flex items-center gap-1 text-sm font-medium text-slate-950 transition hover:gap-2"
+                  className="group inline-flex h-8 items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-2.5 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-slate-400 hover:bg-slate-100 hover:text-slate-900"
                 >
-                  智能体问答
-                  <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+                  进入智能体问答
+                  <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
                 </button>
               </div>
             </CardHeader>
-            <CardContent className="px-3 pb-3">
+            <CardContent className="h-[calc(100%-50px)] px-3">
               <button
                 type="button"
                 onClick={() => setProgressOpen(true)}
-                className="block w-full rounded-[10px] border border-slate-200 bg-slate-50 p-3 text-left transition hover:border-slate-300 hover:bg-slate-100/70"
+                className="flex h-full w-full flex-col overflow-hidden rounded-[10px] border border-slate-200 bg-slate-50 p-3 text-left transition hover:border-slate-300 hover:bg-slate-100/70"
               >
                 <div className="flex items-center gap-2">
                   <div className="flex h-8 w-8 items-center justify-center rounded-full border border-emerald-200 bg-emerald-50 text-emerald-600">
@@ -525,13 +530,13 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
                   </div>
                   <div>
                     <div className="text-sm font-medium text-slate-900">{currentStage.label}</div>
-                    <div className="text-xs text-slate-500">{selectedFile?.name ?? "未选择文件"}</div>
+                    <div className="max-w-47.5 truncate text-xs text-slate-500">{selectedFile?.name ?? "未选择文件"}</div>
                   </div>
                 </div>
 
-                <div className="mt-3 text-xs leading-5 text-slate-500">{currentStage.description}</div>
+                <div className="mt-2 line-clamp-2 text-xs leading-5 text-slate-500">{currentStage.description}</div>
 
-                <div className="mt-3 h-1.5 rounded-full bg-slate-100">
+                <div className="mt-auto h-1.5 rounded-full bg-slate-100">
                   <div className="h-full rounded-full bg-slate-900" style={{ width: `${selectedFile?.progress ?? 0}%` }} />
                 </div>
                 <div className="mt-2 text-xs text-slate-500">进度 {selectedFile?.progress ?? 0}%</div>
@@ -542,7 +547,7 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
       </div>
 
       <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-        <DialogContent className="max-w-[640px] rounded-[16px] border-slate-200">
+        <DialogContent className="max-w-160 rounded-3xl border-slate-200">
           <DialogHeader>
             <DialogTitle>文档预览</DialogTitle>
             <DialogDescription>
@@ -550,7 +555,7 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="rounded-[12px] border border-dashed border-slate-300 bg-slate-50 px-4 py-10 text-center">
+          <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-10 text-center">
             <div className="text-sm font-medium text-slate-900">预览 Modal 待开发</div>
             <div className="mt-2 text-sm text-slate-500">
               后续这里可以接入 PDF、DOCX、图片文件的真实预览能力。
@@ -562,7 +567,7 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
       </Dialog>
 
       <Dialog open={progressOpen} onOpenChange={setProgressOpen}>
-        <DialogContent className="max-w-[560px] rounded-[16px] border-slate-200 p-5">
+        <DialogContent className="max-w-130 rounded-[14px] border-slate-200 p-4">
           <DialogHeader>
             <DialogTitle>完整进程</DialogTitle>
             <DialogDescription>
@@ -570,7 +575,7 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="grid gap-2">
+          <div className="grid gap-1.5">
             {buildStages.map((stage, index) => {
               const passed = index < Math.max(stageIndex, 0)
               const active = stage.key === currentStage.key
@@ -581,7 +586,7 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
                 <div key={stage.key} className="grid justify-items-center gap-0">
                   <div
                     className={cn(
-                      "w-full rounded-[16px] border px-4 py-3.5",
+                      "w-full rounded-[14px] border px-3.5 py-3",
                       active
                         ? "border-slate-900 bg-slate-950 text-white"
                         : passed
@@ -593,7 +598,7 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
                       <div className="flex items-center gap-3">
                         <div
                           className={cn(
-                            "flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] border",
+                            "flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] border",
                             active
                               ? "border-white/15 bg-white/10 text-white"
                               : passed
@@ -601,10 +606,10 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
                                 : "border-slate-200 bg-white text-slate-400"
                           )}
                         >
-                          <StageIcon className={cn("size-5", active && "animate-spin")} />
+                          <StageIcon className={cn("size-4.5", active && "animate-spin")} />
                         </div>
                         <div>
-                          <div className="text-base font-semibold">{stage.label}</div>
+                          <div className="text-sm font-semibold">{stage.label}</div>
                           <div className={cn("mt-1 text-xs", active ? "text-slate-300" : "text-slate-400")}>
                             Step {index + 1}
                           </div>
@@ -613,7 +618,7 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
                       <Badge
                         variant="outline"
                         className={cn(
-                          "rounded-full px-2 py-0.5 text-[10px]",
+                          "rounded-full px-2 py-0.5 text-[10px] leading-4",
                           active
                             ? "border-white/20 bg-white/10 text-white"
                             : passed
@@ -624,22 +629,22 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
                           {statusText}
                       </Badge>
                     </div>
-                    <div className={cn("mt-3 pl-[52px] text-sm leading-6", active ? "text-slate-300" : "text-slate-500")}>
+                    <div className={cn("mt-2 pl-12 text-[13px] leading-5", active ? "text-slate-300" : "text-slate-500")}>
                       {stage.description}
                     </div>
                   </div>
 
                   {index < buildStages.length - 1 ? (
-                    <div className="flex h-10 flex-col items-center justify-center">
+                    <div className="flex h-8 flex-col items-center justify-center">
                       <div
                         className={cn(
-                          "h-4 w-[2px] rounded-full",
+                          "h-3 w-0.5 rounded-full",
                           passed || active ? "bg-slate-900" : "bg-slate-200"
                         )}
                       />
                       <ChevronDown
                         className={cn(
-                          "mt-0.5 size-4",
+                          "mt-0.5 size-3.5",
                           passed || active ? "text-slate-900" : "text-slate-300"
                         )}
                       />

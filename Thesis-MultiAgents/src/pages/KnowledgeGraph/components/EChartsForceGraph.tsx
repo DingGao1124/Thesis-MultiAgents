@@ -43,7 +43,7 @@ const categoryNameMap: Record<KnowledgeNode["group"], string> = {
   line: "产线层",
   module: "模块层",
   unit: "单元层",
-  document: "文档节点",
+  document: "文本文档层",
 }
 
 const categoryIndexMap: Record<KnowledgeNode["group"], number> = {
@@ -113,12 +113,16 @@ export default function EChartsForceGraph({
       tooltip: {
         formatter(params: any) {
           if (params.dataType === "edge") {
-            return `${params.data.source} → ${params.data.target}<br/>关系：${params.data.relation}`
+            return `${params.data.source} -> ${params.data.target}<br/>Relation: ${params.data.relation}`
           }
 
           const data = params.data as { name?: string; subtitle?: string; status?: string } | undefined
           if (!data) return ""
-          return [data.name, data.subtitle ? `<br/>${data.subtitle}` : "", data.status ? `<br/>状态：${data.status}` : ""].join("")
+          return [
+            data.name,
+            data.subtitle ? `<br/>${data.subtitle}` : "",
+            data.status ? `<br/>Status: ${data.status}` : "",
+          ].join("")
         },
       },
       animationDurationUpdate: 300,
@@ -126,7 +130,7 @@ export default function EChartsForceGraph({
         {
           type: "graph",
           layout: "force",
-          animation: false,
+          animation: true,
           roam: true,
           draggable: true,
           emphasis: {
@@ -134,11 +138,11 @@ export default function EChartsForceGraph({
             scale: true,
           },
           force: {
-            repulsion: largeGraph ? 300 : 360,
-            edgeLength: largeGraph ? [55, 90] : [70, 110],
-            gravity: 0.08,
-            friction: 0.78,
-            layoutAnimation: false,
+            repulsion: largeGraph ? 220 : 260,
+            edgeLength: largeGraph ? [50, 82] : [64, 96],
+            gravity: 0.16,
+            friction: 0.32,
+            layoutAnimation: true,
           },
           label: {
             show: true,
@@ -147,9 +151,8 @@ export default function EChartsForceGraph({
             fontSize: largeGraph ? 8 : 11,
             color: "#1f2937",
             formatter(params: any) {
-              const data = params.data as { id?: string; name?: string } | undefined
-              if (!data?.name) return ""
-              return data.name
+              const data = params.data as { name?: string } | undefined
+              return data?.name ?? ""
             },
           },
           edgeLabel: {
@@ -189,8 +192,8 @@ export default function EChartsForceGraph({
               symbolSize: isSelected ? nodeSizeMap[node.group] + 6 : nodeSizeMap[node.group],
               itemStyle: {
                 color: nodeColorMap[node.group],
-                borderColor: isSelected ? "#1d4ed8" : "#475569",
-                borderWidth: isSelected ? 3 : 1,
+                borderColor: isSelected ? "red" : "#475569",
+                borderWidth: isSelected ? 2 : 1,
               },
             }
           }),
@@ -221,7 +224,7 @@ export default function EChartsForceGraph({
   return (
     <div
       ref={containerRef}
-      className="h-full min-h-125 w-full rounded-2xl border border-slate-200"
+      className="h-full min-h-125 w-full rounded-xl border border-slate-200"
       style={{
         backgroundColor: "#f8fafc",
         backgroundImage: "radial-gradient(circle, rgba(148, 163, 184, 0.4) 1px, transparent 1.1px)",

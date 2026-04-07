@@ -14,6 +14,7 @@ import {
   ArrowRight,
   Search,
   Trash2,
+  Loader,
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -42,6 +43,8 @@ import {
   type KnowledgeGraphData,
 } from "../data"
 import EChartsForceGraph from "./EChartsForceGraph"
+import GraphDetail from "./GraphDetail"
+import NodeDetail from "./NodeDetail"
 
 const statusTone: Record<KnowledgeFileStatus, string> = {
   uploaded: "bg-slate-100 text-slate-600 border-slate-200",
@@ -77,13 +80,14 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
   const [previewFile, setPreviewFile] = useState<KnowledgeFile | null>(null)
   const [progressOpen, setProgressOpen] = useState(false)
 
-  const uploadedFiles = files.filter((file) => ["uploaded", "completed"].includes(file.status))
-  const uploadingFiles = files.filter((file) =>
+  const uploadedFiles = files
+  const processingFiles = files.filter((file) =>
     ["queued", "extracting", "aligning", "summarizing"].includes(file.status)
   )
+  const uploadTaskFiles = files.filter((file) => file.status === "uploaded" && file.progress < 100)
   const selectedFile =
     files.find((item) => item.id === buildTargetId) ??
-    uploadingFiles[0] ??
+    processingFiles[0] ??
     files[0] ??
     null
   const selectedNode = graphData.nodes.find((node) => node.id === selectedNodeId) ?? null
@@ -199,9 +203,9 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
   return (
     <>
       <div className="grid h-full min-h-0 gap-2.5 xl:grid-cols-[360px_minmax(0,1fr)_286px]">
-        <div className="min-h-0 rounded-[14px] border border-slate-200 bg-white/94 shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
+        <div className="min-h-0 rounded-xl border border-slate-200 bg-white/94 shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
           <div className="grid h-full min-h-0 grid-rows-[82px_minmax(0,1fr)_222px] gap-2 p-2.5">
-            <section className="rounded-2xl border border-slate-200 bg-[linear-gradient(180deg,#f8fafc_0%,#f1f5f9_100%)] p-1.5 h-full">
+            <section className="rounded-xl border border-slate-200 bg-[linear-gradient(180deg,#f8fafc_0%,#f1f5f9_100%)] p-1.5 h-full">
               <div className="flex h-full items-center justify-between gap-1.5">
                 <div className="grid h-full flex-1 grid-cols-3 gap-1.5">
                   {[
@@ -219,7 +223,7 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
                     },
                     {
                       label: "处理中",
-                      value: uploadingFiles.length,
+                      value: processingFiles.length,
                       badge: "进行中",
                       badgeTone: "border-blue-200 bg-blue-50 text-blue-700",
                     },
@@ -252,23 +256,23 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
               </div>
             </section>
 
-            <section className="min-h-0 rounded-2xl border border-slate-200 bg-slate-50/90">
+            <section className="min-h-0 rounded-xl border border-slate-200 bg-slate-50/90">
               <div className="flex items-center justify-between border-b border-slate-200 px-3 py-2.5">
                 <div className="text-sm font-semibold text-slate-900">已上传文件列表</div>
                 <div className="text-xs text-slate-500">{uploadedFiles.length} 项</div>
               </div>
 
-              <div className="grid h-[calc(100%-57px)] auto-rows-max gap-2 overflow-y-auto px-2 py-2">
+              <div className="grid h-[calc(100%-57px)] auto-rows-max gap-1.5 overflow-y-auto px-2 py-2">
                 {uploadedFiles.map((file) => {
                   const Icon = getFileIcon(file.kind)
 
                   return (
                     <div
                       key={file.id}
-                      className="grid h-24 grid-cols-[34px_minmax(0,1fr)_90px] items-center gap-2 rounded-[10px] border border-slate-200 bg-white px-2.5 py-2 text-left transition hover:border-slate-300 hover:bg-slate-50"
+                      className="grid h-18 grid-cols-[30px_minmax(0,1fr)_86px] items-center gap-1.5 rounded-[10px] border border-slate-200 bg-white px-2 py-1.5 text-left transition hover:border-slate-300 hover:bg-slate-50"
                     >
-                      <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
-                        <Icon className="size-4" />
+                      <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100 text-slate-700">
+                        <Icon className="size-3.5" />
                       </div>
 
                       <div className="min-w-0">
@@ -289,9 +293,6 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
 
                         <div className="mt-1 truncate text-[11px] text-slate-500">
                           {file.source} · {file.size}
-                        </div>
-                        <div className="mt-1.5 h-1 rounded-full bg-black/8">
-                          <div className="h-full rounded-full bg-slate-900" style={{ width: `${file.progress}%` }} />
                         </div>
                       </div>
 
@@ -345,20 +346,28 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
               </div>
             </section>
 
-            <section className="min-h-0 rounded-2xl border border-slate-200 bg-slate-50/90">
+            <section className="min-h-0 rounded-xl border border-slate-200 bg-slate-50/90">
               <div className="flex items-center justify-between border-b border-slate-200 px-3 py-2.5">
                 <div className="text-sm font-semibold text-slate-900">当前上传任务</div>
-                <div className="text-xs text-slate-500">{uploadingFiles.length} 项</div>
+                <div className="text-xs text-slate-500">{uploadTaskFiles.length} 项</div>
               </div>
 
               <div className="grid max-h-[calc(100%-57px)] auto-rows-max gap-2 overflow-y-auto px-2 py-2">
-                {uploadingFiles.length > 0 ? (
-                  uploadingFiles.map((file) => (
+                {uploadTaskFiles.length > 0 ? (
+                  uploadTaskFiles.map((file) => (
                     <div key={file.id} className="rounded-[10px] border border-slate-200 bg-white px-3 py-2.5">
                       <div className="flex items-center justify-between gap-3">
                         <div className="truncate text-sm font-medium text-slate-900">{file.name}</div>
-                        <Badge variant="outline" className={cn("rounded-full border px-2 py-0.5 text-[10px]", statusTone[file.status])}>
-                          {statusLabelMap[file.status]}
+                        <Badge
+                          variant="outline"
+                          className={cn(
+                            "rounded-full border px-2 py-0.5 text-[10px]",
+                            file.progress >= 100
+                              ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                              : "border-blue-200 bg-blue-50 text-blue-700"
+                          )}
+                        >
+                          {file.progress >= 100 ? "已上传" : "上传中"}
                         </Badge>
                       </div>
                       <div className="mt-1 text-[11px] text-slate-500">
@@ -380,11 +389,14 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
         </div>
 
         <div className="grid min-h-0 grid-rows-[auto_minmax(0,1fr)] gap-1">
-          <Card className="gap-2 pt-1.5 pb-0.5 overflow-hidden rounded-[14px] border-slate-200 bg-white/92 shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
+          <Card className="gap-2 pt-1.5 pb-0.5 overflow-hidden rounded-xl border-slate-200 bg-white/92 shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
             <CardHeader className="gap-1 pl-3 pr-2 pt-1">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <CardTitle className="text-base font-semibold text-slate-900">Cypher查询</CardTitle>
+                  <CardTitle className="flex items-center gap-1.5 text-sm font-semibold text-slate-900">
+                    <Search className="size-4" />
+                    Cypher查询
+                  </CardTitle>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -446,7 +458,7 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
             </CardContent>
           </Card>
 
-          <Card className="p-2 min-h-0 rounded-[14px] border-slate-200 bg-white/92 shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
+          <Card className="p-2 min-h-0 rounded-xl border-slate-200 bg-white/92 shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
             <CardContent className="h-full p-1">
               <EChartsForceGraph
                 graph={graphData}
@@ -457,57 +469,16 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
           </Card>
         </div>
 
-        <div className="grid min-h-0 grid-rows-[minmax(0,1fr)_220px] gap-2">
-          <Card className="min-h-0 rounded-[14px] border-slate-200 bg-white/92 shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
-            <CardHeader className="px-3 py-2.5">
-              <CardTitle className="text-sm text-slate-900">节点详情</CardTitle>
-            </CardHeader>
-            <CardContent className="h-[calc(100%-48px)] px-3 pb-3">
-              {selectedNode ? (
-                <div className="grid h-full gap-3 rounded-[10px] border border-slate-200 bg-slate-50 p-3">
-                  <div className="rounded-[10px] border border-slate-200 bg-white p-3">
-                    <div className="flex items-center justify-between gap-3">
-                      <div>
-                        <div className="text-base font-semibold text-slate-900">{selectedNode.title}</div>
-                        <div className="mt-1 text-xs text-slate-500">{selectedNode.subtitle}</div>
-                      </div>
-                      <Badge variant="outline" className="rounded-full border-slate-200 bg-slate-50 text-[10px]">
-                        {selectedNode.label}
-                      </Badge>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-2 text-xs text-slate-600">
-                    <div className="rounded-[10px] border border-slate-200 bg-white px-3 py-2.5">
-                      <div className="text-[11px] text-slate-400">名称</div>
-                      <div className="mt-1 text-sm text-slate-900">{selectedNode.title}</div>
-                    </div>
-                    <div className="rounded-[10px] border border-slate-200 bg-white px-3 py-2.5">
-                      <div className="text-[11px] text-slate-400">层级</div>
-                      <div className="mt-1 text-sm text-slate-900">{selectedNode.label}</div>
-                    </div>
-                    <div className="rounded-[10px] border border-slate-200 bg-white px-3 py-2.5">
-                      <div className="text-[11px] text-slate-400">状态</div>
-                      <div className="mt-1 text-sm text-slate-900">{selectedNode.status ?? "unknown"}</div>
-                    </div>
-                    <div className="rounded-[10px] border border-slate-200 bg-white px-3 py-2.5">
-                      <div className="text-[11px] text-slate-400">说明</div>
-                      <div className="mt-1 text-sm leading-6 text-slate-900">{selectedNode.subtitle}</div>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex h-full items-center justify-center rounded-[10px] border border-dashed border-slate-300 bg-slate-50 px-4 text-sm text-slate-500">
-                  请选择节点查看属性
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card className="overflow-hidden rounded-[14px] border-slate-200 bg-white/92 shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
-            <CardHeader className="px-3 -mb-3">
+        <div className="flex h-full min-h-0 flex-col gap-1">
+          <GraphDetail graph={graphData} selectedNode={selectedNode} />
+          <NodeDetail graph={graphData} selectedNode={selectedNode} />
+          <Card className="h-55 shrink-0 py-2 gap-3 overflow-hidden rounded-xl border-slate-200 bg-white/92 shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
+            <CardHeader className="px-3 -mb-2 mt-0.5">
               <div className="flex items-center justify-between gap-2">
-                <CardTitle className="text-sm text-slate-900">当前进程</CardTitle>
+                <CardTitle className="flex items-center gap-1.5 text-sm font-semibold text-slate-900">
+                  <Loader className="size-4" />
+                  当前进程
+                </CardTitle>
                 <button
                   type="button"
                   onClick={() => onViewChange("qa")}
@@ -547,7 +518,7 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
       </div>
 
       <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-        <DialogContent className="max-w-160 rounded-3xl border-slate-200">
+        <DialogContent className="max-w-160 rounded-xl border-slate-200">
           <DialogHeader>
             <DialogTitle>文档预览</DialogTitle>
             <DialogDescription>
@@ -567,7 +538,7 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
       </Dialog>
 
       <Dialog open={progressOpen} onOpenChange={setProgressOpen}>
-        <DialogContent className="max-w-130 rounded-[14px] border-slate-200 p-4">
+        <DialogContent className="max-w-130 rounded-xl border-slate-200 p-4">
           <DialogHeader>
             <DialogTitle>完整进程</DialogTitle>
             <DialogDescription>
@@ -626,7 +597,7 @@ export default function BuildWorkspace({ onViewChange }: BuildWorkspaceProps) {
                               : "border-slate-200 bg-white text-slate-500"
                         )}
                       >
-                          {statusText}
+                        {statusText}
                       </Badge>
                     </div>
                     <div className={cn("mt-2 pl-12 text-[13px] leading-5", active ? "text-slate-300" : "text-slate-500")}>

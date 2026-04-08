@@ -132,3 +132,7 @@
     cursor: pointer;
   }
 }
+
+@layer base {
+  @import "@xyflow/react/dist/style.css";
+}

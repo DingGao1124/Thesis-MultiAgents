@@ -15,6 +15,8 @@ import GamePage from "./pages/GamePage/GamePage"
 import TestPage from "./pages/TestPage"
 
 const KnowledgeGraph = React.lazy(() => import("./pages/KnowledgeGraph"))
+const ProductionLine = React.lazy(() => import("./pages/ProductionLine"))
+const MultiAgents = React.lazy(() => import("./pages/Multi-Agents"))
 const ModelAssetsPage = React.lazy(() => import("./pages/ModelAssets"))
 
 const router = createBrowserRouter(
@@ -22,7 +24,8 @@ const router = createBrowserRouter(
     <>
       <Route path="/" element={<HomePage />} />
       <Route path="/knowledge-graph" element={<KnowledgeGraph />} />
-      <Route path="/production-line" element={<KnowledgeGraph />} />
+      <Route path="/production-line" element={<ProductionLine />} />
+      <Route path="/multi-agents" element={<MultiAgents />} />
       <Route path="/model-assets" element={<ModelAssetsPage />} />
       <Route path="/game" element={<GamePage />} />
       <Route path="/test" element={<TestPage />} />

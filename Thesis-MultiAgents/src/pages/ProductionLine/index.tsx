@@ -7,11 +7,24 @@ import AgentChatPanel from "./components/AgentChatPanel"
 import AssetLibraryPanel from "./components/AssetLibraryPanel"
 import SceneWorkspacePanel from "./components/SceneWorkspacePanel"
 import type { ChatMessage, DropPoint, ScenePlacement } from "./types"
+import FloatingDockNav from "@/components/layout/FloatingDockNav"
 
 const STORAGE_KEY = "production-line-layout-v3"
+const DEFAULT_STATUS_TEXT = "支持放置、删除与清空命令。"
 
 function createId(prefix: string) {
   return `${prefix}-${Math.random().toString(36).slice(2, 10)}`
+}
+
+function createInitialMessages(): ChatMessage[] {
+  return [
+    {
+      id: createId("message"),
+      role: "assistant",
+      content: "布局代理已就绪。",
+      createdAt: new Date().toISOString(),
+    },
+  ]
 }
 
 function roundCoordinate(value: number) {
@@ -20,9 +33,9 @@ function roundCoordinate(value: number) {
 
 function getNextPlacementPosition(items: ScenePlacement[]): [number, number, number] {
   const index = items.length
-  const column = index % 4
-  const row = Math.floor(index / 4)
-  return [column * 2.8 - 4.2, 0, row * 2.6 - 2.6]
+  const column = index % 6
+  const row = Math.floor(index / 6)
+  return [column * 3.4 - 8.5, 0, row * 3.1 - 3.1]
 }
 
 function getAssetDisplayName(asset: ModelAsset) {
@@ -75,9 +88,7 @@ function parseCoordinates(text: string) {
     }
   }
 
-  const tupleMatch = text.match(
-    /\(\s*(-?\d+(?:\.\d+)?)\s*[,，]\s*(-?\d+(?:\.\d+)?)\s*[,，]\s*(-?\d+(?:\.\d+)?)\s*\)/
-  )
+  const tupleMatch = text.match(/\(\s*(-?\d+(?:\.\d+)?)\s*[,，]\s*(-?\d+(?:\.\d+)?)\s*[,，]\s*(-?\d+(?:\.\d+)?)\s*\)/)
 
   if (!tupleMatch) {
     return null
@@ -150,16 +161,9 @@ export default function ProductionLinePage() {
 
   const [placements, setPlacements] = useState<ScenePlacement[]>([])
   const [selectedPlacementId, setSelectedPlacementId] = useState<string | null>(null)
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: createId("message"),
-      role: "assistant",
-      content: "布局代理已就绪。",
-      createdAt: new Date().toISOString(),
-    },
-  ])
+  const [messages, setMessages] = useState<ChatMessage[]>(() => createInitialMessages())
   const [chatInput, setChatInput] = useState("")
-  const [statusText, setStatusText] = useState("支持放置、删除、清空命令。")
+  const [statusText, setStatusText] = useState(DEFAULT_STATUS_TEXT)
   const [draggedAssetId, setDraggedAssetId] = useState<string | null>(null)
 
   const selectedPlacement = placements.find((item) => item.id === selectedPlacementId) ?? null
@@ -234,9 +238,20 @@ export default function ProductionLinePage() {
     point?: DropPoint | null,
     rotationY = 0,
     scale = 1
-  ) {
-    const placement = createPlacement(asset, placements, source, point, rotationY, scale)
-    setPlacements((current) => [...current, placement])
+  ): ScenePlacement {
+    let createdPlacement: ScenePlacement | undefined
+
+    setPlacements((current) => {
+      const placement = createPlacement(asset, current, source, point, rotationY, scale)
+      createdPlacement = placement
+      return [...current, placement]
+    })
+
+    if (!createdPlacement) {
+      throw new Error("Failed to create placement")
+    }
+
+    const placement = createdPlacement
     setSelectedPlacementId(placement.id)
     return placement
   }
@@ -250,11 +265,29 @@ export default function ProductionLinePage() {
     )
   }
 
+  function removePlacement(placementId: string) {
+    const target = placements.find((item) => item.id === placementId)
+    if (!target) {
+      return
+    }
+
+    setPlacements((current) => current.filter((item) => item.id !== placementId))
+    setSelectedPlacementId((current) => (current === placementId ? null : current))
+    setStatusText(`${target.assetFilename} 已从场景移除。`)
+    pushMessage("assistant", `${target.assetFilename} 已从场景移除。`)
+  }
+
   function clearScene() {
     setPlacements([])
     setSelectedPlacementId(null)
     setStatusText("场景已清空。")
     pushMessage("assistant", "场景已清空。")
+  }
+
+  function resetConversation() {
+    setMessages(createInitialMessages())
+    setChatInput("")
+    setStatusText(DEFAULT_STATUS_TEXT)
   }
 
   async function handleUploadAsset(file: File) {
@@ -264,6 +297,14 @@ export default function ProductionLinePage() {
 
   async function handleDeleteAsset(asset: ModelAsset) {
     await deleteAsset(asset.filename)
+    const nextPlacements = placements.filter((item) => item.assetId !== asset.id)
+    setPlacements(nextPlacements)
+    setSelectedPlacementId((current) => {
+      if (!current) {
+        return current
+      }
+      return nextPlacements.some((item) => item.id === current) ? current : null
+    })
     setStatusText(`已删除 ${asset.filename}。`)
   }
 
@@ -273,6 +314,7 @@ export default function ProductionLinePage() {
     }
 
     const placement = appendPlacement(draggedAsset, "manual", point)
+    setSelectedPlacementId(null)
     setDraggedAssetId(null)
     setStatusText(`已放置 ${placement.assetFilename}。`)
     pushMessage(
@@ -303,15 +345,12 @@ export default function ProductionLinePage() {
         : null
 
       if (!target) {
-        setStatusText("未找到可删除的实例。")
-        pushMessage("assistant", "未找到可删除的实例。")
+        setStatusText("未找到可删除的模型实例。")
+        pushMessage("assistant", "未找到可删除的模型实例。")
         return
       }
 
-      setPlacements((current) => current.filter((item) => item.id !== target.id))
-      setSelectedPlacementId((current) => (current === target.id ? null : current))
-      setStatusText(`已删除 ${target.assetFilename}。`)
-      pushMessage("assistant", `已删除 ${target.assetFilename}。`)
+      removePlacement(target.id)
       return
     }
 
@@ -348,8 +387,9 @@ export default function ProductionLinePage() {
   }
 
   return (
-    <main className="h-screen overflow-hidden bg-slate-100 p-1.5 text-slate-950">
-      <div className="flex h-full gap-1.5">
+    <main className="h-screen overflow-hidden bg-slate-100 p-1 text-slate-950">
+      <FloatingDockNav />
+      <div className="flex h-full gap-1">
         <AssetLibraryPanel
           assets={assets}
           isLoading={isLoadingAssets}
@@ -370,7 +410,6 @@ export default function ProductionLinePage() {
             setDraggedAssetId(assetId)
           }}
         />
-
         <SceneWorkspacePanel
           placements={placements}
           selectedPlacement={selectedPlacement}
@@ -379,14 +418,15 @@ export default function ProductionLinePage() {
           onSelectPlacement={setSelectedPlacementId}
           onDropAsset={handleDropAsset}
           onUpdatePlacement={updatePlacement}
+          onRemovePlacement={removePlacement}
         />
-
         <AgentChatPanel
           messages={messages}
           input={chatInput}
           statusText={statusText}
           onInputChange={setChatInput}
           onSubmit={handleAgentSubmit}
+          onNewChat={resetConversation}
         />
       </div>
     </main>

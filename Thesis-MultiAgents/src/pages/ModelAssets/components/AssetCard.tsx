@@ -15,9 +15,19 @@ interface AssetCardProps {
   previewRef: (node: HTMLDivElement | null) => void
 }
 
-export function AssetCard({ asset, isActive, isDeleting, isVisible, onSelect, onDelete, previewRef }: AssetCardProps) {
+export function AssetCard({
+  asset,
+  isActive,
+  isDeleting,
+  isVisible,
+  onSelect,
+  onDelete,
+  previewRef,
+}: AssetCardProps) {
   return (
     <div
+      ref={previewRef}
+      data-asset-id={asset.id}
       role="button"
       tabIndex={0}
       onClick={onSelect}
@@ -33,19 +43,16 @@ export function AssetCard({ asset, isActive, isDeleting, isVisible, onSelect, on
           : "border-slate-200/70 bg-white/82 hover:-translate-y-1 hover:border-slate-300 hover:shadow-[0_18px_40px_rgba(15,23,42,0.08)]"
       }`}
     >
-      <div
-        ref={previewRef}
-        data-asset-id={asset.id}
-        className="relative h-38 border-b border-slate-200/60 bg-[linear-gradient(180deg,#f6fafc_0%,#eef4f6_100%)]"
-      >
+      <div className="relative h-38 border-b border-slate-200/60 bg-[linear-gradient(180deg,#f6fafc_0%,#eef4f6_100%)]">
         {isVisible ? <ModelAssetCardPreview asset={asset} /> : null}
         {!isVisible ? (
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="rounded-full border border-white/80 bg-white/90 px-3 py-1 text-[11px] text-slate-500">
-              预览待加载
+              完整进入视口后渲染
             </div>
           </div>
         ) : null}
+
         <div className="absolute top-3 right-3 flex items-center gap-2">
           <Badge
             variant="outline"
@@ -53,6 +60,7 @@ export function AssetCard({ asset, isActive, isDeleting, isVisible, onSelect, on
           >
             {asset.format}
           </Badge>
+
           <Button
             type="button"
             variant="ghost"
@@ -76,6 +84,7 @@ export function AssetCard({ asset, isActive, isDeleting, isVisible, onSelect, on
             <p className="mt-1 text-xs text-slate-500">{asset.size_label}</p>
           </div>
         </div>
+
         <div className="flex items-center justify-between text-[11px] text-slate-400">
           <span>{asset.name}</span>
           <span>{formatUpdatedTime(asset.updated_at)}</span>
@@ -88,6 +97,7 @@ export function AssetCard({ asset, isActive, isDeleting, isVisible, onSelect, on
 function formatUpdatedTime(value: string): string {
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return value
+
   return new Intl.DateTimeFormat("zh-CN", {
     year: "numeric",
     month: "2-digit",

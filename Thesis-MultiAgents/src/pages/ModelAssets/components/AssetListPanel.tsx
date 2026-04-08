@@ -1,4 +1,4 @@
-import { useDeferredValue, useEffect, useRef, useState, type ChangeEvent } from "react"
+import { useDeferredValue, useEffect, useMemo, useRef, useState, type ChangeEvent } from "react"
 import { Box, Loader2, RefreshCw, Search, Upload } from "lucide-react"
 
 import type { ModelAsset } from "@/api/assets"
@@ -12,6 +12,20 @@ import { AssetCard } from "./AssetCard"
 
 interface AssetListPanelProps {
   onAssetChange: () => void
+}
+
+function areSetsEqual(left: Set<string>, right: Set<string>) {
+  if (left.size !== right.size) {
+    return false
+  }
+
+  for (const value of left) {
+    if (!right.has(value)) {
+      return false
+    }
+  }
+
+  return true
 }
 
 export function AssetListPanel({ onAssetChange }: AssetListPanelProps) {
@@ -36,15 +50,20 @@ export function AssetListPanel({ onAssetChange }: AssetListPanelProps) {
 
   const deferredKeyword = useDeferredValue(keyword)
 
-  const filteredAssets = assets.filter((asset) => {
-    if (!deferredKeyword.trim()) return true
-    const query = deferredKeyword.trim().toLowerCase()
-    return (
-      asset.name.toLowerCase().includes(query) ||
-      asset.filename.toLowerCase().includes(query) ||
-      asset.format.toLowerCase().includes(query)
-    )
-  })
+  const filteredAssets = useMemo(
+    () =>
+      assets.filter((asset) => {
+        if (!deferredKeyword.trim()) return true
+        const query = deferredKeyword.trim().toLowerCase()
+        return (
+          asset.name.toLowerCase().includes(query) ||
+          asset.filename.toLowerCase().includes(query) ||
+          asset.format.toLowerCase().includes(query)
+        )
+      }),
+    [assets, deferredKeyword]
+  )
+  const filteredAssetIdsKey = filteredAssets.map((asset) => asset.id).join("|")
 
   const selectedAsset =
     filteredAssets.find((a) => a.id === selectedId) ??
@@ -78,16 +97,16 @@ export function AssetListPanel({ onAssetChange }: AssetListPanelProps) {
           entries.forEach((entry) => {
             const assetId = (entry.target as HTMLElement).dataset.assetId
             if (!assetId) return
-            if (entry.isIntersecting) {
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.999) {
               next.add(assetId)
             } else {
               next.delete(assetId)
             }
           })
-          return next
+          return areSetsEqual(previous, next) ? previous : next
         })
       },
-      { root, rootMargin: "120px 0px", threshold: 0.01 }
+      { root, rootMargin: "0px", threshold: [1] }
     )
 
     filteredAssets.forEach((asset) => {
@@ -96,7 +115,7 @@ export function AssetListPanel({ onAssetChange }: AssetListPanelProps) {
     })
 
     return () => observer.disconnect()
-  }, [filteredAssets])
+  }, [filteredAssetIdsKey, filteredAssets])
 
   async function handleUpload(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
@@ -118,8 +137,8 @@ export function AssetListPanel({ onAssetChange }: AssetListPanelProps) {
   }
 
   return (
-    <Card className="flex min-h-0 flex-1 overflow-hidden rounded-[1.2rem] border border-slate-200/60 bg-white/68 py-0 shadow-[0_8px_24px_rgba(15,23,42,0.04)]">
-      <CardHeader className="shrink-0 gap-4 border-b border-slate-200/70 py-4">
+    <Card className="flex min-h-0 flex-1 gap-1 overflow-hidden rounded-[1.2rem] border border-slate-200/60 bg-white/68 py-0 shadow-[0_8px_24px_rgba(15,23,42,0.04)]">
+      <CardHeader className="pt-2.5 pb-1 shrink-0 gap-2 border-b border-slate-200/70">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <CardTitle className="text-[24px] tracking-tight">模型资产目录</CardTitle>

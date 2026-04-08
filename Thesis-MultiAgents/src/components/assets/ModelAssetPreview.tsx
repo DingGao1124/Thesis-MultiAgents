@@ -9,6 +9,7 @@ import {
   OrbitControls,
   useGLTF,
 } from "@react-three/drei"
+import { Box } from "lucide-react"
 
 import type { ModelAsset } from "@/api/assets"
 
@@ -43,19 +44,19 @@ export function ModelAssetCardPreview({ asset }: { asset: ModelAsset }) {
   return (
     <Canvas
       frameloop="demand"
-      dpr={[1, 1.25]}
-      gl={{ antialias: false, alpha: true, powerPreference: "low-power" }}
-      camera={{ position: [4.5, 3.2, 4.8], fov: 34 }}
+      dpr={[1, 1]}
+      gl={{ antialias: false, alpha: false, powerPreference: "low-power" }}
+      camera={{ position: [4.6, 3.4, 4.8], fov: 34 }}
     >
-      <color attach="background" args={["#eef4f6"]} />
-      <ambientLight intensity={1} />
-      <directionalLight position={[5, 6, 4]} intensity={1.35} />
-      <directionalLight position={[-4, 3, -3]} intensity={0.35} />
+      <color attach="background" args={["#edf4f7"]} />
+      <ambientLight intensity={1.05} />
+      <directionalLight position={[5, 6, 4]} intensity={1.25} />
+      <directionalLight position={[-4, 3, -3]} intensity={0.28} />
       <gridHelper args={[12, 12, "#d3dde2", "#e5ecef"]} position={[0, -0.8, 0]} />
       <Suspense fallback={<PreviewFallback compact />}>
         <AssetModel url={asset.url} />
-        <Environment preset="warehouse" />
       </Suspense>
+      <OrbitControls makeDefault enableDamping enablePan={false} />
     </Canvas>
   )
 }

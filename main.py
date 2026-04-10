@@ -10,6 +10,8 @@ from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
+from api.production_line_layouts import router as production_line_layout_router
+
 try:
     from dotenv import load_dotenv
 except ImportError:  # pragma: no cover
@@ -42,6 +44,7 @@ app.mount(
     StaticFiles(directory=str(MODELS_DIR)),
     name="model-files",
 )
+app.include_router(production_line_layout_router)
 
 
 def format_file_size(size_bytes: int) -> str:

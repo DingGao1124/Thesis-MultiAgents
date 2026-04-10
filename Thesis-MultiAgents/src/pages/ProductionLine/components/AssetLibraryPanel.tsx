@@ -7,7 +7,9 @@ import {
   type ChangeEvent,
 } from "react"
 import {
+  AlertCircleIcon,
   Box,
+  Boxes,
   Loader2,
   RefreshCw,
   Search,
@@ -222,7 +224,10 @@ export default function AssetLibraryPanel({
       <section className="flex h-full w-[360px] min-w-[360px] flex-col overflow-hidden rounded-sm border border-slate-200 bg-white">
         <div className="border-b border-slate-200 px-3 py-3">
           <div className="flex items-center justify-between gap-3">
-            <div className="text-sm font-medium text-slate-900">模型资产</div>
+            <div className="flex items-center gap-1 ml-1 text-sm font-medium text-slate-900">
+              <Boxes size={16}/>
+              模型资产
+            </div>
 
             <div className="flex items-center gap-1.5">
               <span className="text-xs text-slate-500">{assets.length}</span>
@@ -341,11 +346,10 @@ export default function AssetLibraryPanel({
                       }}
                       role="button"
                       tabIndex={0}
-                      className={`flex h-[214px] flex-col overflow-hidden rounded-sm border text-left transition ${
-                        isSelected
+                      className={`flex h-[214px] flex-col overflow-hidden rounded-sm border text-left transition ${isSelected
                           ? "border-slate-900 bg-white"
                           : "border-slate-200 bg-white hover:border-slate-400"
-                      }`}
+                        }`}
                     >
                       <div className="relative h-[104px] border-b border-slate-200 bg-slate-50">
                         {shouldRenderPreview ? (
@@ -407,13 +411,16 @@ export default function AssetLibraryPanel({
           }
         }}
       >
-        <AlertDialogContent size="sm" className="rounded-xl border-slate-200">
+        <AlertDialogContent size="sm" className="p-3.5 rounded-xl border-slate-200">
           <AlertDialogHeader className="place-items-start text-left">
-            <AlertDialogTitle className="text-base">确认删除模型</AlertDialogTitle>
+            <AlertDialogTitle className="text-base flex items-center gap-2">
+              <AlertCircleIcon size={18} color="red" />
+              确认删除模型
+            </AlertDialogTitle>
             <AlertDialogDescription className="text-sm leading-6">
               {pendingDeleteAsset
-                ? `删除后将从资产列表中移除 ${pendingDeleteAsset.filename}。`
-                : "删除后将从资产列表中移除当前模型。"}
+                ? <div>删除后将从资产列表中移除 <strong>{pendingDeleteAsset.filename}</strong></div>
+                : <div>删除后将从资产列表中移除当前模型。</div>}
             </AlertDialogDescription>
           </AlertDialogHeader>
 

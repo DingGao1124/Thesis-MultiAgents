@@ -23,3 +23,19 @@ export type DropPoint = {
   y: number
   z: number
 }
+
+export type PendingLayoutAction =
+  | {
+      type: "create"
+    }
+  | {
+      type: "load"
+      layoutId: string
+    }
+
+export type ConfirmDialogCopy = {
+  title: string
+  description: string
+  saveLabel: string
+  discardLabel: string
+}

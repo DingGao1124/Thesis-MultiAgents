@@ -1,5 +1,5 @@
 import type { FormEvent } from "react"
-import { ArrowUp, SquarePen } from "lucide-react"
+import { ArrowUp, FolderOpen, MessageSquareText, Save, SquarePen } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -10,9 +10,14 @@ type AgentChatPanelProps = {
   messages: ChatMessage[]
   input: string
   statusText: string
+  currentLayoutName: string | null
+  currentLayoutId: string | null
+  isDirty: boolean
   onInputChange: (value: string) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
-  onNewChat: () => void
+  onNewLayout: () => void
+  onSaveLayout: () => void
+  onOpenLayoutLibrary: () => void
 }
 
 function formatTimestamp(value: string) {
@@ -29,29 +34,79 @@ function formatTimestamp(value: string) {
   }).format(date)
 }
 
+function getLayoutMetaText(
+  currentLayoutName: string | null,
+  currentLayoutId: string | null,
+  isDirty: boolean
+) {
+  const label = currentLayoutName?.trim() || "未命名布局"
+
+  if (!currentLayoutId) {
+    return `${label} · 未保存`
+  }
+
+  return `${label} · ${isDirty ? "有未保存变更" : "已保存"}`
+}
+
 export default function AgentChatPanel({
   messages,
   input,
   statusText,
+  currentLayoutName,
+  currentLayoutId,
+  isDirty,
   onInputChange,
   onSubmit,
-  onNewChat,
+  onNewLayout,
+  onSaveLayout,
+  onOpenLayoutLibrary,
 }: AgentChatPanelProps) {
   return (
-    <section className="flex h-full w-[300px] min-w-[300px] flex-col overflow-hidden rounded-sm border border-slate-200 bg-[#fcfcfd]">
-      <div className="flex items-center justify-between border-b border-slate-200/80 px-4 py-3">
-        <div className="text-sm font-medium text-slate-900">布局会话</div>
+    <section className="flex h-full w-[340px] min-w-[340px] flex-col overflow-hidden rounded-sm border border-slate-200 bg-[#fcfcfd]">
+      <div className="border-b border-slate-200/80 px-4 py-3">
+        <div className="flex items-center gap-2 text-sm font-medium text-slate-900">
+          <MessageSquareText size={16} />
+          布局会话
+        </div>
 
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={onNewChat}
-          className="h-8 rounded-full px-3 text-xs text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-        >
-          <SquarePen className="size-3.5" />
-          New Chat
-        </Button>
+        <p className="mt-1 text-[11px] text-slate-500">
+          {getLayoutMetaText(currentLayoutName, currentLayoutId, isDirty)}
+        </p>
+
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onOpenLayoutLibrary}
+            className="rounded-full border-slate-200 text-xs text-slate-700"
+          >
+            <FolderOpen className="size-3.5" />
+            布局库
+          </Button>
+
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onSaveLayout}
+            className="rounded-full border-slate-200 text-xs text-slate-700"
+          >
+            <Save className="size-3.5" />
+            保存布局
+          </Button>
+
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={onNewLayout}
+            className="rounded-full px-3 text-xs text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+          >
+            <SquarePen className="size-3.5" />
+            新建布局
+          </Button>
+        </div>
       </div>
 
       <ScrollArea className="min-h-0 flex-1">
@@ -62,7 +117,7 @@ export default function AgentChatPanel({
             return (
               <div
                 key={message.id}
-                className={`rounded-2xl border px-3.5 py-3 ${
+                className={`rounded-xl border px-3.5 py-3 ${
                   isAssistant
                     ? "border-slate-200 bg-white"
                     : "border-slate-200 bg-slate-50/90"
@@ -82,19 +137,20 @@ export default function AgentChatPanel({
       </ScrollArea>
 
       <div className="border-t border-slate-200/80 px-4 py-2 text-[11px] text-slate-500">
+        <span className="mr-2 inline-block size-2 rounded-full bg-emerald-500" />
         {statusText}
       </div>
 
-      <form onSubmit={onSubmit} className="border-t border-slate-200/80 px-3 py-3">
-        <div className="rounded-[28px] border border-slate-200 bg-white shadow-xs">
+      <form onSubmit={onSubmit} className="border-t border-slate-200/80">
+        <div className="relative m-1 rounded-xl border border-slate-200 bg-white shadow-xs">
           <Textarea
             value={input}
             onChange={(event) => onInputChange(event.target.value)}
-            placeholder="输入布局命令"
-            className="min-h-28 resize-none border-0 bg-transparent px-4 py-4 text-sm text-slate-900 placeholder:text-slate-400 focus-visible:ring-0"
+            placeholder="请输入布局命令..."
+            className="resize-none border-0 bg-transparent text-sm text-slate-900 placeholder:text-slate-400 focus-visible:ring-0"
           />
 
-          <div className="flex items-center justify-end px-3 pb-3">
+          <div className="absolute right-2 bottom-2 flex items-center justify-end">
             <Button
               type="submit"
               size="icon-sm"

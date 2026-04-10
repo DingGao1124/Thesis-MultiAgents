@@ -35,8 +35,8 @@ The platform is centered around four core modules:
 
 4. **3D Digital Twin Dynamic Reconstruction and Rendering**
    - Render the virtual workshop with WebGL and Three.js.
+   - Use LLM-Multi-Agents to construct the production line and display the conversation flow.
    - Receive device pose and process state updates through WebSocket.
-   - Update virtual device motion in real time.
    - Adjust scene nodes and spatial structure when layout changes are triggered by hierarchical task trees.
 
 ## Project Architecture

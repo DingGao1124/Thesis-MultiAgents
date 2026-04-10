@@ -127,7 +127,7 @@ export default function MultiAgents() {
           </Panel>
 
           <Panel position="bottom-center" className="mb-2! flex items-center gap-1.5 bg-transparent px-2 py-0.5">
-            <div className="flex items-center gap-1.5 rounded-[16px] border border-slate-200 bg-white/96 px-2 py-1 shadow-[0_8px_18px_rgba(15,23,42,0.06)] backdrop-blur-sm">
+            <div className="flex items-center gap-1.5 rounded-[16px] border border-slate-200 bg-white/96 px-3 py-1 shadow-[0_8px_18px_rgba(15,23,42,0.06)] backdrop-blur-sm">
               <button type="button" className="flex items-center gap-1 text-slate-700">
                 <MousePointer2 className="size-4" />
                 <ChevronDown className="size-3.5 text-slate-400" />

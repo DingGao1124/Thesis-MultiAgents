@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import type { HighlightItem, QuickEntry } from "../home-data"
 import SystemEntryMenu from "./SystemEntryMenu"
+import { Boxes } from "lucide-react"
 
 interface HomeHeroProps {
   highlights: HighlightItem[]
@@ -57,7 +58,10 @@ export default function HomeHero({
           />
 
           <Button asChild size="lg" variant="outline" className="rounded-full px-6">
-            <Link to="/model-assets">进入模型资产模块</Link>
+            <Link to="/model-assets">
+              <Boxes />
+              进入模型资产模块
+            </Link>
           </Button>
         </div>
 

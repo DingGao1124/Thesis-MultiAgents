@@ -1,0 +1,116 @@
+{
+  "id": "layout_d8c45255046d",
+  "version": 1,
+  "name": "产线1",
+  "created_at": "2026-04-10T16:20:54.773222+08:00",
+  "updated_at": "2026-04-10T16:20:54.773222+08:00",
+  "scene": {
+    "placements": [
+      {
+        "id": "placement-p5z1pxgw",
+        "assetId": "ghost.glb",
+        "assetName": "ghost",
+        "assetFilename": "ghost.glb",
+        "assetUrl": "/api/assets/models/file/ghost.glb",
+        "position": [
+          4.6,
+          -1.59,
+          -0.95
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 0.1,
+        "source": "manual",
+        "createdAt": "2026-04-10T07:57:58.159Z"
+      },
+      {
+        "id": "placement-oabsbevq",
+        "assetId": "辅助装置--激光器模块.glb",
+        "assetName": "辅助装置--激光器模块",
+        "assetFilename": "辅助装置--激光器模块.glb",
+        "assetUrl": "/api/assets/models/file/%E8%BE%85%E5%8A%A9%E8%A3%85%E7%BD%AE--%E6%BF%80%E5%85%89%E5%99%A8%E6%A8%A1%E5%9D%97.glb",
+        "position": [
+          -1.75,
+          0.01,
+          4.28
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-10T07:58:02.700Z"
+      },
+      {
+        "id": "placement-5etf7te2",
+        "assetId": "辅助设备--围栏（3）.glb",
+        "assetName": "辅助设备--围栏（3）",
+        "assetFilename": "辅助设备--围栏（3）.glb",
+        "assetUrl": "/api/assets/models/file/%E8%BE%85%E5%8A%A9%E8%AE%BE%E5%A4%87--%E5%9B%B4%E6%A0%8F%EF%BC%883%EF%BC%89.glb",
+        "position": [
+          0.14,
+          -0.12,
+          -0.03
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-10T08:19:55.657Z"
+      }
+    ]
+  },
+  "conversation": {
+    "messages": [
+      {
+        "id": "message-wcgpqiyu",
+        "role": "assistant",
+        "content": "布局代理已就绪。",
+        "createdAt": "2026-04-10T07:48:58.336Z"
+      },
+      {
+        "id": "message-ldrumarc",
+        "role": "assistant",
+        "content": "ghost.glb 已放置在 (-0.25, 0, -0.15)。",
+        "createdAt": "2026-04-10T07:57:58.159Z"
+      },
+      {
+        "id": "message-conwuinz",
+        "role": "assistant",
+        "content": "辅助装置--激光器模块.glb 已放置在 (2.05, 0, -2.87)。",
+        "createdAt": "2026-04-10T07:58:02.700Z"
+      },
+      {
+        "id": "message-h3qx9hbu",
+        "role": "assistant",
+        "content": "厂房.glb 已放置在 (2.88, 0, 2.85)。",
+        "createdAt": "2026-04-10T07:58:26.349Z"
+      },
+      {
+        "id": "message-xht7a6ua",
+        "role": "assistant",
+        "content": "厂房.glb 已从场景移除。",
+        "createdAt": "2026-04-10T07:58:54.740Z"
+      },
+      {
+        "id": "message-nmwgy853",
+        "role": "assistant",
+        "content": "辅助设备--围栏（3）.glb 已放置在 (4.02, 0, 3.96)。",
+        "createdAt": "2026-04-10T08:19:55.657Z"
+      }
+    ],
+    "status_text": "已放置 辅助设备--围栏（3）.glb。"
+  },
+  "summary": {
+    "placement_count": 3,
+    "message_count": 6
+  }
+}

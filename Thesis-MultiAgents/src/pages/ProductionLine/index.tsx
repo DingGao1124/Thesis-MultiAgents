@@ -20,7 +20,7 @@ import LayoutLibraryDialog from "./components/LayoutLibraryDialog"
 import SceneWorkspacePanel from "./components/SceneWorkspacePanel"
 import { useLayoutManager } from "./hooks/useLayoutManager"
 import { usePlacementScene } from "./hooks/usePlacementScene"
-import type { ChatMessage, DropPoint } from "./types"
+import type { ChatMessage, DropPoint, ScenePlacement } from "./types"
 import {
   DEFAULT_STATUS_TEXT,
   createId,
@@ -107,7 +107,7 @@ export default function ProductionLinePage() {
 
   function handleUpdatePlacement(
     placementId: string,
-    patch: Partial<Pick<import("./types").ScenePlacement, "position" | "rotation" | "scale">>
+    patch: Partial<Pick<ScenePlacement, "position" | "rotation" | "scale">>
   ) {
     scene.updatePlacement(placementId, patch)
     layout.setIsDirty(true)
@@ -138,15 +138,8 @@ export default function ProductionLinePage() {
 
   async function handleDeleteAsset(asset: ModelAsset) {
     await deleteAsset(asset.filename)
-    const nextPlacements = scene.placements.filter((item) => item.assetId !== asset.id)
-    if (nextPlacements.length !== scene.placements.length) {
-      scene.setPlacements(nextPlacements)
-      scene.setSelectedPlacementId((current) => {
-        if (!current) {
-          return current
-        }
-        return nextPlacements.some((item) => item.id === current) ? current : null
-      })
+    const removedAny = scene.removePlacementsByAssetId(asset.id)
+    if (removedAny) {
       layout.setIsDirty(true)
     }
     setStatusText(`已删除 ${asset.filename}。`)

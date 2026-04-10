@@ -18,7 +18,15 @@ import * as THREE from "three"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Switch } from "@/components/ui/switch"
 import type { DropPoint, ScenePlacement } from "../types"
+
+type SceneSettings = {
+  maxDpr: 1 | 2
+  antialias: boolean
+  showGrid: boolean
+  showAxes: boolean
+}
 
 type SceneWorkspacePanelProps = {
   placements: ScenePlacement[]
@@ -151,12 +159,14 @@ function PlacementNode({
 function SceneCanvas({
   placements,
   selectedPlacementId,
+  settings,
   onSelectPlacement,
   onCameraReady,
   onUpdatePlacement,
 }: {
   placements: ScenePlacement[]
   selectedPlacementId: string | null
+  settings: SceneSettings
   onSelectPlacement: (placementId: string | null) => void
   onCameraReady: (camera: THREE.Camera) => void
   onUpdatePlacement: (
@@ -209,8 +219,9 @@ function SceneCanvas({
 
   return (
     <Canvas
-      dpr={[1, 1]}
-      gl={{ antialias: false, alpha: false, powerPreference: "low-power" }}
+      key={`${settings.maxDpr}-${settings.antialias}`}
+      dpr={[1, settings.maxDpr]}
+      gl={{ antialias: settings.antialias, alpha: false }}
       onPointerMissed={() => onSelectPlacement(null)}
     >
       <color attach="background" args={["#f7f8fa"]} />
@@ -229,8 +240,10 @@ function SceneCanvas({
       <directionalLight position={[8, 10, 6]} intensity={1.2} />
       <directionalLight position={[-6, 5, -6]} intensity={0.36} />
       <hemisphereLight args={["#ffffff", "#d5dde6", 0.62]} />
-      <axesHelper args={[3]} />
-      <gridHelper args={[48, 96, "#9aa8b8", "#d6dde5"]} position={[0, 0, 0]} />
+      {settings.showAxes ? <axesHelper args={[3]} /> : null}
+      {settings.showGrid ? (
+        <gridHelper args={[48, 96, "#9aa8b8", "#d6dde5"]} position={[0, 0, 0]} />
+      ) : null}
 
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.001, 0]}>
         <planeGeometry args={[120, 120]} />
@@ -317,6 +330,13 @@ export default function SceneWorkspacePanel({
 
   const [isDragOver, setIsDragOver] = useState(false)
   const [dropPoint, setDropPoint] = useState<DropPoint | null>(null)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [sceneSettings, setSceneSettings] = useState<SceneSettings>({
+    maxDpr: 2,
+    antialias: true,
+    showGrid: true,
+    showAxes: true,
+  })
 
   function computeDropPoint(clientX: number, clientY: number) {
     const container = shellRef.current
@@ -377,6 +397,76 @@ export default function SceneWorkspacePanel({
     onUpdatePlacement(selectedPlacement.id, { scale: Math.max(0.1, value) })
   }
 
+  useEffect(() => {
+    if (!selectedPlacement) {
+      return
+    }
+
+    const STEP = 0.2
+    const FAST_STEP = 0.8
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (!selectedPlacement) {
+        return
+      }
+
+      if ((event.target as HTMLElement).tagName === "INPUT" || (event.target as HTMLElement).tagName === "TEXTAREA") {
+        return
+      }
+
+      const step = event.shiftKey ? FAST_STEP : STEP
+      const pos = [...selectedPlacement.position] as [number, number, number]
+      let moved = false
+
+      switch (event.key) {
+        case "w":
+        case "W":
+        case "ArrowUp":
+          pos[2] = roundCoordinate(pos[2] - step)
+          moved = true
+          break
+        case "s":
+        case "S":
+        case "ArrowDown":
+          pos[2] = roundCoordinate(pos[2] + step)
+          moved = true
+          break
+        case "a":
+        case "A":
+        case "ArrowLeft":
+          pos[0] = roundCoordinate(pos[0] - step)
+          moved = true
+          break
+        case "d":
+        case "D":
+        case "ArrowRight":
+          pos[0] = roundCoordinate(pos[0] + step)
+          moved = true
+          break
+        case "q":
+        case "Q":
+          pos[1] = roundCoordinate(pos[1] + step)
+          moved = true
+          break
+        case "e":
+        case "E":
+          pos[1] = roundCoordinate(pos[1] - step)
+          moved = true
+          break
+      }
+
+      if (moved) {
+        event.preventDefault()
+        onUpdatePlacement(selectedPlacement.id, { position: pos })
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [selectedPlacement, onUpdatePlacement])
+
   return (
     <section className="relative min-w-0 flex-1 overflow-hidden rounded-sm border border-slate-200 bg-white">
       <div
@@ -401,6 +491,7 @@ export default function SceneWorkspacePanel({
         <SceneCanvas
           placements={placements}
           selectedPlacementId={selectedPlacementId}
+          settings={sceneSettings}
           onSelectPlacement={onSelectPlacement}
           onCameraReady={(camera) => {
             cameraRef.current = camera
@@ -411,6 +502,63 @@ export default function SceneWorkspacePanel({
         {isDragOver ? (
           <div className="pointer-events-none absolute inset-0 border-2 border-dashed border-sky-400/70 bg-sky-50/20" />
         ) : null}
+
+        <div className="absolute top-2 right-2 z-10 flex flex-col items-end">
+          <button
+            type="button"
+            onClick={() => setIsSettingsOpen((v) => !v)}
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white/96 text-slate-500 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-700"
+            title="渲染设置"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+              <path fillRule="evenodd" d="M7.84 1.804A1 1 0 0 1 8.82 1h2.36a1 1 0 0 1 .98.804l.331 1.652a6.993 6.993 0 0 1 1.929 1.115l1.598-.54a1 1 0 0 1 1.186.447l1.18 2.044a1 1 0 0 1-.205 1.251l-1.267 1.113a7.047 7.047 0 0 1 0 2.228l1.267 1.113a1 1 0 0 1 .206 1.25l-1.18 2.045a1 1 0 0 1-1.187.447l-1.598-.54a6.993 6.993 0 0 1-1.929 1.115l-.33 1.652a1 1 0 0 1-.98.804H8.82a1 1 0 0 1-.98-.804l-.331-1.652a6.993 6.993 0 0 1-1.929-1.115l-1.598.54a1 1 0 0 1-1.186-.447l-1.18-2.044a1 1 0 0 1 .205-1.251l1.267-1.114a7.05 7.05 0 0 1 0-2.227L1.821 7.773a1 1 0 0 1-.206-1.25l1.18-2.045a1 1 0 0 1 1.187-.447l1.598.54A6.992 6.992 0 0 1 7.51 3.456l.33-1.652ZM10 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clipRule="evenodd" />
+            </svg>
+          </button>
+
+          {isSettingsOpen ? (
+            <div className="mt-1 w-48 rounded-xl border border-slate-200 bg-white/96 p-3 shadow-sm backdrop-blur-sm">
+              <div className="mb-2 text-[11px] font-medium text-slate-900">渲染设置</div>
+              <div className="space-y-2.5">
+                <label className="flex items-center justify-between">
+                  <span className="text-[11px] text-slate-600">高清 (2x DPR)</span>
+                  <Switch
+                    checked={sceneSettings.maxDpr === 2}
+                    onCheckedChange={(checked) =>
+                      setSceneSettings((s) => ({ ...s, maxDpr: checked ? 2 : 1 }))
+                    }
+                  />
+                </label>
+                <label className="flex items-center justify-between">
+                  <span className="text-[11px] text-slate-600">抗锯齿</span>
+                  <Switch
+                    checked={sceneSettings.antialias}
+                    onCheckedChange={(checked) =>
+                      setSceneSettings((s) => ({ ...s, antialias: checked }))
+                    }
+                  />
+                </label>
+                <label className="flex items-center justify-between">
+                  <span className="text-[11px] text-slate-600">网格</span>
+                  <Switch
+                    checked={sceneSettings.showGrid}
+                    onCheckedChange={(checked) =>
+                      setSceneSettings((s) => ({ ...s, showGrid: checked }))
+                    }
+                  />
+                </label>
+                <label className="flex items-center justify-between">
+                  <span className="text-[11px] text-slate-600">坐标轴</span>
+                  <Switch
+                    checked={sceneSettings.showAxes}
+                    onCheckedChange={(checked) =>
+                      setSceneSettings((s) => ({ ...s, showAxes: checked }))
+                    }
+                  />
+                </label>
+              </div>
+            </div>
+          ) : null}
+        </div>
 
         <div className="absolute top-2 left-2 rounded-full border border-slate-200 bg-white/96 px-3 py-2 text-xs text-slate-600 shadow-sm">
           <div className="flex items-center gap-3">

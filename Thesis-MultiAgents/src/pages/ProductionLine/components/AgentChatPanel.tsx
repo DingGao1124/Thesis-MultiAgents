@@ -34,18 +34,24 @@ function formatTimestamp(value: string) {
   }).format(date)
 }
 
-function getLayoutMetaText(
-  currentLayoutName: string | null,
-  currentLayoutId: string | null,
-  isDirty: boolean
-) {
-  const label = currentLayoutName?.trim() || "未命名布局"
+function getLayoutName(currentLayoutName: string | null) {
+  return currentLayoutName?.trim() || "未命名布局"
+}
 
-  if (!currentLayoutId) {
-    return `${label} · 未保存`
+function getLayoutStatus(currentLayoutId: string | null, isDirty: boolean) {
+  if (!currentLayoutId || isDirty) {
+    return {
+      label: "未保存",
+      dotClassName: "bg-amber-400",
+      textClassName: "text-amber-600",
+    }
   }
 
-  return `${label} · ${isDirty ? "有未保存变更" : "已保存"}`
+  return {
+    label: "已保存",
+    dotClassName: "bg-emerald-500",
+    textClassName: "text-emerald-600",
+  }
 }
 
 export default function AgentChatPanel({
@@ -61,51 +67,63 @@ export default function AgentChatPanel({
   onSaveLayout,
   onOpenLayoutLibrary,
 }: AgentChatPanelProps) {
+  const layoutName = getLayoutName(currentLayoutName)
+  const layoutStatus = getLayoutStatus(currentLayoutId, isDirty)
+
   return (
-    <section className="flex h-full w-[340px] min-w-[340px] flex-col overflow-hidden rounded-sm border border-slate-200 bg-[#fcfcfd]">
+    <section className="flex h-full w-85 min-w-85 flex-col overflow-hidden rounded-sm border border-slate-200 bg-[#fcfcfd]">
       <div className="border-b border-slate-200/80 px-4 py-3">
-        <div className="flex items-center gap-2 text-sm font-medium text-slate-900">
-          <MessageSquareText size={16} />
-          布局会话
+        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3">
+          <div className="flex items-center gap-1.5 text-sm font-medium text-slate-900">
+            <MessageSquareText size={16} />
+            布局会话
+          </div>
+
+          <div className="min-w-0 text-center text-ellipsis">
+            <p className="truncate text-sm font-medium text-slate-900">{layoutName}</p>
+          </div>
+
+          <div className={`flex items-center gap-2 text-xs ${layoutStatus.textClassName}`}>
+            <span className={`inline-block size-2 rounded-full ${layoutStatus.dotClassName}`} />
+            <span>{layoutStatus.label}</span>
+          </div>
         </div>
 
-        <p className="mt-1 text-[11px] text-slate-500">
-          {getLayoutMetaText(currentLayoutName, currentLayoutId, isDirty)}
-        </p>
-
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
           <Button
             type="button"
             variant="outline"
             size="sm"
             onClick={onOpenLayoutLibrary}
-            className="rounded-full border-slate-200 text-xs text-slate-700"
+            className="rounded-md border-slate-200 text-xs text-slate-700"
           >
             <FolderOpen className="size-3.5" />
             布局库
           </Button>
 
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={onSaveLayout}
-            className="rounded-full border-slate-200 text-xs text-slate-700"
-          >
-            <Save className="size-3.5" />
-            保存布局
-          </Button>
+          <div className="flex items-center gap-1">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onSaveLayout}
+              className="rounded-md border-slate-200 text-xs text-slate-700"
+            >
+              <Save className="size-3.5" />
+              保存布局
+            </Button>
 
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={onNewLayout}
-            className="rounded-full px-3 text-xs text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-          >
-            <SquarePen className="size-3.5" />
-            新建布局
-          </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onNewLayout}
+              className="rounded-md border-slate-200 text-xs text-slate-700"
+            >
+              <SquarePen className="size-3.5" />
+              新建布局
+            </Button>
+          </div>
         </div>
       </div>
 

@@ -83,6 +83,30 @@ export function usePlacementScene(assets: ModelAsset[]) {
     setSelectedPlacementId(null)
   }
 
+  function removePlacementsByAssetId(assetId: string) {
+    let removedAny = false
+    let removedIds = new Set<string>()
+
+    setPlacements((current) => {
+      removedIds = new Set(
+        current.filter((item) => item.assetId === assetId).map((item) => item.id)
+      )
+      const next = current.filter((item) => item.assetId !== assetId)
+      removedAny = next.length !== current.length
+      return next
+    })
+
+    setSelectedPlacementId((current) => {
+      if (!current) {
+        return current
+      }
+
+      return removedIds.has(current) ? null : current
+    })
+
+    return removedAny
+  }
+
   function resetScene() {
     setPlacements([])
     setSelectedPlacementId(null)
@@ -101,6 +125,7 @@ export function usePlacementScene(assets: ModelAsset[]) {
     appendPlacement,
     updatePlacement,
     removePlacement,
+    removePlacementsByAssetId,
     clearPlacements,
     resetScene,
   }

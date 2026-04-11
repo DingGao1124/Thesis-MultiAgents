@@ -4,7 +4,7 @@ import { ArrowUp, FolderOpen, MessageSquareText, Save, SquarePen } from "lucide-
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Textarea } from "@/components/ui/textarea"
-import type { ChatMessage } from "../types"
+import type { ChatMessage } from "@/utils/productionLine"
 
 type AgentChatPanelProps = {
   messages: ChatMessage[]

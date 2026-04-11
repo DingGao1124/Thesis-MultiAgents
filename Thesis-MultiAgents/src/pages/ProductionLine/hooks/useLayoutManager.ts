@@ -1,30 +1,28 @@
-import { useEffect, useState, type FormEvent } from "react"
+import { useState, type FormEvent } from "react"
 
 import {
   createProductionLineLayout,
   deleteProductionLineLayout,
-  getProductionLineLayout,
-  listProductionLineLayouts,
   updateProductionLineLayout,
   type ProductionLineLayoutSummary,
 } from "@/api/productionLineLayouts"
+import { useProductionLineWorkspaceStore } from "@/stores/productionLineWorkspaceStore"
 
-import type { ChatMessage, PendingLayoutAction, ScenePlacement } from "../types"
-import { DEFAULT_STATUS_TEXT, getConfirmDialogCopy, getErrorMessage } from "../utils"
+import { useProductionLineLayoutLibrary } from "./useProductionLineLayoutLibrary"
+import type { PendingLayoutAction } from "@/utils/productionLine"
+import { getConfirmDialogCopy, getErrorMessage } from "@/utils/productionLine"
 
-type LayoutManagerDeps = {
-  placements: ScenePlacement[]
-  messages: ChatMessage[]
-  statusText: string
-  onResetScene: () => void
-  onLoadScene: (placements: ScenePlacement[], messages: ChatMessage[], statusText: string) => void
-  onStatusChange: (text: string) => void
-}
-
-export function useLayoutManager(deps: LayoutManagerDeps) {
-  const [currentLayoutId, setCurrentLayoutId] = useState<string | null>(null)
-  const [currentLayoutName, setCurrentLayoutName] = useState<string | null>(null)
-  const [isDirty, setIsDirty] = useState(false)
+export function useLayoutManager() {
+  const placements = useProductionLineWorkspaceStore((state) => state.placements)
+  const messages = useProductionLineWorkspaceStore((state) => state.messages)
+  const statusText = useProductionLineWorkspaceStore((state) => state.statusText)
+  const currentLayoutId = useProductionLineWorkspaceStore((state) => state.currentLayoutId)
+  const currentLayoutName = useProductionLineWorkspaceStore((state) => state.currentLayoutName)
+  const isDirty = useProductionLineWorkspaceStore((state) => state.isDirty)
+  const resetWorkspace = useProductionLineWorkspaceStore((state) => state.resetWorkspace)
+  const setStatusText = useProductionLineWorkspaceStore((state) => state.setStatusText)
+  const markClean = useProductionLineWorkspaceStore((state) => state.markClean)
+  const detachCurrentLayout = useProductionLineWorkspaceStore((state) => state.detachCurrentLayout)
 
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false)
   const [saveName, setSaveName] = useState("")
@@ -32,49 +30,19 @@ export function useLayoutManager(deps: LayoutManagerDeps) {
   const [actionAfterSave, setActionAfterSave] = useState<PendingLayoutAction | null>(null)
 
   const [isLayoutLibraryOpen, setIsLayoutLibraryOpen] = useState(false)
-  const [layoutKeyword, setLayoutKeyword] = useState("")
-  const [savedLayouts, setSavedLayouts] = useState<ProductionLineLayoutSummary[]>([])
-  const [isLoadingLayouts, setIsLoadingLayouts] = useState(false)
-  const [loadingLayoutId, setLoadingLayoutId] = useState<string | null>(null)
   const [deletingLayoutId, setDeletingLayoutId] = useState<string | null>(null)
-
   const [confirmAction, setConfirmAction] = useState<PendingLayoutAction | null>(null)
   const confirmDialogCopy = getConfirmDialogCopy(confirmAction)
 
-  useEffect(() => {
-    if (!isLayoutLibraryOpen) {
-      return
-    }
-
-    const timer = window.setTimeout(() => {
-      void fetchLayoutLibrary(layoutKeyword)
-    }, 200)
-
-    return () => {
-      window.clearTimeout(timer)
-    }
-  }, [isLayoutLibraryOpen, layoutKeyword])
-
-  async function fetchLayoutLibrary(keywordValue: string) {
-    setIsLoadingLayouts(true)
-
-    try {
-      const response = await listProductionLineLayouts(keywordValue)
-      setSavedLayouts(response.items)
-    } catch (error) {
-      deps.onStatusChange(getErrorMessage(error, "布局列表加载失败。"))
-    } finally {
-      setIsLoadingLayouts(false)
-    }
-  }
+  const layoutLibrary = useProductionLineLayoutLibrary({ enabled: isLayoutLibraryOpen })
 
   async function persistLayout(name: string) {
     const trimmedName = name.trim()
     const payload = {
       name: trimmedName,
-      placements: deps.placements,
-      messages: deps.messages,
-      status_text: deps.statusText,
+      placements,
+      messages,
+      status_text: statusText,
     }
 
     setIsSavingLayout(true)
@@ -83,12 +51,13 @@ export function useLayoutManager(deps: LayoutManagerDeps) {
         ? await updateProductionLineLayout(currentLayoutId, payload)
         : await createProductionLineLayout(payload)
 
-      setCurrentLayoutId(response.item.id)
-      setCurrentLayoutName(response.item.name)
-      setIsDirty(false)
+      markClean({
+        id: response.item.id,
+        name: response.item.name,
+      })
 
       if (isLayoutLibraryOpen) {
-        void fetchLayoutLibrary(layoutKeyword)
+        void layoutLibrary.fetchLayoutLibrary()
       }
 
       return response.item
@@ -99,28 +68,14 @@ export function useLayoutManager(deps: LayoutManagerDeps) {
 
   async function executePendingAction(action: PendingLayoutAction) {
     if (action.type === "create") {
-      deps.onResetScene()
-      setCurrentLayoutId(null)
-      setCurrentLayoutName(null)
-      setIsDirty(false)
+      resetWorkspace()
       return
     }
 
-    setLoadingLayoutId(action.layoutId)
     try {
-      const response = await getProductionLineLayout(action.layoutId)
-      deps.onLoadScene(
-        response.item.scene.placements,
-        response.item.conversation.messages,
-        response.item.conversation.status_text || DEFAULT_STATUS_TEXT
-      )
-      setCurrentLayoutId(response.item.id)
-      setCurrentLayoutName(response.item.name)
-      setIsDirty(false)
+      await layoutLibrary.loadLayout(action.layoutId)
     } catch (error) {
-      deps.onStatusChange(getErrorMessage(error, "布局加载失败。"))
-    } finally {
-      setLoadingLayoutId(null)
+      setStatusText(getErrorMessage(error, "布局加载失败。"))
     }
   }
 
@@ -140,7 +95,7 @@ export function useLayoutManager(deps: LayoutManagerDeps) {
 
     const trimmedName = saveName.trim()
     if (!trimmedName) {
-      deps.onStatusChange("请输入布局名称。")
+      setStatusText("请输入布局名称。")
       return
     }
 
@@ -155,16 +110,27 @@ export function useLayoutManager(deps: LayoutManagerDeps) {
         await executePendingAction(nextAction)
       }
     } catch (error) {
-      deps.onStatusChange(getErrorMessage(error, "布局保存失败。"))
+      setStatusText(getErrorMessage(error, "布局保存失败。"))
     }
   }
 
   function handleRequestNewLayout() {
+    if (!isDirty) {
+      void executePendingAction({ type: "create" })
+      return
+    }
+
     setConfirmAction({ type: "create" })
   }
 
   function handleRequestLoadLayout(layoutId: string) {
     setIsLayoutLibraryOpen(false)
+
+    if (!isDirty) {
+      void executePendingAction({ type: "load", layoutId })
+      return
+    }
+
     setConfirmAction({ type: "load", layoutId })
   }
 
@@ -173,16 +139,14 @@ export function useLayoutManager(deps: LayoutManagerDeps) {
 
     try {
       await deleteProductionLineLayout(layout.id)
-      setSavedLayouts((current) => current.filter((item) => item.id !== layout.id))
+      layoutLibrary.removeLayoutSummary(layout.id)
 
       if (currentLayoutId === layout.id) {
-        setCurrentLayoutId(null)
-        setCurrentLayoutName(layout.name)
-        setIsDirty(true)
-        deps.onStatusChange(`已删除布局 ${layout.name}，当前场景保留为未保存状态。`)
+        detachCurrentLayout(layout.name)
+        setStatusText(`已删除布局 ${layout.name}，当前场景保留为未保存状态。`)
       }
     } catch (error) {
-      deps.onStatusChange(getErrorMessage(error, "布局删除失败。"))
+      setStatusText(getErrorMessage(error, "布局删除失败。"))
     } finally {
       setDeletingLayoutId(null)
     }
@@ -208,7 +172,6 @@ export function useLayoutManager(deps: LayoutManagerDeps) {
     currentLayoutId,
     currentLayoutName,
     isDirty,
-    setIsDirty,
 
     isSaveDialogOpen,
     saveName,
@@ -220,11 +183,11 @@ export function useLayoutManager(deps: LayoutManagerDeps) {
 
     isLayoutLibraryOpen,
     setIsLayoutLibraryOpen,
-    layoutKeyword,
-    setLayoutKeyword,
-    savedLayouts,
-    isLoadingLayouts,
-    loadingLayoutId,
+    layoutKeyword: layoutLibrary.layoutKeyword,
+    setLayoutKeyword: layoutLibrary.setLayoutKeyword,
+    savedLayouts: layoutLibrary.savedLayouts,
+    isLoadingLayouts: layoutLibrary.isLoadingLayouts,
+    loadingLayoutId: layoutLibrary.loadingLayoutId,
     deletingLayoutId,
     handleDeleteLayout,
     handleRequestLoadLayout,

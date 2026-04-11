@@ -1,6 +1,6 @@
 import { del, get, post, put } from "./config/client"
 
-import type { ChatMessage, ScenePlacement } from "@/pages/ProductionLine/types"
+import type { ChatMessage, ScenePlacement } from "@/utils/productionLine"
 
 export interface ProductionLineLayoutSummary {
   id: string

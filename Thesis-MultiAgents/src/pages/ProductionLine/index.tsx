@@ -14,22 +14,19 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { useModelAssetStore } from "@/stores/modelAssetStore"
+import { useProductionLineWorkspaceStore } from "@/stores/productionLineWorkspaceStore"
 import AgentChatPanel from "./components/AgentChatPanel"
 import AssetLibraryPanel from "./components/AssetLibraryPanel"
 import LayoutLibraryDialog from "./components/LayoutLibraryDialog"
 import SceneWorkspacePanel from "./components/SceneWorkspacePanel"
 import { useLayoutManager } from "./hooks/useLayoutManager"
-import { usePlacementScene } from "./hooks/usePlacementScene"
-import type { ChatMessage, DropPoint, ScenePlacement } from "./types"
+import type { DropPoint, ScenePlacement } from "@/utils/productionLine"
 import {
-  DEFAULT_STATUS_TEXT,
-  createId,
-  createInitialMessages,
   parseCoordinates,
   parseRotation,
   parseScale,
   resolveAssetFromText,
-} from "./utils"
+} from "@/utils/productionLine"
 
 export default function ProductionLinePage() {
   const assets = useModelAssetStore((state) => state.assets)
@@ -45,32 +42,29 @@ export default function ProductionLinePage() {
   const setKeyword = useModelAssetStore((state) => state.setKeyword)
   const setSelectedId = useModelAssetStore((state) => state.setSelectedId)
 
-  const scene = usePlacementScene(assets)
-
-  const [messages, setMessages] = useState<ChatMessage[]>(() => createInitialMessages())
   const [chatInput, setChatInput] = useState("")
-  const [statusText, setStatusText] = useState(DEFAULT_STATUS_TEXT)
+  const placements = useProductionLineWorkspaceStore((state) => state.placements)
+  const selectedPlacementId = useProductionLineWorkspaceStore((state) => state.selectedPlacementId)
+  const draggedAssetId = useProductionLineWorkspaceStore((state) => state.draggedAssetId)
+  const messages = useProductionLineWorkspaceStore((state) => state.messages)
+  const statusText = useProductionLineWorkspaceStore((state) => state.statusText)
+  const ensureInitialized = useProductionLineWorkspaceStore((state) => state.ensureInitialized)
+  const appendPlacement = useProductionLineWorkspaceStore((state) => state.appendPlacement)
+  const updatePlacement = useProductionLineWorkspaceStore((state) => state.updatePlacement)
+  const removePlacement = useProductionLineWorkspaceStore((state) => state.removePlacement)
+  const removePlacementsByAssetId = useProductionLineWorkspaceStore((state) => state.removePlacementsByAssetId)
+  const clearPlacements = useProductionLineWorkspaceStore((state) => state.clearPlacements)
+  const setSelectedPlacementId = useProductionLineWorkspaceStore((state) => state.setSelectedPlacementId)
+  const setDraggedAssetId = useProductionLineWorkspaceStore((state) => state.setDraggedAssetId)
+  const pushMessage = useProductionLineWorkspaceStore((state) => state.pushMessage)
+  const setStatusText = useProductionLineWorkspaceStore((state) => state.setStatusText)
+  const layout = useLayoutManager()
 
-  const layout = useLayoutManager({
-    placements: scene.placements,
-    messages,
-    statusText,
-    onResetScene: () => {
-      scene.resetScene()
-      setMessages(createInitialMessages())
-      setChatInput("")
-      setStatusText(DEFAULT_STATUS_TEXT)
-    },
-    onLoadScene: (placements, msgs, status) => {
-      scene.setPlacements(placements)
-      scene.setSelectedPlacementId(null)
-      scene.setDraggedAssetId(null)
-      setMessages(msgs)
-      setChatInput("")
-      setStatusText(status)
-    },
-    onStatusChange: setStatusText,
-  })
+  const draggedAsset = assets.find((asset) => asset.id === draggedAssetId) ?? null
+
+  useEffect(() => {
+    ensureInitialized()
+  }, [ensureInitialized])
 
   useEffect(() => {
     void loadAssets()
@@ -80,23 +74,21 @@ export default function ProductionLinePage() {
     if (notice) {
       setStatusText(notice)
     }
-  }, [notice])
+  }, [notice, setStatusText])
 
-  function pushMessage(role: ChatMessage["role"], content: string) {
-    setMessages((current) => [
-      ...current,
-      {
-        id: createId("message"),
-        role,
-        content,
-        createdAt: new Date().toISOString(),
-      },
-    ])
-    layout.setIsDirty(true)
-  }
+  useEffect(() => {
+    if (!draggedAssetId) {
+      return
+    }
+
+    const exists = assets.some((asset) => asset.id === draggedAssetId)
+    if (!exists) {
+      setDraggedAssetId(null)
+    }
+  }, [assets, draggedAssetId, setDraggedAssetId])
 
   function handleRemovePlacement(placementId: string) {
-    const removed = scene.removePlacement(placementId)
+    const removed = removePlacement(placementId)
     if (!removed) {
       return
     }
@@ -109,12 +101,11 @@ export default function ProductionLinePage() {
     placementId: string,
     patch: Partial<Pick<ScenePlacement, "position" | "rotation" | "scale">>
   ) {
-    scene.updatePlacement(placementId, patch)
-    layout.setIsDirty(true)
+    updatePlacement(placementId, patch)
   }
 
   function clearScene() {
-    scene.clearPlacements()
+    clearPlacements()
     setStatusText("场景已清空。")
     pushMessage("assistant", "场景已清空。")
   }
@@ -126,9 +117,7 @@ export default function ProductionLinePage() {
     rotationY = 0,
     scale = 1
   ) {
-    const placement = scene.appendPlacement(asset, source, point, rotationY, scale)
-    layout.setIsDirty(true)
-    return placement
+    return appendPlacement(asset, source, point, rotationY, scale)
   }
 
   async function handleUploadAsset(file: File) {
@@ -138,20 +127,17 @@ export default function ProductionLinePage() {
 
   async function handleDeleteAsset(asset: ModelAsset) {
     await deleteAsset(asset.filename)
-    const removedAny = scene.removePlacementsByAssetId(asset.id)
-    if (removedAny) {
-      layout.setIsDirty(true)
-    }
+    removePlacementsByAssetId(asset.id)
     setStatusText(`已删除 ${asset.filename}。`)
   }
 
   function handleDropAsset(point: DropPoint | null) {
-    if (!scene.draggedAsset) {
+    if (!draggedAsset) {
       return
     }
 
-    const placement = handleAppendPlacement(scene.draggedAsset, "manual", point)
-    scene.setDraggedAssetId(null)
+    const placement = handleAppendPlacement(draggedAsset, "manual", point)
+    setDraggedAssetId(null)
     setStatusText(`已放置 ${placement.assetFilename}。`)
     pushMessage(
       "assistant",
@@ -177,7 +163,7 @@ export default function ProductionLinePage() {
     if (/删除|移除|remove|delete/i.test(content)) {
       const asset = resolveAssetFromText(content, assets)
       const target = asset
-        ? [...scene.placements].reverse().find((item) => item.assetId === asset.id) ?? null
+        ? [...placements].reverse().find((item) => item.assetId === asset.id) ?? null
         : null
 
       if (!target) {
@@ -244,16 +230,15 @@ export default function ProductionLinePage() {
             onDelete={handleDeleteAsset}
             onDragStart={(assetId) => {
               setSelectedId(assetId)
-              scene.setDraggedAssetId(assetId)
+              setDraggedAssetId(assetId)
             }}
           />
 
           <SceneWorkspacePanel
-            placements={scene.placements}
-            selectedPlacement={scene.selectedPlacement}
-            selectedPlacementId={scene.selectedPlacementId}
-            draggedAssetName={scene.draggedAsset?.filename ?? null}
-            onSelectPlacement={scene.setSelectedPlacementId}
+            placements={placements}
+            selectedPlacementId={selectedPlacementId}
+            draggedAssetName={draggedAsset?.filename ?? null}
+            onSelectPlacement={setSelectedPlacementId}
             onDropAsset={handleDropAsset}
             onUpdatePlacement={handleUpdatePlacement}
             onRemovePlacement={handleRemovePlacement}

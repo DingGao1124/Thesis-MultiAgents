@@ -64,6 +64,8 @@ The main product goal is to support:
   - `cd Thesis-MultiAgents`
   - `pnpm install`
   - `pnpm dev`
+  - `pnpm lint`
+  - `pnpm exec tsc --noEmit`
 
 ## Recommended Working Order
 When implementing new features, follow this priority:
@@ -87,57 +89,32 @@ When implementing new features, follow this priority:
 - Scope: `Thesis-MultiAgents/src/**/*.{ts,tsx,css}`
 - Use functional React components only.
 - Keep React Compiler friendly: do not add `React.memo`, `useMemo`, `useCallback` unless explicitly required.
+- Keep TypeScript strict-friendly code; avoid `any` unless there is a clear reason.
 - Use `shadcn/ui` as default UI component library.
 - Use `ECharts` as default chart library.
 - Use `GSAP` as default motion library; prefer reusable `useGsap` pattern.
-- Use `Three.js` for 3D scene rendering and dynamic asset updates.
-- Use WebSocket for real-time scene status updates when possible.
-- Keep UI industrial and professional: clean, stable, minimal, suitable for thesis screenshots.
+- Use `Three.js` as the baseline renderer for 3D scene features.
+- Prefer WebSocket for real-time scene/device status sync when backend events are available.
+- Keep UI industrial and professional for thesis screenshots.
 - Keep component boundaries small and decoupled.
 - Keep frontend API contracts typed and compatible with `src/App.tsx` routing.
-- Favor dashboard-style layouts with clear panels, status cards, graph views, logs, and scene views.
-- Avoid overly flashy visual effects that reduce clarity.
+- Keep frontend API access through `/api` proxy; do not hardcode backend host in page/component code.
 
-## Recommended Frontend Pages
-Agents should prefer building or extending the following pages:
-
-- **Dashboard**
-  - high-level system status
-  - task progress
-  - agent overview
-  - scene summary
-
-- **Task and Asset Management**
-  - work order import
-  - task list
-  - asset upload
-  - document upload
-  - version management
-
-- **Knowledge Graph View**
-  - graph visualization
-  - node detail panel
-  - relation filtering
-  - three-layer hierarchy display
-
-- **Multi-Agent Monitoring**
-  - agent panels by hierarchy
-  - task decomposition view
-  - dialogue stream
-  - execution logs
-  - status transitions
-
-- **3D Twin Scene**
-  - scene tree
-  - device status panel
-  - real-time updates
-  - layout reconstruction result
-
-- **Experiment / Validation View**
-  - experiment selection
-  - result metrics
-  - comparison charts
-  - replay-oriented logs
+## Frontend src Folder Responsibilities
+- `src/pages`: route-level orchestration only. Avoid putting heavy reusable logic directly in page files.
+- `src/pages/*/components`: page-scoped feature components. Keep domain boundaries clear per feature.
+- `src/components/ui`: reusable primitive UI components (foundation layer).
+- `src/components/layout`: cross-page layout and navigation shells.
+- `src/components/3D`: reusable 3D rendering/viewer helpers and overlays.
+- `src/components/assets`: reusable asset-related display components shared by pages.
+- `src/stores`: shared state and domain actions (Zustand). Split stores by domain responsibility.
+- `src/api`: typed request/response contracts and transport calls only.
+- `src/api/config`: API client configuration, interceptors, and request wrappers.
+- `src/hooks`: reusable behavior hooks; avoid burying domain business logic in generic hooks.
+- `src/utils`: pure utility functions, parsing, and data transforms.
+- `src/types`: shared domain and API-related type definitions.
+- `src/lib`: low-level shared helpers (framework/library adapters).
+- `src/assets`: static assets only.
 
 ## Backend Rules
 - Scope: `*.py`, `api/**/*.py`, `config/**/*.py`, `lib/**/*.py`, `modules/**/*.py`, `services/**/*.py`, `utils/**/*.py`
@@ -286,6 +263,8 @@ This project is hierarchical by design.
   - run the changed API path manually
   - verify logs and returned payloads
 - Frontend:
+  - run `cd Thesis-MultiAgents && pnpm lint`
+  - run `cd Thesis-MultiAgents && pnpm exec tsc --noEmit`
   - verify routing, panel rendering, and typed API usage
   - verify no obvious console errors
 - Infra:

@@ -27,6 +27,7 @@ import FloatingDockNav from '@/components/layout/FloatingDockNav'
 import AgentChat from './components/AgentChat'
 import AgentEdge from './components/AgentEdge'
 import AgentNode from './components/AgentNode'
+import RealtimeProductionLinePanel from './components/RealtimeProductionLinePanel'
 import { initialEdges, initialNodes } from './data'
 import type { AgentNodeData } from './types'
 
@@ -45,6 +46,7 @@ export default function MultiAgents() {
   const [nodes, setNodes, onNodesChange] = useNodesState<AgentNodeData>(initialNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
   const [isChatOpen, setIsChatOpen] = useState(false)
+  const [isRealtime3DOpen, setIsRealtime3DOpen] = useState(false)
 
   const handleDeleteNode = (nodeId: string) => {
     setNodes((currentNodes) => currentNodes.filter((node) => node.id !== nodeId))
@@ -78,11 +80,6 @@ export default function MultiAgents() {
     setEdges((currentEdges) => addEdge(nextEdge, currentEdges))
   }
 
-  const handleOpenRealtime3DStatus = () => {
-    // Placeholder entry: wire this to 3D realtime status panel/page later.
-    console.info('Open 3D production-line realtime status')
-  }
-
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-slate-100">
       <FloatingDockNav />
@@ -104,9 +101,9 @@ export default function MultiAgents() {
               variant="outline"
               size="icon-sm"
               className="h-8 w-8 rounded-full border-slate-300 bg-white text-slate-700 shadow-sm transition-transform duration-300 hover:scale-105"
-              onClick={handleOpenRealtime3DStatus}
-              aria-label="Open 3D production-line realtime status"
-              title="Open 3D production-line realtime status"
+              onClick={() => setIsRealtime3DOpen((value) => !value)}
+              aria-label={isRealtime3DOpen ? 'Close 3D production-line realtime status' : 'Open 3D production-line realtime status'}
+              title={isRealtime3DOpen ? 'Close 3D production-line realtime status' : 'Open 3D production-line realtime status'}
             >
               <Factory className="size-4" />
             </Button>
@@ -189,6 +186,12 @@ export default function MultiAgents() {
           <Background variant={BackgroundVariant.Dots} color="#94a3b8" gap={16} size={1.5} />
         </ReactFlow>
       </div>
+
+      <RealtimeProductionLinePanel
+        open={isRealtime3DOpen}
+        isChatOpen={isChatOpen}
+        onOpenChange={setIsRealtime3DOpen}
+      />
 
       <div className="pointer-events-none absolute right-4 top-4 bottom-4 z-20 w-90 max-w-[calc(100vw-2rem)]">
         <div

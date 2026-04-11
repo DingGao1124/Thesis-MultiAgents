@@ -19,8 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import SceneWorkspacePanel from "@/pages/ProductionLine/components/SceneWorkspacePanel"
-import { useProductionLineLayoutLibrary } from "@/pages/ProductionLine/hooks/useProductionLineLayoutLibrary"
+import SceneWorkspacePanel from "@/components/production-line/SceneWorkspacePanel"
+import { useProductionLineLayoutLibrary } from "@/hooks/useProductionLineLayoutLibrary"
 import { useProductionLineWorkspaceStore } from "@/stores/productionLineWorkspaceStore"
 
 type RealtimeProductionLinePanelProps = {
@@ -52,7 +52,12 @@ export default function RealtimeProductionLinePanel({
   const setSelectedPlacementId = useProductionLineWorkspaceStore((state) => state.setSelectedPlacementId)
 
   const [pendingLayoutId, setPendingLayoutId] = useState<string | null>(null)
+  const [isSceneReady, setIsSceneReady] = useState(false)
   const layoutLibrary = useProductionLineLayoutLibrary({ enabled: open })
+
+  function emitResize() {
+    window.dispatchEvent(new Event("resize"))
+  }
 
   useEffect(() => {
     if (!open) {
@@ -61,6 +66,57 @@ export default function RealtimeProductionLinePanel({
 
     ensureInitialized()
   }, [ensureInitialized, open])
+
+  useEffect(() => {
+    if (!open) {
+      setIsSceneReady(false)
+      return
+    }
+
+    const frameId = window.requestAnimationFrame(() => {
+      emitResize()
+    })
+
+    const delayedResize = window.setTimeout(() => {
+      emitResize()
+    }, 320)
+
+    const revealScene = window.setTimeout(() => {
+      emitResize()
+      setIsSceneReady(true)
+    }, 380)
+
+    return () => {
+      window.cancelAnimationFrame(frameId)
+      window.clearTimeout(delayedResize)
+      window.clearTimeout(revealScene)
+    }
+  }, [open, isChatOpen])
+
+  useEffect(() => {
+    if (!open) {
+      return
+    }
+
+    if (layoutLibrary.loadingLayoutId) {
+      setIsSceneReady(false)
+      return
+    }
+
+    const frameId = window.requestAnimationFrame(() => {
+      emitResize()
+    })
+
+    const revealScene = window.setTimeout(() => {
+      emitResize()
+      setIsSceneReady(true)
+    }, 120)
+
+    return () => {
+      window.cancelAnimationFrame(frameId)
+      window.clearTimeout(revealScene)
+    }
+  }, [open, layoutLibrary.loadingLayoutId])
 
   const selectValue =
     currentLayoutId && layoutLibrary.savedLayouts.some((item) => item.id === currentLayoutId)
@@ -91,6 +147,8 @@ export default function RealtimeProductionLinePanel({
       setPendingLayoutId(null)
     }
   }
+
+  const shouldShowSceneLoading = open && (!isSceneReady || Boolean(layoutLibrary.loadingLayoutId))
 
   return (
     <>
@@ -176,14 +234,25 @@ export default function RealtimeProductionLinePanel({
             </div>
           </div>
 
-          <div className="min-h-0 flex-1 p-3">
+          <div className="relative h-full w-full p-2">
             <SceneWorkspacePanel
               placements={placements}
               selectedPlacementId={selectedPlacementId}
               onSelectPlacement={setSelectedPlacementId}
               readOnly
-              className="h-full rounded-2xl"
+              className={`h-full w-full rounded-2xl transition-opacity duration-200 ${
+                shouldShowSceneLoading ? "opacity-0" : "opacity-100"
+              }`}
             />
+
+            {shouldShowSceneLoading ? (
+              <div className="absolute inset-2 flex items-center justify-center rounded-2xl border border-slate-200 bg-white/96">
+                <div className="flex flex-col items-center gap-3 text-slate-500">
+                  <Loader2 className="size-6 animate-spin text-sky-600" />
+                  <div className="text-sm font-medium text-slate-700">加载三维场景中...</div>
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

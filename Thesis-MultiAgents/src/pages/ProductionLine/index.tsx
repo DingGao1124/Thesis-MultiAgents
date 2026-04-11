@@ -2,6 +2,17 @@ import { useEffect, useState, type FormEvent } from "react"
 import * as THREE from "three"
 
 import type { ModelAsset } from "@/api/assets"
+import SceneWorkspacePanel from "@/components/production-line/SceneWorkspacePanel"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import FloatingDockNav from "@/components/layout/FloatingDockNav"
 import { Button } from "@/components/ui/button"
 import {
@@ -18,7 +29,6 @@ import { useProductionLineWorkspaceStore } from "@/stores/productionLineWorkspac
 import AgentChatPanel from "./components/AgentChatPanel"
 import AssetLibraryPanel from "./components/AssetLibraryPanel"
 import LayoutLibraryDialog from "./components/LayoutLibraryDialog"
-import SceneWorkspacePanel from "./components/SceneWorkspacePanel"
 import { useLayoutManager } from "./hooks/useLayoutManager"
 import type { DropPoint, ScenePlacement } from "@/utils/productionLine"
 import {
@@ -339,6 +349,41 @@ export default function ProductionLinePage() {
         </DialogContent>
       </Dialog>
 
+      <AlertDialog
+        open={layout.pendingDeleteLayout !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            layout.closeDeleteLayoutDialog()
+          }
+        }}
+      >
+        <AlertDialogContent size="sm">
+          <AlertDialogHeader>
+            <AlertDialogTitle>确认删除布局</AlertDialogTitle>
+            <AlertDialogDescription>
+              {layout.pendingDeleteLayout
+                ? `删除后将无法恢复，确定删除布局“${layout.pendingDeleteLayout.name}”吗？`
+                : "删除后将无法恢复，确定继续吗？"}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={Boolean(layout.deletingLayoutId)}>
+              取消
+            </AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              disabled={Boolean(layout.deletingLayoutId)}
+              onClick={() => {
+                void layout.confirmDeleteLayout()
+              }}
+            >
+              {layout.deletingLayoutId ? "删除中" : "确认删除"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <LayoutLibraryDialog
         open={layout.isLayoutLibraryOpen}
         keyword={layout.layoutKeyword}
@@ -350,7 +395,7 @@ export default function ProductionLinePage() {
         onOpenChange={layout.setIsLayoutLibraryOpen}
         onKeywordChange={layout.setLayoutKeyword}
         onLoad={layout.handleRequestLoadLayout}
-        onDelete={layout.handleDeleteLayout}
+        onDelete={layout.requestDeleteLayout}
       />
     </>
   )

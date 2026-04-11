@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import * as THREE from "three"
 
 import { cn } from "@/lib/utils"
-import type { DropPoint, ScenePlacement } from "@/utils/productionLine"
-import { roundCoordinate } from "@/utils/productionLine"
+import { roundCoordinate, type DropPoint, type ScenePlacement } from "@/utils/productionLine"
 import SceneWorkspaceCanvas, { type SceneSettings } from "./SceneWorkspaceCanvas"
 import SceneWorkspaceInspector from "./SceneWorkspaceInspector"
 import SceneWorkspaceSettings from "./SceneWorkspaceSettings"
@@ -121,7 +120,6 @@ export default function SceneWorkspacePanel({
           break
         case "d":
         case "D":
-        case "ArrowRight":
           pos[0] = roundCoordinate(pos[0] + step)
           moved = true
           break
@@ -150,7 +148,7 @@ export default function SceneWorkspacePanel({
   }, [onUpdatePlacement, readOnly, selectedPlacement])
 
   return (
-    <section className={cn("relative min-w-0 flex-1 overflow-hidden rounded-sm border border-slate-200 bg-white", className)}>
+    <section className={cn("relative h-full w-full min-w-0 flex-1 overflow-hidden rounded-sm border border-slate-200 bg-white", className)}>
       <div
         ref={shellRef}
         className="relative h-full w-full"

@@ -5,9 +5,7 @@ type SceneWorkspaceSettingsProps = {
   open: boolean
   onToggle: () => void
   settings: SceneSettings
-  onSettingsChange: (
-    updater: (current: SceneSettings) => SceneSettings
-  ) => void
+  onSettingsChange: (updater: (current: SceneSettings) => SceneSettings) => void
 }
 
 export default function SceneWorkspaceSettings({

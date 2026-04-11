@@ -27,7 +27,7 @@ import FloatingDockNav from '@/components/layout/FloatingDockNav'
 import AgentChat from './components/AgentChat'
 import AgentEdge from './components/AgentEdge'
 import AgentNode from './components/AgentNode'
-import RealtimeProductionLinePanel from './components/RealtimeProductionLinePanel'
+import ProductionLinePanel from './components/ProductionLinePanel'
 import { initialEdges, initialNodes } from './data'
 import type { AgentNodeData } from './types'
 
@@ -187,7 +187,7 @@ export default function MultiAgents() {
         </ReactFlow>
       </div>
 
-      <RealtimeProductionLinePanel
+      <ProductionLinePanel
         open={isRealtime3DOpen}
         isChatOpen={isChatOpen}
         onOpenChange={setIsRealtime3DOpen}
@@ -201,7 +201,8 @@ export default function MultiAgents() {
               : 'pointer-events-none translate-y-3 scale-95 opacity-0'
           }`}
         >
-          <AgentChat productionName="锂电池包组装产线" />
+          <AgentChat productionName="制造零件分拣产线" />
+          {/* <AgentChat productionName="锂电池包组装产线" /> */}
         </div>
       </div>
     </div>

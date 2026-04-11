@@ -9,9 +9,11 @@ import {
   OrbitControls,
   useGLTF,
 } from "@react-three/drei"
-import { Box } from "lucide-react"
 
 import type { ModelAsset } from "@/api/assets"
+import PreviewUnavailable from "./PreviewUnavailable"
+
+const MAX_PREVIEW_SIZE_BYTES = 50 * 1024 * 1024
 
 function AssetModel({ url }: { url: string }) {
   const gltf = useGLTF(url)
@@ -40,7 +42,15 @@ function PreviewFallback({ compact = false }: { compact?: boolean }) {
   )
 }
 
+function shouldSkipPreview(asset: ModelAsset) {
+  return asset.size_bytes > MAX_PREVIEW_SIZE_BYTES
+}
+
 export function ModelAssetCardPreview({ asset }: { asset: ModelAsset }) {
+  if (shouldSkipPreview(asset)) {
+    return <PreviewUnavailable compact sizeLabel={asset.size_label} />
+  }
+
   return (
     <Canvas
       frameloop="demand"
@@ -74,6 +84,10 @@ export function ModelAssetViewer({
         请选择模型查看详情
       </div>
     )
+  }
+
+  if (shouldSkipPreview(asset)) {
+    return <PreviewUnavailable sizeLabel={asset.size_label} />
   }
 
   return (

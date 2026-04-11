@@ -1,0 +1,762 @@
+{
+  "id": "layout_6aeffa23713d",
+  "version": 1,
+  "name": "零件布局示例",
+  "created_at": "2026-04-11T21:07:45.462531+08:00",
+  "updated_at": "2026-04-11T21:45:26.869892+08:00",
+  "scene": {
+    "placements": [
+      {
+        "id": "placement-fj16bu3s",
+        "assetId": "辅助设备--围栏（3）.glb",
+        "assetName": "辅助设备--围栏（3）",
+        "assetFilename": "辅助设备--围栏（3）.glb",
+        "assetUrl": "/api/assets/models/file/%E8%BE%85%E5%8A%A9%E8%AE%BE%E5%A4%87--%E5%9B%B4%E6%A0%8F%EF%BC%883%EF%BC%89.glb",
+        "position": [
+          -10.16,
+          0.0,
+          -17.91
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:26:55.520Z"
+      },
+      {
+        "id": "placement-7siiz45o",
+        "assetId": "辅助装置--激光器模块.glb",
+        "assetName": "辅助装置--激光器模块",
+        "assetFilename": "辅助装置--激光器模块.glb",
+        "assetUrl": "/api/assets/models/file/%E8%BE%85%E5%8A%A9%E8%A3%85%E7%BD%AE--%E6%BF%80%E5%85%89%E5%99%A8%E6%A8%A1%E5%9D%97.glb",
+        "position": [
+          -1.67,
+          0.0,
+          -7.33
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:26:57.400Z"
+      },
+      {
+        "id": "placement-8jxy8z84",
+        "assetId": "辅助设备--围栏（2）.glb",
+        "assetName": "辅助设备--围栏（2）",
+        "assetFilename": "辅助设备--围栏（2）.glb",
+        "assetUrl": "/api/assets/models/file/%E8%BE%85%E5%8A%A9%E8%AE%BE%E5%A4%87--%E5%9B%B4%E6%A0%8F%EF%BC%882%EF%BC%89.glb",
+        "position": [
+          -11.63,
+          0.0,
+          -1.92
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:26:58.735Z"
+      },
+      {
+        "id": "placement-xgylfy3d",
+        "assetId": "辅助设备--围栏标语.glb",
+        "assetName": "辅助设备--围栏标语",
+        "assetFilename": "辅助设备--围栏标语.glb",
+        "assetUrl": "/api/assets/models/file/%E8%BE%85%E5%8A%A9%E8%AE%BE%E5%A4%87--%E5%9B%B4%E6%A0%8F%E6%A0%87%E8%AF%AD.glb",
+        "position": [
+          0.71,
+          0.0,
+          8.99
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:26:59.967Z"
+      },
+      {
+        "id": "placement-0j3s18ta",
+        "assetId": "跨接片组装工作站.glb",
+        "assetName": "跨接片组装工作站",
+        "assetFilename": "跨接片组装工作站.glb",
+        "assetUrl": "/api/assets/models/file/%E8%B7%A8%E6%8E%A5%E7%89%87%E7%BB%84%E8%A3%85%E5%B7%A5%E4%BD%9C%E7%AB%99.glb",
+        "position": [
+          6.69,
+          0.0,
+          -9.91
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:27:13.703Z"
+      },
+      {
+        "id": "placement-ci3ag2nb",
+        "assetId": "激光打标机.glb",
+        "assetName": "激光打标机",
+        "assetFilename": "激光打标机.glb",
+        "assetUrl": "/api/assets/models/file/%E6%BF%80%E5%85%89%E6%89%93%E6%A0%87%E6%9C%BA.glb",
+        "position": [
+          -11.58,
+          0.0,
+          13.93
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:27:14.855Z"
+      },
+      {
+        "id": "placement-mn5llwqt",
+        "assetId": "检测单元.glb",
+        "assetName": "检测单元",
+        "assetFilename": "检测单元.glb",
+        "assetUrl": "/api/assets/models/file/%E6%A3%80%E6%B5%8B%E5%8D%95%E5%85%83.glb",
+        "position": [
+          -14.8,
+          0.0,
+          7.53
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:27:18.830Z"
+      },
+      {
+        "id": "placement-oi8p4tjc",
+        "assetId": "上罩单个模型glb.glb",
+        "assetName": "上罩单个模型glb",
+        "assetFilename": "上罩单个模型glb.glb",
+        "assetUrl": "/api/assets/models/file/%E4%B8%8A%E7%BD%A9%E5%8D%95%E4%B8%AA%E6%A8%A1%E5%9E%8Bglb.glb",
+        "position": [
+          -0.55,
+          0.0,
+          -12.69
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:27:22.542Z"
+      },
+      {
+        "id": "placement-5rbgmmqq",
+        "assetId": "上罩.glb",
+        "assetName": "上罩",
+        "assetFilename": "上罩.glb",
+        "assetUrl": "/api/assets/models/file/%E4%B8%8A%E7%BD%A9.glb",
+        "position": [
+          13.81,
+          0.0,
+          -21.01
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:27:23.967Z"
+      },
+      {
+        "id": "placement-0voyeqcy",
+        "assetId": "机柜上罩.glb",
+        "assetName": "机柜上罩",
+        "assetFilename": "机柜上罩.glb",
+        "assetUrl": "/api/assets/models/file/%E6%9C%BA%E6%9F%9C%E4%B8%8A%E7%BD%A9.glb",
+        "position": [
+          5.14,
+          0.0,
+          14.12
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:27:26.665Z"
+      },
+      {
+        "id": "placement-iq8tgtau",
+        "assetId": "四光纤电源柜单个模型.glb",
+        "assetName": "四光纤电源柜单个模型",
+        "assetFilename": "四光纤电源柜单个模型.glb",
+        "assetUrl": "/api/assets/models/file/%E5%9B%9B%E5%85%89%E7%BA%A4%E7%94%B5%E6%BA%90%E6%9F%9C%E5%8D%95%E4%B8%AA%E6%A8%A1%E5%9E%8B.glb",
+        "position": [
+          -13.19,
+          0.0,
+          17.13
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:27:28.131Z"
+      },
+      {
+        "id": "placement-qkevwg08",
+        "assetId": "四光纤电源柜.glb",
+        "assetName": "四光纤电源柜",
+        "assetFilename": "四光纤电源柜.glb",
+        "assetUrl": "/api/assets/models/file/%E5%9B%9B%E5%85%89%E7%BA%A4%E7%94%B5%E6%BA%90%E6%9F%9C.glb",
+        "position": [
+          1.82,
+          0.0,
+          -17.04
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:27:35.785Z"
+      },
+      {
+        "id": "placement-cz5lzvdm",
+        "assetId": "搬运夹取工具.glb",
+        "assetName": "搬运夹取工具",
+        "assetFilename": "搬运夹取工具.glb",
+        "assetUrl": "/api/assets/models/file/%E6%90%AC%E8%BF%90%E5%A4%B9%E5%8F%96%E5%B7%A5%E5%85%B7.glb",
+        "position": [
+          -7.45,
+          0.0,
+          18.56
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:27:39.125Z"
+      },
+      {
+        "id": "placement-i3t55kqw",
+        "assetId": "单体装配工作站.glb",
+        "assetName": "单体装配工作站",
+        "assetFilename": "单体装配工作站.glb",
+        "assetUrl": "/api/assets/models/file/%E5%8D%95%E4%BD%93%E8%A3%85%E9%85%8D%E5%B7%A5%E4%BD%9C%E7%AB%99.glb",
+        "position": [
+          -0.72,
+          0.0,
+          17.45
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:27:40.261Z"
+      },
+      {
+        "id": "placement-du1nasx7",
+        "assetId": "贴胶工作站.glb",
+        "assetName": "贴胶工作站",
+        "assetFilename": "贴胶工作站.glb",
+        "assetUrl": "/api/assets/models/file/%E8%B4%B4%E8%83%B6%E5%B7%A5%E4%BD%9C%E7%AB%99.glb",
+        "position": [
+          11.0,
+          0.0,
+          17.66
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:27:42.884Z"
+      },
+      {
+        "id": "placement-lg64ossk",
+        "assetId": "导热壳供料打码读码及涂胶A.glb",
+        "assetName": "导热壳供料打码读码及涂胶A",
+        "assetFilename": "导热壳供料打码读码及涂胶A.glb",
+        "assetUrl": "/api/assets/models/file/%E5%AF%BC%E7%83%AD%E5%A3%B3%E4%BE%9B%E6%96%99%E6%89%93%E7%A0%81%E8%AF%BB%E7%A0%81%E5%8F%8A%E6%B6%82%E8%83%B6A.glb",
+        "position": [
+          13.85,
+          0.0,
+          -1.17
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:27:45.706Z"
+      },
+      {
+        "id": "placement-m2d3xtc1",
+        "assetId": "端板输送线.glb",
+        "assetName": "端板输送线",
+        "assetFilename": "端板输送线.glb",
+        "assetUrl": "/api/assets/models/file/%E7%AB%AF%E6%9D%BF%E8%BE%93%E9%80%81%E7%BA%BF.glb",
+        "position": [
+          7.79,
+          0.0,
+          3.97
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:27:47.193Z"
+      },
+      {
+        "id": "placement-lzt0z1ht",
+        "assetId": "倍速链线体.glb",
+        "assetName": "倍速链线体",
+        "assetFilename": "倍速链线体.glb",
+        "assetUrl": "/api/assets/models/file/%E5%80%8D%E9%80%9F%E9%93%BE%E7%BA%BF%E4%BD%93.glb",
+        "position": [
+          2.39,
+          0.4,
+          4.66
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:27:49.963Z"
+      },
+      {
+        "id": "placement-rq4es753",
+        "assetId": "电芯大面清洗极性检测读码单元.glb",
+        "assetName": "电芯大面清洗极性检测读码单元",
+        "assetFilename": "电芯大面清洗极性检测读码单元.glb",
+        "assetUrl": "/api/assets/models/file/%E7%94%B5%E8%8A%AF%E5%A4%A7%E9%9D%A2%E6%B8%85%E6%B4%97%E6%9E%81%E6%80%A7%E6%A3%80%E6%B5%8B%E8%AF%BB%E7%A0%81%E5%8D%95%E5%85%83.glb",
+        "position": [
+          8.41,
+          7.17,
+          11.79
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:28:02.855Z"
+      },
+      {
+        "id": "placement-j41s184e",
+        "assetId": "模组线下组件.glb",
+        "assetName": "模组线下组件",
+        "assetFilename": "模组线下组件.glb",
+        "assetUrl": "/api/assets/models/file/%E6%A8%A1%E7%BB%84%E7%BA%BF%E4%B8%8B%E7%BB%84%E4%BB%B6.glb",
+        "position": [
+          16.02,
+          9.57,
+          6.17
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:28:14.204Z"
+      },
+      {
+        "id": "placement-zvqpu8l3",
+        "assetId": "厂房模型文件.glb",
+        "assetName": "厂房模型文件",
+        "assetFilename": "厂房模型文件.glb",
+        "assetUrl": "/api/assets/models/file/%E5%8E%82%E6%88%BF%E6%A8%A1%E5%9E%8B%E6%96%87%E4%BB%B6.glb",
+        "position": [
+          0.0,
+          12.2,
+          10.8
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:28:21.389Z"
+      },
+      {
+        "id": "placement-zt4izpqy",
+        "assetId": "厂房地面文件.glb",
+        "assetName": "厂房地面文件",
+        "assetFilename": "厂房地面文件.glb",
+        "assetUrl": "/api/assets/models/file/%E5%8E%82%E6%88%BF%E5%9C%B0%E9%9D%A2%E6%96%87%E4%BB%B6.glb",
+        "position": [
+          -0.57,
+          -9.05,
+          0.76
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:29:12.917Z"
+      },
+      {
+        "id": "placement-dbj9xai0",
+        "assetId": "模组堆叠总装.glb",
+        "assetName": "模组堆叠总装",
+        "assetFilename": "模组堆叠总装.glb",
+        "assetUrl": "/api/assets/models/file/%E6%A8%A1%E7%BB%84%E5%A0%86%E5%8F%A0%E6%80%BB%E8%A3%85.glb",
+        "position": [
+          -3.7,
+          0.0,
+          -0.04
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:29:38.946Z"
+      },
+      {
+        "id": "placement-g31gz0jx",
+        "assetId": "五轴加工激光站单图.glb",
+        "assetName": "五轴加工激光站单图",
+        "assetFilename": "五轴加工激光站单图.glb",
+        "assetUrl": "/api/assets/models/file/%E4%BA%94%E8%BD%B4%E5%8A%A0%E5%B7%A5%E6%BF%80%E5%85%89%E7%AB%99%E5%8D%95%E5%9B%BE.glb",
+        "position": [
+          7.87,
+          -3.93,
+          -7.74
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:29:48.464Z"
+      },
+      {
+        "id": "placement-oolt720g",
+        "assetId": "五轴激光加工站总图.glb",
+        "assetName": "五轴激光加工站总图",
+        "assetFilename": "五轴激光加工站总图.glb",
+        "assetUrl": "/api/assets/models/file/%E4%BA%94%E8%BD%B4%E6%BF%80%E5%85%89%E5%8A%A0%E5%B7%A5%E7%AB%99%E6%80%BB%E5%9B%BE.glb",
+        "position": [
+          12.47,
+          -3.04,
+          -3.37
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:29:52.358Z"
+      },
+      {
+        "id": "placement-aurmpp7q",
+        "assetId": "电芯上料工作站.glb",
+        "assetName": "电芯上料工作站",
+        "assetFilename": "电芯上料工作站.glb",
+        "assetUrl": "/api/assets/models/file/%E7%94%B5%E8%8A%AF%E4%B8%8A%E6%96%99%E5%B7%A5%E4%BD%9C%E7%AB%99.glb",
+        "position": [
+          4.54,
+          -0.02,
+          -8.23
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T13:30:01.287Z"
+      }
+    ]
+  },
+  "conversation": {
+    "messages": [
+      {
+        "id": "message-g6dbf60g",
+        "role": "assistant",
+        "content": "布局代理已就绪。",
+        "createdAt": "2026-04-11T13:07:29.377Z"
+      },
+      {
+        "id": "message-1edo7b97",
+        "role": "assistant",
+        "content": "辅助装置--激光器模块.glb 已放置在 (-3.53, 0, 0.02)。",
+        "createdAt": "2026-04-11T13:07:32.450Z"
+      },
+      {
+        "id": "message-r416603u",
+        "role": "assistant",
+        "content": "stacy.glb 已放置在 (1.27, 0, -2.35)。",
+        "createdAt": "2026-04-11T13:07:38.196Z"
+      },
+      {
+        "id": "message-cjbmd3jc",
+        "role": "assistant",
+        "content": "stacy.glb 已从场景移除。",
+        "createdAt": "2026-04-11T13:12:17.697Z"
+      },
+      {
+        "id": "message-bcuflgsa",
+        "role": "assistant",
+        "content": "辅助装置--激光器模块.glb 已从场景移除。",
+        "createdAt": "2026-04-11T13:12:19.002Z"
+      },
+      {
+        "id": "message-g330g21g",
+        "role": "assistant",
+        "content": "厂房.glb 已放置在 (-1.12, 0, -0.59)。",
+        "createdAt": "2026-04-11T13:12:43.288Z"
+      },
+      {
+        "id": "message-l77t8we8",
+        "role": "assistant",
+        "content": "炼钢.glb 已放置在 (-20.93, 0, -4.8)。",
+        "createdAt": "2026-04-11T13:12:57.303Z"
+      },
+      {
+        "id": "message-ivw8k8a9",
+        "role": "assistant",
+        "content": "厂房.glb 已从场景移除。",
+        "createdAt": "2026-04-11T13:25:53.239Z"
+      },
+      {
+        "id": "message-50im3tnv",
+        "role": "assistant",
+        "content": "炼钢.glb 已从场景移除。",
+        "createdAt": "2026-04-11T13:25:54.612Z"
+      },
+      {
+        "id": "message-rapbqyy1",
+        "role": "assistant",
+        "content": "辅助设备--围栏（3）.glb 已放置在 (-10.16, 0, -17.91)。",
+        "createdAt": "2026-04-11T13:26:55.520Z"
+      },
+      {
+        "id": "message-ulzxuw7f",
+        "role": "assistant",
+        "content": "辅助装置--激光器模块.glb 已放置在 (-1.67, 0, -7.33)。",
+        "createdAt": "2026-04-11T13:26:57.400Z"
+      },
+      {
+        "id": "message-tjd3qts1",
+        "role": "assistant",
+        "content": "辅助设备--围栏（2）.glb 已放置在 (-11.63, 0, -1.92)。",
+        "createdAt": "2026-04-11T13:26:58.735Z"
+      },
+      {
+        "id": "message-fpopi2tk",
+        "role": "assistant",
+        "content": "辅助设备--围栏标语.glb 已放置在 (0.71, 0, 8.99)。",
+        "createdAt": "2026-04-11T13:26:59.967Z"
+      },
+      {
+        "id": "message-bwwa7c8b",
+        "role": "assistant",
+        "content": "跨接片组装工作站.glb 已放置在 (6.69, 0, -9.91)。",
+        "createdAt": "2026-04-11T13:27:13.703Z"
+      },
+      {
+        "id": "message-ikd4wbeh",
+        "role": "assistant",
+        "content": "激光打标机.glb 已放置在 (-11.58, 0, 13.93)。",
+        "createdAt": "2026-04-11T13:27:14.855Z"
+      },
+      {
+        "id": "message-0q56l1ik",
+        "role": "assistant",
+        "content": "检测单元.glb 已放置在 (-14.8, 0, 7.53)。",
+        "createdAt": "2026-04-11T13:27:18.830Z"
+      },
+      {
+        "id": "message-6xei6odf",
+        "role": "assistant",
+        "content": "厂房地面文件.glb 已放置在 (0.37, 0, 1.52)。",
+        "createdAt": "2026-04-11T13:27:20.247Z"
+      },
+      {
+        "id": "message-nrnud85j",
+        "role": "assistant",
+        "content": "上罩单个模型glb.glb 已放置在 (-0.55, 0, -12.69)。",
+        "createdAt": "2026-04-11T13:27:22.542Z"
+      },
+      {
+        "id": "message-qghi4rt8",
+        "role": "assistant",
+        "content": "上罩.glb 已放置在 (13.81, 0, -21.01)。",
+        "createdAt": "2026-04-11T13:27:23.967Z"
+      },
+      {
+        "id": "message-pcintolg",
+        "role": "assistant",
+        "content": "机柜上罩.glb 已放置在 (5.14, 0, 14.12)。",
+        "createdAt": "2026-04-11T13:27:26.665Z"
+      },
+      {
+        "id": "message-gb80zrg3",
+        "role": "assistant",
+        "content": "四光纤电源柜单个模型.glb 已放置在 (-13.19, 0, 17.13)。",
+        "createdAt": "2026-04-11T13:27:28.131Z"
+      },
+      {
+        "id": "message-7f5zj7ob",
+        "role": "assistant",
+        "content": "四光纤电源柜.glb 已放置在 (1.82, 0, -17.04)。",
+        "createdAt": "2026-04-11T13:27:35.785Z"
+      },
+      {
+        "id": "message-m0ysl4nx",
+        "role": "assistant",
+        "content": "搬运夹取工具.glb 已放置在 (-7.45, 0, 18.56)。",
+        "createdAt": "2026-04-11T13:27:39.126Z"
+      },
+      {
+        "id": "message-ntqdqqm6",
+        "role": "assistant",
+        "content": "单体装配工作站.glb 已放置在 (-0.72, 0, 17.45)。",
+        "createdAt": "2026-04-11T13:27:40.261Z"
+      },
+      {
+        "id": "message-0jlrltwt",
+        "role": "assistant",
+        "content": "贴胶工作站.glb 已放置在 (11, 0, 17.66)。",
+        "createdAt": "2026-04-11T13:27:42.884Z"
+      },
+      {
+        "id": "message-xd7zwmca",
+        "role": "assistant",
+        "content": "导热壳供料打码读码及涂胶A.glb 已放置在 (13.85, 0, -1.17)。",
+        "createdAt": "2026-04-11T13:27:45.706Z"
+      },
+      {
+        "id": "message-86yddtc7",
+        "role": "assistant",
+        "content": "端板输送线.glb 已放置在 (7.79, 0, 3.97)。",
+        "createdAt": "2026-04-11T13:27:47.193Z"
+      },
+      {
+        "id": "message-0sem7t7g",
+        "role": "assistant",
+        "content": "倍速链线体.glb 已放置在 (2.75, 0, 4.45)。",
+        "createdAt": "2026-04-11T13:27:49.963Z"
+      },
+      {
+        "id": "message-zro1pp7e",
+        "role": "assistant",
+        "content": "电芯大面清洗极性检测读码单元.glb 已放置在 (21.68, 0, -5.73)。",
+        "createdAt": "2026-04-11T13:28:02.855Z"
+      },
+      {
+        "id": "message-l79b1396",
+        "role": "assistant",
+        "content": "模组线下组件.glb 已放置在 (26.57, 0, -3.19)。",
+        "createdAt": "2026-04-11T13:28:14.204Z"
+      },
+      {
+        "id": "message-9vlqcayo",
+        "role": "assistant",
+        "content": "厂房模型文件.glb 已放置在 (21.56, 0, 4.23)。",
+        "createdAt": "2026-04-11T13:28:21.389Z"
+      },
+      {
+        "id": "message-3i5yx15n",
+        "role": "assistant",
+        "content": "厂房地面文件.glb 已从场景移除。",
+        "createdAt": "2026-04-11T13:28:52.863Z"
+      },
+      {
+        "id": "message-4lvm1nnm",
+        "role": "assistant",
+        "content": "厂房地面文件.glb 已放置在 (-0.77, 0, 1.16)。",
+        "createdAt": "2026-04-11T13:29:12.917Z"
+      },
+      {
+        "id": "message-kobr72ph",
+        "role": "assistant",
+        "content": "模组堆叠总装.glb 已放置在 (-3.7, 0, -0.04)。",
+        "createdAt": "2026-04-11T13:29:38.946Z"
+      },
+      {
+        "id": "message-lk3rx26q",
+        "role": "assistant",
+        "content": "五轴加工激光站单图.glb 已放置在 (9.19, 0, -3.06)。",
+        "createdAt": "2026-04-11T13:29:48.464Z"
+      },
+      {
+        "id": "message-slx6au7i",
+        "role": "assistant",
+        "content": "五轴激光加工站总图.glb 已放置在 (8.99, 0, -6)。",
+        "createdAt": "2026-04-11T13:29:52.358Z"
+      },
+      {
+        "id": "message-13jm8q3d",
+        "role": "assistant",
+        "content": "电芯上料工作站.glb 已放置在 (6.37, 0, 1.97)。",
+        "createdAt": "2026-04-11T13:30:01.288Z"
+      }
+    ],
+    "status_text": "已放置 电芯上料工作站.glb。"
+  },
+  "summary": {
+    "placement_count": 26,
+    "message_count": 37
+  }
+}

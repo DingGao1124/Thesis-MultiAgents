@@ -2,8 +2,7 @@ import * as THREE from "three"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import type { ScenePlacement } from "@/utils/productionLine"
-import { roundCoordinate } from "@/utils/productionLine"
+import { roundCoordinate, type ScenePlacement } from "@/utils/productionLine"
 
 type SceneWorkspaceInspectorProps = {
   selectedPlacement: ScenePlacement | null

@@ -7,8 +7,8 @@ import {
   type ProductionLineLayoutSummary,
 } from "@/api/productionLineLayouts"
 import { useProductionLineWorkspaceStore } from "@/stores/productionLineWorkspaceStore"
+import { useProductionLineLayoutLibrary } from "@/hooks/useProductionLineLayoutLibrary"
 
-import { useProductionLineLayoutLibrary } from "./useProductionLineLayoutLibrary"
 import type { PendingLayoutAction } from "@/utils/productionLine"
 import { getConfirmDialogCopy, getErrorMessage } from "@/utils/productionLine"
 
@@ -31,10 +31,18 @@ export function useLayoutManager() {
 
   const [isLayoutLibraryOpen, setIsLayoutLibraryOpen] = useState(false)
   const [deletingLayoutId, setDeletingLayoutId] = useState<string | null>(null)
+  const [pendingDeleteLayout, setPendingDeleteLayout] =
+    useState<ProductionLineLayoutSummary | null>(null)
   const [confirmAction, setConfirmAction] = useState<PendingLayoutAction | null>(null)
   const confirmDialogCopy = getConfirmDialogCopy(confirmAction)
 
   const layoutLibrary = useProductionLineLayoutLibrary({ enabled: isLayoutLibraryOpen })
+
+  function shouldOverwriteLayout(name: string) {
+    const trimmedName = name.trim()
+    const currentName = currentLayoutName?.trim() ?? ""
+    return Boolean(currentLayoutId) && trimmedName.length > 0 && trimmedName === currentName
+  }
 
   async function persistLayout(name: string) {
     const trimmedName = name.trim()
@@ -47,7 +55,7 @@ export function useLayoutManager() {
 
     setIsSavingLayout(true)
     try {
-      const response = currentLayoutId
+      const response = shouldOverwriteLayout(trimmedName) && currentLayoutId
         ? await updateProductionLineLayout(currentLayoutId, payload)
         : await createProductionLineLayout(payload)
 
@@ -134,7 +142,24 @@ export function useLayoutManager() {
     setConfirmAction({ type: "load", layoutId })
   }
 
-  async function handleDeleteLayout(layout: ProductionLineLayoutSummary) {
+  function requestDeleteLayout(layout: ProductionLineLayoutSummary) {
+    setPendingDeleteLayout(layout)
+  }
+
+  function closeDeleteLayoutDialog() {
+    if (deletingLayoutId) {
+      return
+    }
+
+    setPendingDeleteLayout(null)
+  }
+
+  async function confirmDeleteLayout() {
+    const layout = pendingDeleteLayout
+    if (!layout) {
+      return
+    }
+
     setDeletingLayoutId(layout.id)
 
     try {
@@ -149,6 +174,7 @@ export function useLayoutManager() {
       setStatusText(getErrorMessage(error, "布局删除失败。"))
     } finally {
       setDeletingLayoutId(null)
+      setPendingDeleteLayout(null)
     }
   }
 
@@ -189,7 +215,10 @@ export function useLayoutManager() {
     isLoadingLayouts: layoutLibrary.isLoadingLayouts,
     loadingLayoutId: layoutLibrary.loadingLayoutId,
     deletingLayoutId,
-    handleDeleteLayout,
+    pendingDeleteLayout,
+    requestDeleteLayout,
+    closeDeleteLayoutDialog,
+    confirmDeleteLayout,
     handleRequestLoadLayout,
 
     confirmAction,

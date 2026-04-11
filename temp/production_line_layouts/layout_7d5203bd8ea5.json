@@ -1,0 +1,144 @@
+{
+  "id": "layout_7d5203bd8ea5",
+  "version": 1,
+  "name": "锂电池最终布局",
+  "created_at": "2026-04-11T23:39:04.667300+08:00",
+  "updated_at": "2026-04-11T23:39:04.667300+08:00",
+  "scene": {
+    "placements": [
+      {
+        "id": "placement-uvgbhbso",
+        "assetId": "电源组装线精简版.glb",
+        "assetName": "电源组装线精简版",
+        "assetFilename": "电源组装线精简版.glb",
+        "assetUrl": "/api/assets/models/file/%E7%94%B5%E6%BA%90%E7%BB%84%E8%A3%85%E7%BA%BF%E7%B2%BE%E7%AE%80%E7%89%88.glb",
+        "position": [
+          0.0,
+          -2.29,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T15:36:22.523Z"
+      },
+      {
+        "id": "placement-wg191903",
+        "assetId": "厂房地面文件.glb",
+        "assetName": "厂房地面文件",
+        "assetFilename": "厂房地面文件.glb",
+        "assetUrl": "/api/assets/models/file/%E5%8E%82%E6%88%BF%E5%9C%B0%E9%9D%A2%E6%96%87%E4%BB%B6.glb",
+        "position": [
+          0.0,
+          0.2,
+          -0.32
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": 1.0,
+        "source": "manual",
+        "createdAt": "2026-04-11T15:38:20.412Z"
+      }
+    ]
+  },
+  "conversation": {
+    "messages": [
+      {
+        "id": "message-axhgwaiq",
+        "role": "assistant",
+        "content": "布局代理已就绪。",
+        "createdAt": "2026-04-11T15:36:20.898Z"
+      },
+      {
+        "id": "user-py6i5vxa",
+        "role": "user",
+        "content": "请完成锂电池组装产线的布局内容。",
+        "createdAt": "2026-04-11T15:36:20.898Z"
+      },
+      {
+        "id": "message-j6ja92fy",
+        "role": "assistant",
+        "content": "电源组装线精简版.glb 已放置在 (-1.77, 0, 3.9)。",
+        "createdAt": "2026-04-11T15:36:22.523Z"
+      },
+      {
+        "id": "message-72s5q4wv",
+        "role": "assistant",
+        "content": "厂房地面文件.glb 已放置在 (2.07, 0, -14.22)。",
+        "createdAt": "2026-04-11T15:37:06.385Z"
+      },
+      {
+        "id": "message-xirt043c",
+        "role": "assistant",
+        "content": "机械臂下线工作站.glb 已放置在 (19.71, 0, 18.35)。",
+        "createdAt": "2026-04-11T15:37:54.868Z"
+      },
+      {
+        "id": "message-kbjtf188",
+        "role": "assistant",
+        "content": "辅助装置--激光器模块.glb 已放置在 (12.13, 0, 19.86)。",
+        "createdAt": "2026-04-11T15:37:57.202Z"
+      },
+      {
+        "id": "message-g1bjbve6",
+        "role": "assistant",
+        "content": "辅助设备--围栏（2）.glb 已放置在 (3.93, 0, 24.48)。",
+        "createdAt": "2026-04-11T15:38:00.470Z"
+      },
+      {
+        "id": "message-kgpdwbev",
+        "role": "assistant",
+        "content": "辅助设备--围栏标语.glb 已放置在 (4.76, 0, 15.6)。",
+        "createdAt": "2026-04-11T15:38:02.081Z"
+      },
+      {
+        "id": "message-41ngtn2n",
+        "role": "assistant",
+        "content": "辅助设备--围栏标语.glb 已从场景移除。",
+        "createdAt": "2026-04-11T15:38:04.592Z"
+      },
+      {
+        "id": "message-wd0t4q87",
+        "role": "assistant",
+        "content": "辅助设备--围栏（2）.glb 已从场景移除。",
+        "createdAt": "2026-04-11T15:38:07.113Z"
+      },
+      {
+        "id": "message-9mpl78c3",
+        "role": "assistant",
+        "content": "辅助装置--激光器模块.glb 已从场景移除。",
+        "createdAt": "2026-04-11T15:38:08.600Z"
+      },
+      {
+        "id": "message-djzsc87p",
+        "role": "assistant",
+        "content": "机械臂下线工作站.glb 已从场景移除。",
+        "createdAt": "2026-04-11T15:38:10.233Z"
+      },
+      {
+        "id": "message-azmuqsul",
+        "role": "assistant",
+        "content": "厂房地面文件.glb 已从场景移除。",
+        "createdAt": "2026-04-11T15:38:17.050Z"
+      },
+      {
+        "id": "message-nmrmhv15",
+        "role": "assistant",
+        "content": "厂房地面文件.glb 已放置在 (8.15, 0, -9.65)。",
+        "createdAt": "2026-04-11T15:38:20.412Z"
+      }
+    ],
+    "status_text": "已放置 厂房地面文件.glb。"
+  },
+  "summary": {
+    "placement_count": 2,
+    "message_count": 14
+  }
+}

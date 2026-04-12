@@ -29,7 +29,7 @@ MODELS_DIR.mkdir(parents=True, exist_ok=True)
 
 app = FastAPI(title="Multi-Agent Backend", version="0.1.0")
 
-frontend_origin = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")
+frontend_origin = os.getenv("FRONTEND_ORIGIN", "http://localhost:11124")
 
 app.add_middleware(
     CORSMiddleware,

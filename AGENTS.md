@@ -11,6 +11,49 @@ Repository-level instructions for AI coding agents working on this project.
 - Do not use words like `demo`, `prototype`, `mock`, `example`, or other labels that make the platform look unfinished.
 - Always treat the product as a formal production-ready industrial platform, not as a temporary showcase system.
 
+## Coding Pattern Guidelines
+Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
+
+Tradeoff: these guidelines bias toward caution over speed. For trivial tasks, use judgment.
+
+### 1. Think Before Coding
+- Do not assume. Do not hide confusion. Surface tradeoffs.
+- State assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them and do not choose silently.
+- If a simpler approach exists, say so and push back when warranted.
+- If something is unclear, stop, name the ambiguity, and ask.
+
+### 2. Simplicity First
+- Write the minimum code that solves the problem. Nothing speculative.
+- Do not add features beyond the request.
+- Do not introduce abstractions for single-use code.
+- Do not add flexibility/configurability that was not requested.
+- Do not add error handling for impossible scenarios.
+- If 200 lines can be 50, rewrite it simpler.
+- Self-check: would a senior engineer call this overcomplicated? If yes, simplify.
+
+### 3. Surgical Changes
+- Touch only what is necessary. Clean up only what your change causes.
+- Do not improve adjacent code/comments/formatting unless required by the task.
+- Do not refactor code that is not broken.
+- Match existing style even if you prefer another style.
+- If you notice unrelated dead code, mention it; do not delete it.
+- Remove imports/variables/functions made unused by your own changes.
+- Do not remove pre-existing dead code unless explicitly asked.
+- Test for scope: every changed line should map directly to the user request.
+
+### 4. Goal-Driven Execution
+- Define success criteria and iterate until verified.
+- Turn vague asks into verifiable goals.
+- Add validation: write tests for invalid inputs, then make them pass.
+- Fix a bug: write a reproducing test, then make it pass.
+- Refactor X: ensure tests pass before and after.
+- For multi-step tasks, state a brief plan:
+  1. [Step] -> verify: [check]
+  2. [Step] -> verify: [check]
+  3. [Step] -> verify: [check]
+- Health signal: fewer unnecessary diffs, fewer overcomplication rewrites, and more clarifying questions before implementation.
+
 ## Project Overview
 This repository implements an interactive digital twin modeling platform for flexible production lines based on LLM-driven multi-agent collaboration.
 

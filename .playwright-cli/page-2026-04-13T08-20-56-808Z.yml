@@ -1,0 +1,678 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e5]:
+    - generic [ref=e6]:
+      - link "手机版" [ref=e7] [cursor=pointer]:
+        - /url: //m.cnki.net/mcnkidown/index.html
+        - generic [ref=e8]: 手机版
+      - link "English" [ref=e9] [cursor=pointer]:
+        - /url: //oversea.cnki.net
+        - generic [ref=e10]: English
+      - link "网站地图" [ref=e11] [cursor=pointer]:
+        - /url: //www.cnki.net/subpages/webmap.html
+        - generic [ref=e12]: 网站地图
+      - link "帮助中心" [ref=e13] [cursor=pointer]:
+        - /url: //service.cnki.net/helpcenter/
+        - generic [ref=e14]: 帮助中心
+    - generic [ref=e16]:
+      - link "会员" [ref=e17] [cursor=pointer]:
+        - /url: //mall.cnki.net/user/user.html
+        - generic [ref=e18]: 会员
+      - link "我的CNKI" [ref=e19] [cursor=pointer]:
+        - /url: /myspace/collect
+        - generic [ref=e20]: 我的CNKI
+      - link "登录" [ref=e22] [cursor=pointer]:
+        - /url: javascript:void(0);
+        - generic [ref=e23]: 登录
+  - generic [ref=e26]:
+    - generic [ref=e28]:
+      - link [ref=e30] [cursor=pointer]:
+        - /url: https://www.cnki.net/
+      - generic [ref=e33]:
+        - list:
+          - listitem [ref=e34]:
+            - link "文献" [ref=e35] [cursor=pointer]:
+              - /url: javascript:void(0);
+          - listitem [ref=e36]:
+            - link "期刊" [ref=e37]:
+              - /url: javascript:void(0)
+          - listitem [ref=e38]:
+            - link "博硕士" [ref=e39] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=e40]:
+            - link "会议" [ref=e41] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=e42]:
+            - link "报纸" [ref=e43] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=e44]:
+            - link "图书" [ref=e45] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=e46]:
+            - link "年鉴" [ref=e47] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=e48]:
+            - link "工具书" [ref=e49] [cursor=pointer]:
+              - /url: http://gongjushu.cnki.net/rbook/
+          - listitem [ref=e50]:
+            - link "专利" [ref=e51] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=e52]:
+            - link "标准" [ref=e53] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=e54]:
+            - link "成果" [ref=e55] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=e56]:
+            - link "更多>>" [ref=e58] [cursor=pointer]:
+              - /url: javascript:void(0);
+    - generic [ref=e60]:
+      - generic [ref=e62]:
+        - link "新型出版模式介绍" [ref=e63] [cursor=pointer]:
+          - /url: subpage/introduce.aspx
+        - link "期刊导航" [ref=e64] [cursor=pointer]:
+          - /url: https://navi.cnki.net/knavi/journals/index
+      - generic [ref=e65]:
+        - generic [ref=e66]:
+          - generic [ref=e67]:
+            - link [ref=e68] [cursor=pointer]:
+              - /url: javascript:naviSearch.prototype.ChangeDiv('XuekeNavi_Div');naviSearch.prototype.ChangeImgSrc('XuekeNavi_Div','s_jiantou0','chs/kns7/images/navi/s_jiantou01.gif','chs/kns7/images/navi/s_jiantou.gif');
+              - img [ref=e69]
+            - strong [ref=e70]: 文献分类目录
+          - generic [ref=e74]:
+            - generic [ref=e76]: 全选 清除
+            - list [ref=e77]:
+              - listitem [ref=e78]:
+                - link "基础科学" [ref=e82] [cursor=pointer]:
+                  - /url: javascript:void(0);
+              - listitem [ref=e83]:
+                - link "工程科技Ⅰ辑" [ref=e87] [cursor=pointer]:
+                  - /url: javascript:void(0);
+              - listitem [ref=e88]:
+                - link "工程科技Ⅱ辑" [ref=e92] [cursor=pointer]:
+                  - /url: javascript:void(0);
+              - listitem [ref=e93]:
+                - link "农业科技" [ref=e97] [cursor=pointer]:
+                  - /url: javascript:void(0);
+              - listitem [ref=e98]:
+                - link "医药卫生科技" [ref=e102] [cursor=pointer]:
+                  - /url: javascript:void(0);
+              - listitem [ref=e103]:
+                - link "哲学与人文科学" [ref=e107] [cursor=pointer]:
+                  - /url: javascript:void(0);
+              - listitem [ref=e108]:
+                - link "社会科学Ⅰ辑" [ref=e112] [cursor=pointer]:
+                  - /url: javascript:void(0);
+              - listitem [ref=e113]:
+                - link "社会科学Ⅱ辑" [ref=e117] [cursor=pointer]:
+                  - /url: javascript:void(0);
+              - listitem [ref=e118]:
+                - link "信息科技" [ref=e122] [cursor=pointer]:
+                  - /url: javascript:void(0);
+              - listitem [ref=e123]:
+                - link "经济与管理科学" [ref=e127] [cursor=pointer]:
+                  - /url: javascript:void(0);
+        - generic [ref=e328]:
+          - strong [ref=e330]: 为我推荐
+          - list [ref=e332]:
+            - listitem [ref=e1972]:
+              - link "大语言模型技术赋能档案数字资源治理转型：路径方法与应用场景" [ref=e1973] [cursor=pointer]:
+                - /url: https://kns.cnki.net/kcms2/article/abstract?v=JRmhR0Lfi26FPhvusiGsDPlgf8fRSx6gU8O_VeQ9rvVoiSErxwdBg70wJagACf6RFM0RHg97b88u_B0ZCO8vlmN3xJHMlisbX73W8S_sTbpi-ZBi8XKVQWW9eFAOOla7s1qI6NJhBfrgh2ysHAsRWI8pclRAUTMg-yzgZGULWnV9qmUW7K828dVxSCpKeYA7&uniplatform=NZKPT&language=CHS
+            - listitem [ref=e1974]:
+              - link "大语言模型何以赋能二语习得?——基于国内外文献的范围述评" [ref=e1975] [cursor=pointer]:
+                - /url: https://kns.cnki.net/kcms2/article/abstract?v=JRmhR0Lfi257l45qs1XBoy9OlajlHjnsG2gLAiouMdEetxR6zB4cEoo-U2Fd1SHYIgjpReHzg_gEdUKpQfLOZi3wdO86cMrwXOII9JiBUsqd_Ugjd78rqvD5JW_7fAzVbyYM6L7AbO9mmYCJd4SLMT6sdpin5NYvNIwogMqQEdvy5IYt3sQtopHiTcIVldy6&uniplatform=NZKPT&language=CHS
+            - listitem [ref=e1976]:
+              - link "基于混合智能体的作战行动方案生成方法" [ref=e1977] [cursor=pointer]:
+                - /url: https://kns.cnki.net/kcms2/article/abstract?v=JRmhR0Lfi27JQgTqDGczVkjq-URNhXzBTAT8i9O9xNAw91KFyQCAruGC3L1XsW2pzV6AhTLSGtQuLqEnnG2Rugouq8J6WtjjZcCXx6G1f1RJRX5iG9QUlDq_ibV1lovdihx6aFTA9GPzeT_Kp6Jf5NT3tDA3-plZFVlqU2jvqw4ClKSdlsgduG9Ua_lVi2J1&uniplatform=NZKPT&language=CHS
+            - listitem [ref=e1978]:
+              - link "大语言模型赋能实现差异化指导" [ref=e1979] [cursor=pointer]:
+                - /url: https://kns.cnki.net/kcms2/article/abstract?v=JRmhR0Lfi246kXrWg--KAK1QuZeEWBblemKZoyWapqTDQfIRr96BU-SI48iRjyh4NGFb4J0XLopA6fa2V8oQdiImkjEgdT-lvsgiOYQRdbM8xezJUs0W0Ke6GOSC5VZEe_5PJC1ZOKMgdk06SeoqND3ZYgYd199om1sHtaXtzO79dF7tW1N-7nEJ9ir3JLes&uniplatform=NZKPT&language=CHS
+            - listitem [ref=e1980]:
+              - link "大语言模型技术在重症领域中的应用进展" [ref=e1981] [cursor=pointer]:
+                - /url: https://kns.cnki.net/kcms2/article/abstract?v=JRmhR0Lfi25hjrMk_iza1jJR37ZksBypBeeHzZ2SPWrh5nQnz3btrylM8-0w_5RCubtUEhYXHADmeTDgaBSzcv22cWFH0-vUVMItKkJf4UrSk-_keirVYj7YnJzAqlOxAQ0EVNH6S0lbUqi98Oa2Pjp6p02klMsWnWFG_prgJxnDncfe68kvH_HtK8PN43u7&uniplatform=NZKPT&language=CHS
+            - listitem [ref=e1982]:
+              - link "人工智能大语言模型在水电行业标书制作中的应用" [ref=e1983] [cursor=pointer]:
+                - /url: https://kns.cnki.net/kcms2/article/abstract?v=JRmhR0Lfi26gG1o3Tsoa0IbLXg1mGwKeTNX8oOpbvWBN4KYNu6g2dDMh-fLAgJPn7PXNm5DRZgajj_NOZ5uVUrYioyCrgSNwSSr_LWQMAUbsbW-N15qz5T1Mi0c7zLhIMTCtqFpvitFtkYXAyhETbM3OpeLgkGWPsERnL4wAWboFuL1VtcvUuxI4F7Xbmo1Q&uniplatform=NZKPT&language=CHS
+            - listitem [ref=e1984]:
+              - link "大型语言模型在眼科中的应用" [ref=e1985] [cursor=pointer]:
+                - /url: https://kns.cnki.net/kcms2/article/abstract?v=JRmhR0Lfi26Xk2-WHuU418aLRX9p2mtGXgwgTRwa6UcvPjBFGpuglFZr5IMKAkAj1fXoZ6rR4JG-Me9JxtCj0gyrD5Tm4A-A81rW52hvgLuXeb1YcGa5d73SmVyqz2u8i8SVH0tIjgde0L7RkoKTeGFfxpZC1t4aMFw7nb-8C9BOz9smVUxzDrJ_n4ykxkfP&uniplatform=NZKPT&language=CHS
+            - listitem [ref=e1986]:
+              - link "基于大语言模型的人工智能生成语料判别的研究" [ref=e1987] [cursor=pointer]:
+                - /url: https://kns.cnki.net/kcms2/article/abstract?v=JRmhR0Lfi27l3DYs-k6fk3R0x3EJKYqS2fZcDp5XKLKEFUaok09oieFy4hVK2l87VHBSKn5dt3OORS60Hk7G3o6myCRGyXhI0BQf6yj23zMr4e0-b8Cuuu8nqSx4Gru1fiSXeOuzTvs13yMH1ac2fxJj1K_wnLZe0vD2gvGE2TC-kMGahTM8TvqlQgW-ihV7&uniplatform=NZKPT&language=CHS
+            - listitem [ref=e1988]:
+              - link "基于大语言模型的实践教学改革——以人工智能编程实践与实验课程为例" [ref=e1989] [cursor=pointer]:
+                - /url: https://kns.cnki.net/kcms2/article/abstract?v=JRmhR0Lfi24JjJ_ktC5XKukD9Dou1dufp1bJuAGDGZs2-v8QmR6hOD5-MLCvRK-onOmrlFGUypjBRXQ4mKTIYNqhlC_kn6Q3psIQVldQKakGOrY-CZ4h-HGrqvqe61Jb_myQrKPsu-vor4CH51Wv_we3JKxE2fGuRavsLEJIS1cg5ZgsK-UxcB35gjv9n0n0&uniplatform=NZKPT&language=CHS
+            - listitem [ref=e1990]:
+              - link "大语言模型人格化表达实现技术综述" [ref=e1991] [cursor=pointer]:
+                - /url: https://kns.cnki.net/kcms2/article/abstract?v=JRmhR0Lfi27UBSge11yr3CUhyPyc_WiO-TgMMXIAXdd3VqCOv7ycY2EytCEbSOWEY3m-xZcgSMLA4KNrdJiIW853TiSYepyLRbOf26YM9iEolqKj-v-W33o4Sni1OJpGy_4NNrYi-J1rBMWN4CdSBpUj-ecTLjEISypi-VrR3yrGBswWvkdg9g==&uniplatform=NZKPT&language=CHS
+      - generic [ref=e128]:
+        - generic [ref=e129]:
+          - generic [ref=e130]:
+            - generic [ref=e131] [cursor=pointer]: 高级检索
+            - generic [ref=e132] [cursor=pointer]: 专业检索
+            - generic [ref=e133] [cursor=pointer]: 作者发文检索
+            - generic [ref=e134] [cursor=pointer]: 句子检索
+            - link "一框式检索" [ref=e135] [cursor=pointer]:
+              - /url: search?language=CHS&classid=7NS01R8M
+              - generic [ref=e136]: 一框式检索
+          - generic [ref=e138]:
+            - generic [ref=e139]: 输入检索条件：
+            - generic [ref=e140]:
+              - generic [ref=e141]:
+                - img [ref=e142] [cursor=pointer]
+                - img [ref=e143] [cursor=pointer]
+              - generic [ref=e144]:
+                - text: (
+                - combobox [ref=e146]:
+                  - option "主题" [selected]
+                  - option "篇关摘"
+                  - option "篇名"
+                  - option "关键词"
+                  - option "摘要"
+                  - option "小标题"
+                  - option "全文"
+                  - option "参考文献"
+                  - option "中图分类号"
+                  - option "栏目信息"
+                  - option "DOI"
+                - textbox [ref=e147]: 数字孪生
+                - combobox [disabled] [ref=e148]:
+                  - option "词频" [selected]
+                  - option "2"
+                  - option "3"
+                  - option "4"
+                  - option "5"
+                  - option "6"
+                  - option "7"
+                  - option "8"
+                  - option "9"
+                - combobox [ref=e149]:
+                  - option "并含" [selected]
+                  - option "或含"
+                  - option "不含"
+                - textbox [ref=e150]
+                - combobox [disabled] [ref=e151]:
+                  - option "词频" [selected]
+                  - option "2"
+                  - option "3"
+                  - option "4"
+                  - option "5"
+                  - option "6"
+                  - option "7"
+                  - option "8"
+                  - option "9"
+                - combobox [disabled] [ref=e152]:
+                  - option "精确" [selected]
+                  - option "模糊"
+                - text: )
+            - generic [ref=e153]:
+              - combobox [ref=e155]:
+                - option "并且" [selected]
+                - option "或者"
+                - option "不含"
+              - generic [ref=e156]:
+                - text: (
+                - combobox [ref=e158]:
+                  - option "主题" [selected]
+                  - option "篇关摘"
+                  - option "篇名"
+                  - option "关键词"
+                  - option "摘要"
+                  - option "小标题"
+                  - option "全文"
+                  - option "参考文献"
+                  - option "中图分类号"
+                  - option "栏目信息"
+                  - option "DOI"
+                - textbox [ref=e159]: 生产线
+                - combobox [disabled] [ref=e160]:
+                  - option "词频" [selected]
+                  - option "2"
+                  - option "3"
+                  - option "4"
+                  - option "5"
+                  - option "6"
+                  - option "7"
+                  - option "8"
+                  - option "9"
+                - combobox [ref=e161]:
+                  - option "并含" [selected]
+                  - option "或含"
+                  - option "不含"
+                - textbox [ref=e162]
+                - combobox [disabled] [ref=e163]:
+                  - option "词频" [selected]
+                  - option "2"
+                  - option "3"
+                  - option "4"
+                  - option "5"
+                  - option "6"
+                  - option "7"
+                  - option "8"
+                  - option "9"
+                - combobox [disabled] [ref=e164]:
+                  - option "精确" [selected]
+                  - option "模糊"
+                - text: )
+            - generic [ref=e165]:
+              - generic [ref=e166]:
+                - img [ref=e167] [cursor=pointer]
+                - img [ref=e168] [cursor=pointer]
+              - generic [ref=e169]:
+                - combobox [ref=e170]:
+                  - option "作者" [selected]
+                  - option "通讯作者"
+                  - option "第一作者"
+                - textbox "中文名/英文名/拼音" [ref=e171]
+                - combobox [ref=e172]:
+                  - option "精确" [selected]
+                  - option "模糊"
+                - generic [ref=e173]: "作者单位:"
+                - textbox "全称/简称/曾用名" [ref=e174]
+                - combobox [ref=e175]:
+                  - option "精确"
+                  - option "模糊" [selected]
+            - generic [ref=e176]:
+              - generic [ref=e177]:
+                - text: 从
+                - combobox [ref=e178]:
+                  - option "不限"
+                  - option "1915"
+                  - option "1949"
+                  - option "1979"
+                  - option "1980"
+                  - option "1981"
+                  - option "1982"
+                  - option "1983"
+                  - option "1984"
+                  - option "1985"
+                  - option "1986"
+                  - option "1987"
+                  - option "1988"
+                  - option "1989"
+                  - option "1990"
+                  - option "1991"
+                  - option "1992"
+                  - option "1993"
+                  - option "1994"
+                  - option "1995"
+                  - option "1996"
+                  - option "1997"
+                  - option "1998"
+                  - option "1999"
+                  - option "2000"
+                  - option "2001"
+                  - option "2002"
+                  - option "2003"
+                  - option "2004"
+                  - option "2005"
+                  - option "2006"
+                  - option "2007"
+                  - option "2008"
+                  - option "2009"
+                  - option "2010"
+                  - option "2011"
+                  - option "2012"
+                  - option "2013"
+                  - option "2014"
+                  - option "2015"
+                  - option "2016"
+                  - option "2017"
+                  - option "2018"
+                  - option "2019"
+                  - option "2020"
+                  - option "2021"
+                  - option "2022"
+                  - option "2023"
+                  - option "2024"
+                  - option "2025" [selected]
+                  - option "2026"
+                - text: 年到
+                - combobox [ref=e179]:
+                  - option "不限"
+                  - option "2026" [selected]
+                  - option "2025"
+                  - option "2024"
+                  - option "2023"
+                  - option "2022"
+                  - option "2021"
+                  - option "2020"
+                  - option "2019"
+                  - option "2018"
+                  - option "2017"
+                  - option "2016"
+                  - option "2015"
+                  - option "2014"
+                  - option "2013"
+                  - option "2012"
+                  - option "2011"
+                  - option "2010"
+                  - option "2009"
+                  - option "2008"
+                  - option "2007"
+                  - option "2006"
+                  - option "2005"
+                  - option "2004"
+                  - option "2003"
+                  - option "2002"
+                  - option "2001"
+                  - option "2000"
+                  - option "1999"
+                  - option "1998"
+                  - option "1997"
+                  - option "1996"
+                  - option "1995"
+                  - option "1994"
+                  - option "1993"
+                  - option "1992"
+                  - option "1991"
+                  - option "1990"
+                  - option "1989"
+                  - option "1988"
+                  - option "1987"
+                  - option "1986"
+                  - option "1985"
+                  - option "1984"
+                  - option "1983"
+                  - option "1982"
+                  - option "1981"
+                  - option "1980"
+                  - option "1979"
+                  - option "1978"
+                  - option "1949"
+                  - option "1915"
+                - text: 年
+              - generic [ref=e180]: "指定期:"
+              - textbox [ref=e181]
+              - generic [ref=e182]: 更新时间：
+              - combobox [ref=e183]:
+                - option "不限" [selected]
+                - option "最近一周"
+                - option "最近一月"
+                - option "最近半年"
+                - option "最近一年"
+                - option "今年迄今"
+                - option "上一年度"
+            - generic [ref=e184]:
+              - generic [ref=e185]: 来源期刊：
+              - textbox "期刊名称/ISSN/CN" [ref=e186]: 计算机集成制造系统
+              - combobox [ref=e187]:
+                - option "精确"
+                - option "模糊" [selected]
+              - link [ref=e188] [cursor=pointer]:
+                - /url: " javascript:void(0);"
+                - img [ref=e189]
+            - generic [ref=e190]:
+              - generic [ref=e191]: 来源类型：
+              - checkbox "全部期刊" [checked] [ref=e192]
+              - text: 全部期刊
+              - checkbox "SCI来源期刊 SCI来源期刊" [ref=e193]
+              - text: SCI来源期刊
+              - checkbox "EI来源期刊 EI来源期刊" [ref=e194]
+              - text: EI来源期刊
+              - checkbox "核心期刊 核心期刊" [ref=e195]
+              - text: 核心期刊
+              - checkbox "CSSCI CSSCI" [ref=e196]
+              - text: CSSCI
+              - checkbox "CSCD CSCD" [ref=e197]
+              - text: CSCD
+            - generic [ref=e198]:
+              - generic [ref=e199]: 支持基金：
+              - textbox "基金" [ref=e200]
+              - combobox [ref=e201]:
+                - option "精确" [selected]
+                - option "模糊"
+              - link [ref=e202] [cursor=pointer]:
+                - /url: " javascript:void(0);"
+                - img [ref=e203]
+            - generic [ref=e204]:
+              - checkbox "包含资讯" [ref=e205]
+              - text: 包含资讯
+              - checkbox "网络首发 网络首发" [ref=e206]
+              - text: 网络首发
+              - checkbox "增强出版 增强出版" [ref=e207]
+              - text: 增强出版
+              - checkbox "数据论文 数据论文" [ref=e208]
+              - text: 数据论文
+              - checkbox "中英文扩展" [checked] [ref=e209]
+              - text: 中英文扩展
+              - checkbox "同义词扩展" [ref=e210]
+              - text: 同义词扩展
+            - generic [ref=e211] [cursor=pointer]: 检索
+            - generic [ref=e353] [cursor=pointer]: 结果中检索
+        - generic [ref=e355] [cursor=pointer]: 免费订阅
+        - generic [ref=e255]:
+          - generic [ref=e356]:
+            - generic [ref=e1992]:
+              - generic [ref=e1993]: "分组浏览:"
+              - link "主题" [ref=e1995] [cursor=pointer]:
+                - /url: javascript:window.Group.getRightSingleGroup("NKY")
+              - link "发表年度" [ref=e1997] [cursor=pointer]:
+                - /url: javascript:window.Group.getRightSingleGroup("YE")
+              - link "研究层次" [ref=e1999] [cursor=pointer]:
+                - /url: javascript:window.Group.getRightSingleGroup("YJCC")
+              - link "作者" [ref=e2001] [cursor=pointer]:
+                - /url: javascript:window.Group.getRightSingleGroup("AUC")
+              - link "机构" [ref=e2003] [cursor=pointer]:
+                - /url: javascript:window.Group.getRightSingleGroup("AFC")
+              - link "基金" [ref=e2005] [cursor=pointer]:
+                - /url: javascript:window.Group.getRightSingleGroup("FUC")
+            - generic [ref=e2006]:
+              - link "X" [ref=e2007] [cursor=pointer]:
+                - /url: javascript:void(0);
+              - generic:
+                - generic:
+                  - list:
+                    - listitem [ref=e2008]:
+                      - generic [ref=e2010] [cursor=pointer]: 流程再造
+                      - text: (1)
+                    - listitem [ref=e2011]:
+                      - generic [ref=e2013] [cursor=pointer]: 总装生产线
+                      - text: (1)
+                    - listitem [ref=e2014]:
+                      - generic [ref=e2016] [cursor=pointer]: 数字孪生
+                      - text: (1)
+                    - listitem [ref=e2017]:
+                      - generic [ref=e2019] [cursor=pointer]: 动态重构
+                      - text: (1)
+                    - listitem [ref=e2020]:
+                      - generic [ref=e2022] [cursor=pointer]: 管控方法
+                      - text: (1)
+                  - listitem
+              - link "可视化" [ref=e2023] [cursor=pointer]:
+                - /url: javascript:void(0);
+          - generic [ref=e2026]:
+            - generic [ref=e2027]:
+              - generic [ref=e2028]:
+                - text: 排序：
+                - list [ref=e2029]:
+                  - listitem "只在800万条记录以内有效" [ref=e2030] [cursor=pointer]: 相关度
+                  - listitem "只在800万条记录以内有效" [ref=e2031] [cursor=pointer]: 发表时间
+                  - listitem "只在800万条记录以内有效" [ref=e2032] [cursor=pointer]: 被引
+                  - listitem "只在800万条记录以内有效" [ref=e2033] [cursor=pointer]: 综合
+                  - listitem "只在800万条记录以内有效" [ref=e2034] [cursor=pointer]: 下载
+                - generic [ref=e2035]:
+                  - generic [ref=e2036]:
+                    - link "中文文献" [ref=e2037] [cursor=pointer]:
+                      - /url: javascript:void(0)
+                      - text: 中文文献
+                    - link "外文文献" [ref=e2039] [cursor=pointer]:
+                      - /url: javascript:void(0)
+                      - text: 外文文献
+                  - list [ref=e2041]:
+                    - listitem "详情" [ref=e2042] [cursor=pointer]
+                    - listitem "列表" [ref=e2044] [cursor=pointer]
+                  - generic [ref=e2047]:
+                    - text: 显示
+                    - list [ref=e2049]:
+                      - listitem [ref=e2050]:
+                        - link "10" [ref=e2051] [cursor=pointer]:
+                          - /url: javascript:void(0);
+                      - listitem [ref=e2052]:
+                        - link "20" [ref=e2053] [cursor=pointer]:
+                          - /url: javascript:void(0);
+                      - listitem [ref=e2054]:
+                        - link "50" [ref=e2055] [cursor=pointer]:
+                          - /url: javascript:void(0);
+              - generic [ref=e2056]:
+                - generic [ref=e2058]:
+                  - text: 共找到
+                  - emphasis [ref=e2059]: "1"
+                  - text: 条结果
+                - generic [ref=e2060]:
+                  - generic [ref=e2061]:
+                    - generic [ref=e2062]:
+                      - checkbox "全选" [ref=e2063]
+                      - text: 全选
+                    - text: 已选：
+                    - emphasis [ref=e2064] [cursor=pointer]: "0"
+                    - link "清除" [ref=e2065] [cursor=pointer]:
+                      - /url: javascript:$(this).filenameClear();
+                  - list [ref=e2066]:
+                    - listitem [ref=e2067]:
+                      - link "批量下载" [ref=e2068] [cursor=pointer]:
+                        - /url: javascript:void(0)
+                    - listitem [ref=e2069]:
+                      - link "导出/参考文献" [ref=e2070] [cursor=pointer]:
+                        - /url: javascript:void(0)
+                    - listitem [ref=e2071]:
+                      - link "计量可视化分析" [ref=e2072] [cursor=pointer]:
+                        - /url: javascript:void(0)
+            - table [ref=e2077]:
+              - rowgroup [ref=e2078]:
+                - row "篇名 作者 刊名 发表时间 被引 下载 操作" [ref=e2079]:
+                  - columnheader [ref=e2080]
+                  - columnheader "篇名" [ref=e2081]
+                  - columnheader "作者" [ref=e2082]
+                  - columnheader "刊名" [ref=e2083]
+                  - columnheader "发表时间" [ref=e2084]
+                  - columnheader "被引" [ref=e2085]
+                  - columnheader "下载" [ref=e2086]
+                  - columnheader "操作" [ref=e2087]
+              - rowgroup [ref=e2088]:
+                - row "1 航空航天产品总装产线流程再造设计及工程应用 魏乐愚;崔金星;刘检华;庄存波 计算机集成制造系统 2025-12-22 17:15 196 HTML阅读" [ref=e2089]:
+                  - cell "1" [ref=e2090]:
+                    - checkbox [ref=e2091]
+                    - text: "1"
+                  - cell "航空航天产品总装产线流程再造设计及工程应用" [ref=e2092]:
+                    - link "航空航天产品总装产线流程再造设计及工程应用" [ref=e2093] [cursor=pointer]:
+                      - /url: https://kns.cnki.net/kcms2/article/abstract?v=JRmhR0Lfi25mhTNhdD8jbBI3fIP8r6A9aeS4BpzXhVs9AVrp78mK8MZqUWZYdG6jlIs0p8PuLukS-0PBKIY9Op2KWIYNo62g4WZTbKzz9I-dy052LDsECb0x1bNe8p3OYy0OJNL8YDWlbFuEhqE7yaFS6CGIDd70b9udrKrNVvc0zxVcVB8IPQ==&uniplatform=NZKPT&language=CHS
+                  - cell "魏乐愚;崔金星;刘检华;庄存波" [ref=e2094]:
+                    - link "魏乐愚" [ref=e2095] [cursor=pointer]:
+                      - /url: https://kns.cnki.net/kcms2/author/detail?v=JRmhR0Lfi25mhTNhdD8jbK_YxbDtP_57WE3nao9na8ku-ajTb_dKn8WaZWe1-vmbhrhcyqjTx-6y86Pg-4C0sN5B8ai1mP2YEOkXzkn8j2CaXyih0QeNCyAGSe3doJIa&uniplatform=NZKPT&language=CHS
+                    - text: ;
+                    - link "崔金星" [ref=e2096] [cursor=pointer]:
+                      - /url: https://kns.cnki.net/kcms2/author/detail?v=JRmhR0Lfi25mhTNhdD8jbK_YxbDtP_57MYKrsxwdO79Oq3VCY0Ea6olKQ2ar1LlKsnMxDlYtqQmo_lqsn0v9kFlU0_MA68vCMbJkebQ3sSy4q4HUpK1i4Oc1lUXSJ2ZM&uniplatform=NZKPT&language=CHS
+                    - text: ;
+                    - link "刘检华" [ref=e2097] [cursor=pointer]:
+                      - /url: https://kns.cnki.net/kcms2/author/detail?v=JRmhR0Lfi25mhTNhdD8jbK_YxbDtP_57QMpqAHlhw3oy0mHsT6byPuvIvcSCLQ-khqzcPbhvxoFBsKeGoC0_LfWp3H3yBjDYjd1Pui0gEnafYl4pAQdQMvmrZ42UnTAn&uniplatform=NZKPT&language=CHS
+                    - text: ;
+                    - link "庄存波" [ref=e2098] [cursor=pointer]:
+                      - /url: https://kns.cnki.net/kcms2/author/detail?v=JRmhR0Lfi25mhTNhdD8jbK_YxbDtP_577CeSg2ZsNVnheU2MQdkkFJdK8LvY3qNMHdEC7OpBClgX8eDYV-lAFNgnjeLT9UGCAjIi2WFAt_V0e5hO3PxTptRHnM1Yi2EU&uniplatform=NZKPT&language=CHS
+                  - cell "计算机集成制造系统" [ref=e2099]:
+                    - link "计算机集成制造系统" [ref=e2101] [cursor=pointer]:
+                      - /url: https://navi.cnki.net/knavi/detail?p=milrcbeiyvU2fe7C86F0xx7gHhcKmV1cC0-B7l9hYtTOMHH7tdY21VH-ZIHPos9PrtvAqBBfq1VPj1OF4FxLysI5mHUv8a-VsseIc8_gbCk=&uniplatform=NZKPT
+                  - cell "2025-12-22 17:15" [ref=e2102]
+                  - cell [ref=e2103]
+                  - cell "196" [ref=e2104]:
+                    - link "196" [ref=e2107] [cursor=pointer]:
+                      - /url: javascript:void(0);
+                  - cell "HTML阅读" [ref=e2108]:
+                    - link "未登录" [ref=e2109] [cursor=pointer]:
+                      - /url: https://bar.cnki.net/bar/download/order?id=Pmp%2F5es3RB81cmauPwpbvsPMJcfwHgIZAnUyOJG6Kdp%2FBATd6cHlCPC9fmWrw2DGGHBfGhWwXbWosgnFMt3xXpvV%2Bw5mUrn60UL%2F3QV4M117b5mY%2FmsIpB5E%2FKF94iQVtRGRF3wJSTnwmOEEZ8vwAlK57xT%2B8LhM%2BfEqYWvBGm0igmLMld3nSvbU4a5%2BOkNaUlSU0HSLnl9m7MwOtW%2FIk7Lq36LGSmFD7PEKCbjxF4xlgv7q8C%2BP7FPVW3hwYPcqveGzrp%2B41EH7caBaJ8FVkg%3D%3D
+                    - link "HTML阅读" [ref=e2111] [cursor=pointer]:
+                      - /url: https://bar.cnki.net/bar/download/order?id=Pmp%2F5es3RB81cmauPwpbvsPMJcfwHgIZAnUyOJG6Kdp%2FBATd6cHlCPC9fmWrw2DGGHBfGhWwXbWosgnFMt3xXqm4KLUpu8PgRqEIpSxWzYWL6pUY4deTV2VvozAOFIpRZPJZEQefXW1RVS3a1v8jK%2F1BfoaD1y1Qo7XRFd7QjHpuNlDuxMvlZu263io%2FYiDKaul1dsBYtTi0d7iCbJHlGW6ZrzqbzxnyfDEKu1ch%2BUEXiql9KY3JMvZ6iMxh3%2BdUJ8HpDE5hTIhHw8ygXn%2Ftyw%3D%3D
+                      - text: HTML阅读
+                    - generic "收藏" [ref=e2113] [cursor=pointer]
+                    - link "引用" [ref=e2115] [cursor=pointer]:
+                      - /url: javascript:void(0)
+      - generic:
+        - list:
+          - listitem
+          - listitem
+    - generic [ref=e256]:
+      - generic [ref=e257]:
+        - link "在线咨询" [ref=e258] [cursor=pointer]:
+          - /url: http://help.cnki.net/
+        - link "用户反馈" [ref=e259] [cursor=pointer]:
+          - /url: https://kefu.cnki.net/im/goLeavemsg.html?appid=01xds8&isLogin=true&skill=ff8080818906901e018909b8eda90057
+      - link "已选文献" [ref=e261] [cursor=pointer]:
+        - /url: javascript:void(0);
+  - contentinfo [ref=e263]:
+    - generic [ref=e265]:
+      - generic [ref=e266]:
+        - link "关于我们" [ref=e267] [cursor=pointer]:
+          - /url: http://cnki.net/gycnki/gycnki.htm
+        - link "CNKI荣誉" [ref=e268] [cursor=pointer]:
+          - /url: http://www.cnki.net/other/gonggao/gongsirongyu.html
+        - link "版权公告" [ref=e269] [cursor=pointer]:
+          - /url: http://www.cnki.net/other/gonggao/bqsm.htm
+        - link "客服中心" [ref=e270] [cursor=pointer]:
+          - /url: http://service.cnki.net/
+        - link "在线咨询" [ref=e271] [cursor=pointer]:
+          - /url: http://help.cnki.net/
+        - link "用户建议" [ref=e272] [cursor=pointer]:
+          - /url: http://help.cnki.net/Live800_2_2.aspx
+        - link "知网推广" [ref=e273] [cursor=pointer]:
+          - /url: //a.cnki.net/
+      - generic [ref=e275]:
+        - generic [ref=e276]:
+          - list:
+            - listitem [ref=e277]:
+              - generic [ref=e278]: 读者服务
+              - paragraph [ref=e279]:
+                - link "购买知网卡" [ref=e280] [cursor=pointer]:
+                  - /url: http://vipcard.cnki.net/ec/skwd/skwd.htm
+                - link "充值中心" [ref=e281] [cursor=pointer]:
+                  - /url: http://my.cnki.net/CNKIRecharging/czzx.html
+                - link "我的CNKI" [ref=e282] [cursor=pointer]:
+                  - /url: /kns/RedirectPage.aspx?action=&url=&domain=http%3a%2f%2fmy.cnki.net/
+                - link "帮助中心" [ref=e283] [cursor=pointer]:
+                  - /url: http://service.cnki.net/helpcenter/
+            - listitem [ref=e284]:
+              - generic [ref=e285]: CNKI常用软件下载
+              - paragraph [ref=e286]:
+                - link "CAJViewer浏览器" [ref=e287] [cursor=pointer]:
+                  - /url: http://cajviewer.cnki.net
+                - link "知网研学（原E-Study）" [ref=e288] [cursor=pointer]:
+                  - /url: http://x.cnki.net
+                - link "工具书桌面检索软件" [ref=e289] [cursor=pointer]:
+                  - /url: http://mall.cnki.net/Reference/Soft/CNKI工具书.rar
+            - listitem [ref=e290]:
+              - generic [ref=e291]: 特色服务
+              - paragraph [ref=e292]:
+                - link "手机知网" [ref=e293] [cursor=pointer]:
+                  - /url: http://wap.cnki.net/touch/web
+                - link "杂志订阅" [ref=e294] [cursor=pointer]:
+                  - /url: http://wuxizazhi.cnki.net/
+                - link "数字出版物订阅" [ref=e295] [cursor=pointer]:
+                  - /url: http://mall.cnki.net/
+            - listitem [ref=e296]:
+              - generic [ref=e297]: 客服咨询
+              - paragraph [ref=e298]:
+                - text: 订卡热线：400-819-9993
+                - text: 服务热线：400-810-9888
+                - text: 在线咨询：
+                - link "help.cnki.net" [ref=e299] [cursor=pointer]:
+                  - /url: http://help.cnki.net
+                - text: 邮件咨询：
+                - link "help@cnki.net" [ref=e300] [cursor=pointer]:
+                  - /url: mailto:help@cnki.net
+                - text: 客服微博：
+                - link "客服新浪微博" [ref=e302] [cursor=pointer]:
+                  - /url: http://e.weibo.com/u/3059308095
+        - generic [ref=e303]:
+          - text: 京ICP证040431号
+          - link "网络出版服务许可证网出证(京)字第416号" [ref=e304] [cursor=pointer]:
+            - /url: https://piccache.cnki.net/index/images/gb/416.jpg
+          - text: 京公网安备11010802020460号
+          - text: © 1998-2019中国知网(CNKI)
+          - text: 同方知网数字科技有限公司
+          - text: KDN 平台基础技术由 AIKBase 提供. 您当前IP：124.193.98.156
+  - generic [ref=e307]:
+    - generic [ref=e308]:
+      - generic [ref=e310]: 拖动下方拼图完成验证
+      - img "close" [ref=e312] [cursor=pointer]
+    - img [ref=e316]
+    - generic [ref=e321]:
+      - generic [ref=e323]: 安全验证
+      - img "refresh" [ref=e326] [cursor=pointer]

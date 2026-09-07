@@ -1,4 +1,4 @@
-# Multi-Agents System for FLexible Production Line Construction
+# LLM Multi-Agent System for FLexible Production Line Construction
 
 Large Language Model-driven Multi-Agent System for dynamic modeling of flexible production line digital twins.
 
